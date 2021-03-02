@@ -1,3 +1,15 @@
+import sys.FileSystem;
+import sys.io.File;
+
+class TR {
+	public var name:String;
+	public var url:String;
+	public var path:String;
+	public var flag:String;
+	public var mode:String;
+	public var size:Int;
+}
+
 class Main {
 	static var paths = [
 		"sq.nahi", "sq.mehdiu", "sq.ahmeti", "ber.mensur", "ar.jalalayn", "ar.muyassar", "am.sadiq", "az.mammadaliyev", "az.musayev", "bn.hoque",
@@ -42,6 +54,16 @@ class Main {
 	}
 
 	static function http_onData(str:String) {
+		var xml = Xml.parse(str).firstElement();
+		var suras = xml.elements();
+		var ss = new Array<Array<String>>();
+		for (s in suras) {
+			var aa = new Array<String>();
+			var ayas = s.elements();
+			for (a in ayas)
+				aa.push(a.get("text"));
+			ss.push(aa);
+		}
 		fileIndex++;
 		load();
 	}
