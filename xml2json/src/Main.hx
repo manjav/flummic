@@ -64,6 +64,9 @@ class Main {
 				aa.push(a.get("text"));
 			ss.push(aa);
 		}
+		var content:String = haxe.Json.stringify(ss);
+		File.saveContent('data/' + paths[fileIndex] + '.json', content);
+
 		fileIndex++;
 		load();
 	}
