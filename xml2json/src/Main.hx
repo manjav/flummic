@@ -20,6 +20,11 @@ class Main {
 	}
 
 	static function load() {
+		if (fileIndex >= paths.length) {
+			trace(paths.length , "finish");
+			return;
+		}
+
 		var http = new haxe.Http("http://tanzil.net/trans/?transID=" + paths[fileIndex] + "&type=xml");
 		http.onData = http_onData;
 		http.onError = function(error) {
