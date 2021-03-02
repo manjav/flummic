@@ -13,7 +13,25 @@ class Main {
 		"tr.yildirim", "tr.ates", "ur.maududi", "ur.kanzuliman", "ur.ahmedali", "ur.jalandhry", "ur.qadri", "ur.jawadi", "ur.junagarhi", "ur.najafi",
 		"ug.saleh", "uz.sodik"
 	];
+	static var fileIndex = 0;
 
 	static function main() {
+		load();
+	}
+
+	static function load() {
+		var http = new haxe.Http("http://tanzil.net/trans/?transID=" + paths[fileIndex] + "&type=xml");
+		http.onData = http_onData;
+		http.onError = function(error) {
+			trace('loading ' + paths[fileIndex] + ' failed.');
+			fileIndex++;
+			load();
+		}
+		http.request();
+	}
+
+	static function http_onData(str:String) {
+		fileIndex++;
+		load();
 	}
 }
