@@ -25,6 +25,12 @@ class Main {
 			return;
 		}
 
+		if (FileSystem.exists('data/' + paths[fileIndex] + '.json')) {
+			fileIndex++;
+			load();
+			return;
+		}
+
 		var http = new haxe.Http("http://tanzil.net/trans/?transID=" + paths[fileIndex] + "&type=xml");
 		http.onData = http_onData;
 		http.onError = function(error) {
