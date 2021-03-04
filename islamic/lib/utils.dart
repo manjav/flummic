@@ -2,6 +2,17 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 class Utils {
+  static String getLocaleByTimezone(String timezone) {
+    switch (timezone) {
+      case "Asia/Tehran":
+      case "Asia/Kabul":
+      case "Asia/Dushanbe":
+        return "fa";
+
+      default:
+        return "en";
+    }
+  }
 
   static String findTimezone() {
     tz.initializeTimeZones();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islamic/utils.dart';
+
 import 'home.dart';
 
 void main() => runApp(MyApp());
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
         const Locale('en', ''),
         const Locale('fa', ''),
       ],
+      locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ''),
       // debugShowCheckedModeBanner: false,
       // theme: ThemeData(primarySwatch: Colors.blue),
       home: HomePage(),
