@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: [
-        const Locale('en', ''),
-        const Locale('fa', ''),
+        const Locale("en", ""),
+        const Locale("fa", ""),
       ],
-      locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ''),
+      locale: Locale(Utils.getByTimezone(Utils.findTimezone()), ""),
       // debugShowCheckedModeBanner: false,
       // theme: ThemeData(primarySwatch: Colors.blue),
       home: HomePage(),
