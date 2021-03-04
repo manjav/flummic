@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         const Locale("en", ""),
         const Locale("fa", ""),
       ],
-      locale: Locale(Utils.getByTimezone(Utils.findTimezone()), ""),
+      locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ""),
       // debugShowCheckedModeBanner: false,
       // theme: ThemeData(primarySwatch: Colors.blue),
       home: HomePage(),
