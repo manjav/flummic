@@ -13,6 +13,9 @@ class MyApp extends StatefulWidget {
 }
 
 class AppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
