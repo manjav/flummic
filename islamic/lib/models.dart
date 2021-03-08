@@ -23,7 +23,8 @@ class Configs {
     for (var p in map["translators"]) instance.translators.add(Person(p));
     instance.reciters = <Person>[];
     for (var p in map["reciters"]) instance.reciters.add(Person(p));
-    _onCreate();
+
+    instance.translators[0].load(_onCreate, null, null);
   }
 }
 
@@ -35,6 +36,7 @@ class Person {
   String flag;
   String mode;
   int size;
+  List<List<String>> data;
 
   Person(p) {
     url = p["url"];
@@ -44,5 +46,19 @@ class Person {
     flag = p["flag"];
     mode = p["mode"];
     size = p["size"];
+  }
+
+  void load(
+      Function onDone, Function(double) onProgress, Function(String) onError) {
+    Loader().load(path, url, (String _data) {
+      var map = json.decode(_data);
+      data = <List<String>>[];
+      for (var s in map) {
+        var sura = <String>[];
+        for (var a in s) sura.add(a);
+        data.add(sura);
+      }
+      onDone();
+    }, onProgress, onError);
   }
 }
