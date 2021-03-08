@@ -22,14 +22,14 @@ class Loader {
     response.asBroadcastStream().listen(
       (List<int> newBytes) {
         bytes.addAll(newBytes);
-        onProgress(bytes.length / contentLength);
+        if (onProgress != null) onProgress(bytes.length / contentLength);
       },
       onDone: () async {
         await file.writeAsBytes(bytes);
         onDone(utf8.decode(bytes));
       },
       onError: (e) {
-        onError(e);
+        if (onError != null) onError(e);
       },
       cancelOnError: true,
     );
