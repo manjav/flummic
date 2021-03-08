@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils.dart';
+import 'package:islamic/waiting.dart';
 
 import 'home.dart';
 
@@ -22,6 +23,7 @@ class AppState extends State<MyApp> {
       Configs.create(() {
         print(Configs.instance.translators[0].data[0][4]);
         configured = true;
+        setState(() {});
       });
   }
 
@@ -41,7 +43,7 @@ class AppState extends State<MyApp> {
       locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ""),
       // debugShowCheckedModeBanner: false,
       // theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(),
+      home: configured ? HomePage() : WaitingPage(),
     );
   }
 }
