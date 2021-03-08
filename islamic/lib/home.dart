@@ -8,12 +8,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var textStyle = TextStyle(
+      fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
       title: Text(
-          AppLocalizations.of(context).helloWorldOn(DateTime.utc(1996, 7, 10))),
+        AppLocalizations.of(context).helloWorldOn(DateTime.utc(1996, 7, 10)),
+        style: textStyle,
+      ),
     ));
   }
 }
