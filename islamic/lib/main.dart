@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:islamic/models.dart';
 import 'package:islamic/utils.dart';
 
 import 'home.dart';
@@ -13,9 +14,15 @@ class MyApp extends StatefulWidget {
 }
 
 class AppState extends State<MyApp> {
+  bool configured = false;
   @override
   void initState() {
     super.initState();
+    if (!configured)
+      Configs.create(() {
+        print(Configs.instance.translators[0].data[0][4]);
+        configured = true;
+      });
   }
 
   @override
