@@ -9,12 +9,15 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   PageController suraPageController;
+  ScrollController ayasController;
+
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
   int selectedAyaIndex;
   int currentAyaIndex = 0;
 
   int currentPageValue;
+  List<String> ayas;
 
   void initState() {
     super.initState();
@@ -23,11 +26,14 @@ class HomePageState extends State<HomePage> {
       var page = suraPageController.page.round();
       if (page != currentPageValue) {
         setState(() {
+          // toolbarHeight = _toolbarHeight;
           currentPageValue = page;
           widget.title = "Sura ${page + 1}";
         });
   }
     });
+
+    ayasController = ScrollController();
   }
 
   @override
@@ -45,8 +51,22 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget suraPageBuilder(BuildContext context, int position) {
-    var ayas = Configs.instance.quran[position];
+    ayas = Configs.instance.quran[position];
 
-    return Center(child: Text(ayas[0]));
+    return
+        ListView.builder(
+            itemCount: ayas.length,
+            itemBuilder: ayaItemBuilder,
+            controller: ayasController);
+  }
+
+  Widget ayaItemBuilder(BuildContext context, int index) {
+    currentAyaIndex = index;
+    return
+        Text(ayas[index],
+            textAlign: TextAlign.justify,
+            textDirection: TextDirection.rtl,
+            style: textStyle)
+        ;
   }
 }
