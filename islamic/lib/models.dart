@@ -13,6 +13,7 @@ class Configs {
         (String error) => print("error: $error"));
   }
 
+  get quran => instance.translators[0].data;
   List<Person> reciters;
   List<Person> translators;
 
@@ -23,7 +24,7 @@ class Configs {
     for (var p in map["translators"]) instance.translators.add(Person(p));
     instance.reciters = <Person>[];
     for (var p in map["reciters"]) instance.reciters.add(Person(p));
-
+    
     instance.translators[0].load(_onCreate, null, null);
   }
 }
