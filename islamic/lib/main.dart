@@ -20,11 +20,11 @@ class AppState extends State<MyApp> {
   void initState() {
     super.initState();
     // if (!configured)
-      Configs.create(() {
-        print(Configs.instance.translators[0].data[0][4]);
-        configured = true;
-        setState(() {});
-      });
+    Configs.create(() {
+      print(Configs.instance.translators[0].data[0][4]);
+      configured = true;
+      setState(() {});
+    });
   }
 
   @override
@@ -42,7 +42,7 @@ class AppState extends State<MyApp> {
       ],
       locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ""),
       // debugShowCheckedModeBanner: false,
-      // theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.teal),
       home: configured ? HomePage() : WaitingPage(),
     );
   }
