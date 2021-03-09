@@ -10,25 +10,29 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final _toolbarHeight = 56.0;
   PageController suraPageController;
   ScrollController ayasController;
 
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
-  int selectedAyaIndex;
+  // int selectedAyaIndex;
   int currentAyaIndex = 0;
-
   int currentPageValue;
   List<String> ayas;
+  bool isScrollingDown = false;
+  double toolbarHeight;
+  double startScrollBarIndicator = 0;
 
   void initState() {
     super.initState();
+    toolbarHeight = _toolbarHeight;
     suraPageController = PageController();
     suraPageController.addListener(() {
       var page = suraPageController.page.round();
       if (page != currentPageValue) {
         setState(() {
-          // toolbarHeight = _toolbarHeight;
+          toolbarHeight = _toolbarHeight;
           currentPageValue = page;
           widget.title = "Sura ${page + 1}";
         });
@@ -36,12 +40,23 @@ class HomePageState extends State<HomePage> {
     });
 
     ayasController = ScrollController();
+    ayasController.addListener(() {
+      var changes = startScrollBarIndicator - ayasController.position.pixels;
+      startScrollBarIndicator = ayasController.position.pixels;
+      var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
+      if (toolbarHeight != h) {
+        toolbarHeight = h;
+        setState(() {});
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          toolbarHeight: toolbarHeight,
+          toolbarOpacity: toolbarHeight / _toolbarHeight,
           centerTitle: true,
           title: Text(widget.title, style: textStyle),
         ),
