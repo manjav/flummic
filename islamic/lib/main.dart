@@ -19,7 +19,7 @@ class AppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    if (!configured)
+    // if (!configured)
       Configs.create(() {
         print(Configs.instance.translators[0].data[0][4]);
         configured = true;
