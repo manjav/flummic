@@ -1,3 +1,4 @@
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 
@@ -16,6 +17,12 @@ class HomePageState extends State<HomePage> {
 
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
+  TextStyle textStyleLight = TextStyle(
+      fontFamily: 'Uthmani',
+      fontSize: 22,
+      height: 2,
+      letterSpacing: 2,
+      color: Colors.white);
   // int selectedAyaIndex;
   int currentAyaIndex = 0;
   int currentPageValue;
@@ -70,8 +77,7 @@ class HomePageState extends State<HomePage> {
   Widget suraPageBuilder(BuildContext context, int position) {
     ayas = Configs.instance.quran[position];
 
-    return
-        /* DraggableScrollbar.arrows(
+    return DraggableScrollbar.arrows(
         labelTextBuilder: (offset) {
           return ayas.length < 10
               ? null
@@ -83,11 +89,10 @@ class HomePageState extends State<HomePage> {
         labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
         backgroundColor: Theme.of(context).primaryColorDark,
         controller: ayasController,
-        child: */
-        ListView.builder(
+        child: ListView.builder(
             itemCount: ayas.length,
             itemBuilder: ayaItemBuilder,
-            controller: ayasController);
+            controller: ayasController));
   }
 
   Widget ayaItemBuilder(BuildContext context, int index) {
