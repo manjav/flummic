@@ -99,24 +99,23 @@ class HomePageState extends State<HomePage> {
                     Spacer(),
                     CircleButton(text: (index + 1).toString()),
                   ],
-                ),
-                SizedBox(height: 20), */
-
+                  SizedBox(height: 20),
                     Text(ayas[index],
                         textAlign: TextAlign.justify,
                         textDirection: TextDirection.rtl,
-                        style: textStyle)
-                /* ListTile(
+                      style: textStyle),
+                  ListTile(
                   trailing: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/icon.png'),
+                      backgroundImage: AssetImage('images/icon.png'),
                   ),
                   title: Text(
-                    ayas.elementAt(index).getAttribute("text"),
+                      ayas[index],
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,
                   ),
                 )
-              ]) ),*/
+                ])
+                // ),
                 ));
   }
 }
