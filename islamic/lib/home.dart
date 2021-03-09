@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 
+import 'buttons.dart';
+
 class HomePage extends StatefulWidget {
   String title = "Sura 1";
   @override
@@ -86,34 +88,34 @@ class HomePageState extends State<HomePage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
-            color: index == selectedAyaIndex ? Colors.white : Colors.white70,
+            // color: index == selectedAyaIndex ? Colors.white70 : Colors.white,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                child:
-                    /*  Column(children: <Widget>[
-                Row(
-                  children: [
-                    CircleButton(icon: Icons.bookmark),
-                    SizedBox(width: 8),
-                    CircleButton(icon: Icons.share),
-                    Spacer(),
-                    CircleButton(text: (index + 1).toString()),
-                  ],
+                child: Column(children: <Widget>[
+                  Row(
+                    children: [
+                      CircleButton(icon: Icons.bookmark),
+                      SizedBox(width: 8),
+                      CircleButton(icon: Icons.share),
+                      Spacer(),
+                      CircleButton(text: (index + 1).toString()),
+                    ],
+                  ),
                   SizedBox(height: 20),
-                    Text(ayas[index],
-                        textAlign: TextAlign.justify,
-                        textDirection: TextDirection.rtl,
+                  Text(ayas[index],
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
                       style: textStyle),
                   ListTile(
-                  trailing: CircleAvatar(
+                    trailing: CircleAvatar(
                       backgroundImage: AssetImage('images/icon.png'),
-                  ),
-                  title: Text(
+                    ),
+                    title: Text(
                       ayas[index],
-                    textAlign: TextAlign.justify,
-                    textDirection: TextDirection.rtl,
-                  ),
-                )
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
+                    ),
+                  )
                 ])
                 // ),
                 ));
