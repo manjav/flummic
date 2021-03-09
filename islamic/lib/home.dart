@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   PageController suraPageController;
-  ScrollController ayasController;
+  ScrollController ayaScrollController;
 
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
@@ -46,10 +46,10 @@ class HomePageState extends State<HomePage> {
       }
     });
 
-    ayasController = ScrollController();
-    ayasController.addListener(() {
-      var changes = startScrollBarIndicator - ayasController.position.pixels;
-      startScrollBarIndicator = ayasController.position.pixels;
+    ayaScrollController = ScrollController();
+    ayaScrollController.addListener(() {
+      var changes = startScrollBarIndicator - ayaScrollController.position.pixels;
+      startScrollBarIndicator = ayaScrollController.position.pixels;
       var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
       if (toolbarHeight != h) {
         toolbarHeight = h;
@@ -88,11 +88,11 @@ class HomePageState extends State<HomePage> {
         },
         labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
         backgroundColor: Theme.of(context).primaryColorDark,
-        controller: ayasController,
+        controller: ayaScrollController,
         child: ListView.builder(
             itemCount: ayas.length,
             itemBuilder: ayaItemBuilder,
-            controller: ayasController));
+            controller: ayaScrollController));
   }
 
   Widget ayaItemBuilder(BuildContext context, int index) {
