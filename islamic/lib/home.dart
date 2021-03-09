@@ -30,7 +30,7 @@ class HomePageState extends State<HomePage> {
           currentPageValue = page;
           widget.title = "Sura ${page + 1}";
         });
-  }
+      }
     });
 
     ayasController = ScrollController();
@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(widget.title, style: textStyle),
-      ),
+        ),
         body: PageView.builder(
             reverse: true,
             itemCount: Configs.instance.quran.length,
@@ -54,6 +54,19 @@ class HomePageState extends State<HomePage> {
     ayas = Configs.instance.quran[position];
 
     return
+        /* DraggableScrollbar.arrows(
+        labelTextBuilder: (offset) {
+          return ayas.length < 10
+              ? null
+              : Text(
+                  "${currentAyaIndex + 1}",
+                  style: textStyleLight,
+                );
+        },
+        labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
+        backgroundColor: Theme.of(context).primaryColorDark,
+        controller: ayasController,
+        child: */
         ListView.builder(
             itemCount: ayas.length,
             itemBuilder: ayaItemBuilder,
@@ -63,10 +76,47 @@ class HomePageState extends State<HomePage> {
   Widget ayaItemBuilder(BuildContext context, int index) {
     currentAyaIndex = index;
     return
-        Text(ayas[index],
-            textAlign: TextAlign.justify,
-            textDirection: TextDirection.rtl,
-            style: textStyle)
-        ;
+        /*GestureDetector(
+        onTap: () => setState(() {
+              selectedAyaIndex = index;
+            }),
+        child: 
+        */
+        Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            color: index == selectedAyaIndex ? Colors.white : Colors.white70,
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                child:
+                    /*  Column(children: <Widget>[
+                Row(
+                  children: [
+                    CircleButton(icon: Icons.bookmark),
+                    SizedBox(width: 8),
+                    CircleButton(icon: Icons.share),
+                    Spacer(),
+                    CircleButton(text: (index + 1).toString()),
+                  ],
+                ),
+                SizedBox(height: 20), */
+
+                    Text(ayas[index],
+                        textAlign: TextAlign.justify,
+                        textDirection: TextDirection.rtl,
+                        style: textStyle)
+                /* ListTile(
+                  trailing: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/icon.png'),
+                  ),
+                  title: Text(
+                    ayas.elementAt(index).getAttribute("text"),
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                  ),
+                )
+              ]) ),*/
+                ));
   }
 }
