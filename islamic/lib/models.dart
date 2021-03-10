@@ -1,21 +1,21 @@
 import 'dart:convert';
-
 import 'loader.dart';
 
 class Configs {
   static Configs instance;
+  List<Person> reciters;
+  List<Person> translators;
+  QuranMeta metadata;
+
+  get quran => instance.translators[0].data;
 
   static Function _onCreate;
   static void create(Function onCreate) async {
     _onCreate = onCreate;
     var url = "https://grantech.ir/islam/configs.ijson";
     await Loader().load("configs.json", url, onLoadData, null,
-        (String error) => print("error: $error"));
+        (String e) => print("error: $e"));
   }
-
-  get quran => instance.translators[0].data;
-  List<Person> reciters;
-  List<Person> translators;
 
   static void onLoadData(String data) {
     instance = Configs();
