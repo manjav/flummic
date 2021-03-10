@@ -16,12 +16,19 @@ class MyApp extends StatefulWidget {
 
 class AppState extends State<MyApp> {
   bool configured = false;
+
+  WaitingPage waitingPage;
   @override
   void initState() {
     super.initState();
+    waitingPage = WaitingPage();
     Configs.create(() {
-      configured = true;
-      setState(() {});
+      if (waitingPage.onLoop)
+        waitingPage.finish(() {
+          setState(() => configured = true);
+        });
+      else
+        setState(() => configured = true);
     });
   }
 
@@ -41,7 +48,7 @@ class AppState extends State<MyApp> {
       locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ""),
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.teal),
-      home: configured ? HomePage() : WaitingPage(),
+      home: configured ? HomePage() : waitingPage,
     );
   }
 }
