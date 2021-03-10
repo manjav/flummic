@@ -30,15 +30,9 @@ class Configs {
 }
 
 class Person {
-  String url;
-  String path;
-  String name;
-  String ename;
-  String flag;
-  String mode;
   int size;
   List<List<String>> data;
-
+  String url, path, name, ename, flag, mode;
   Person(p) {
     url = p["url"];
     path = p["path"];
