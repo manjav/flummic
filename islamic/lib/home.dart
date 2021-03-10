@@ -48,7 +48,8 @@ class HomePageState extends State<HomePage> {
 
     ayaScrollController = ScrollController();
     ayaScrollController.addListener(() {
-      var changes = startScrollBarIndicator - ayaScrollController.position.pixels;
+      var changes =
+          startScrollBarIndicator - ayaScrollController.position.pixels;
       startScrollBarIndicator = ayaScrollController.position.pixels;
       var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
       if (toolbarHeight != h) {
@@ -67,11 +68,13 @@ class HomePageState extends State<HomePage> {
           centerTitle: true,
           title: Text(widget.title, style: textStyle),
         ),
-        body: PageView.builder(
-            reverse: true,
-            itemCount: Configs.instance.quran.length,
-            itemBuilder: suraPageBuilder,
-            controller: suraPageController));
+        body: new Directionality(
+            textDirection: TextDirection.ltr,
+            child: PageView.builder(
+                reverse: true,
+                itemCount: Configs.instance.quran.length,
+                itemBuilder: suraPageBuilder,
+                controller: suraPageController)));
   }
 
   Widget suraPageBuilder(BuildContext context, int position) {
