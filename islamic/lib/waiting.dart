@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rive/rive.dart';
 
 class WaitingPage extends StatefulWidget {
   bool onLoop = false;
@@ -20,6 +22,7 @@ class WaitingPageState extends State<WaitingPage> {
         final file = RiveFile();
         if (file.import(data)) {
           widget.artboard = file.mainArtboard;
+          widget.artboard.addController(SimpleAnimation('start'));
           widget.artboard.addController(widget.controller = SimpleAnimation('idle'));
           setState(() {});
         }
