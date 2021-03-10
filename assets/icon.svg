@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="1e3" height="1e3" version="1.1" viewBox="0 0 271 271" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient4605">
+   <stop stop-color="#fff" stop-opacity=".22" offset="0"/>
+   <stop stop-color="#dfdfdf" stop-opacity="0" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient4577" x1="336" x2="439" y1="184" y2="178" gradientTransform="translate(-113 -188)" gradientUnits="userSpaceOnUse">
+   <stop stop-opacity=".2" offset="0"/>
+   <stop stop-color="#dfdfdf" stop-opacity="0" offset="1"/>
+  </linearGradient>
+  <radialGradient id="radialGradient4631" cx="126" cy="89" r="29" gradientTransform="matrix(2.3 0 0 .11 -404 126)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient4605"/>
+  <radialGradient id="radialGradient4589" cx="126" cy="89" r="29" gradientTransform="matrix(2.9 0 0 1.9 -227 -49)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#fff" offset="0"/>
+   <stop stop-color="#dfdfdf" stop-opacity="0" offset="1"/>
+  </radialGradient>
+  <radialGradient id="radialGradient5286" cx="126" cy="89" r="29" gradientTransform="matrix(2.4 0 0 .12 -333 166)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient4605"/>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(0 -26)">
+  <g>
+   <ellipse transform="rotate(-45)" cx="-18" cy="210" rx="135" ry="136" fill="#009487"/>
+   <path d="m231 66c53 53 53 139 0 192-53 53-139 53-192 1e-5z" fill="#004d41"/>
+   <ellipse transform="rotate(-45)" cx="-18" cy="210" rx="114" ry="114" fill="#81cac5"/>
+   <path transform="rotate(45)" d="m223-72 84 5.3 36 78-46 104-99-6.2z" fill="url(#linearGradient4577)"/>
+  </g>
+  <g transform="translate(0 2.1)">
+   <ellipse transform="rotate(-90)" cx="-119" cy="135" rx="65" ry="3.2" fill="url(#radialGradient4631)"/>
+   <ellipse id="use4645" transform="rotate(-60)" cx="-35" cy="177" rx="68" ry="4.7" fill="url(#radialGradient5286)"/>
+   <use id="use4647" transform="rotate(30 136 119)" width="100%" height="100%" xlink:href="#use4645"/>
+   <use transform="rotate(-90 136 119)" width="100%" height="100%" xlink:href="#use4645"/>
+   <use transform="rotate(-90 136 119)" width="100%" height="100%" xlink:href="#use4647"/>
+   <ellipse cx="136" cy="119" rx="83" ry="54" fill="url(#radialGradient4589)"/>
+  </g>
+  <path d="m135 118 73-12v110l-73 13z" fill="#fff"/>
+  <path d="m135 118-73-12v110l73 13z" fill="#dfdfdf"/>
+ </g>
+</svg>
