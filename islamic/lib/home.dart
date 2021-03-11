@@ -5,7 +5,7 @@ import 'package:islamic/models.dart';
 import 'buttons.dart';
 
 class HomePage extends StatefulWidget {
-  String title = "Sura 1";
+  String title = Configs.instance.metadata.suras[0].name;
   @override
   HomePageState createState() => HomePageState();
 }
@@ -41,7 +41,7 @@ class HomePageState extends State<HomePage> {
         setState(() {
           toolbarHeight = _toolbarHeight;
           currentPageValue = page;
-          widget.title = "Sura ${page + 1}";
+          widget.title = Configs.instance.metadata.suras[page].name;
         });
       }
     });
