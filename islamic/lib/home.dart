@@ -26,7 +26,6 @@ class HomePageState extends State<HomePage> {
   // int selectedAyaIndex;
   int currentAyaIndex = 0;
   int currentPageValue;
-  List<String> ayas;
   bool isScrollingDown = false;
   double toolbarHeight;
   double startScrollBarIndicator = 0;
@@ -77,9 +76,8 @@ class HomePageState extends State<HomePage> {
                 controller: suraPageController)));
   }
 
-  Widget suraPageBuilder(BuildContext context, int position) {
-    ayas = Configs.instance.quran[position];
-
+  Widget suraPageBuilder(BuildContext context, int p) {
+    var ayas = Configs.instance.quran[p];
     return DraggableScrollbar.arrows(
         labelTextBuilder: (offset) {
           return ayas.length < 10
@@ -94,11 +92,12 @@ class HomePageState extends State<HomePage> {
         controller: ayaScrollController,
         child: ListView.builder(
             itemCount: ayas.length,
-            itemBuilder: ayaItemBuilder,
+            itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
             controller: ayaScrollController));
   }
 
-  Widget ayaItemBuilder(BuildContext context, int index) {
+  Widget ayaItemBuilder(int position, int index) {
+    var aya = Configs.instance.quran[position][index];
     currentAyaIndex = index;
     return
         /*GestureDetector(
@@ -125,7 +124,7 @@ class HomePageState extends State<HomePage> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  Text(ayas[index],
+                  Text(aya,
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                       style: textStyle),
@@ -134,7 +133,7 @@ class HomePageState extends State<HomePage> {
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      ayas[index],
+                      aya,
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                     ),
