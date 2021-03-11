@@ -7,30 +7,32 @@ class Configs {
   List<Person> translators;
   QuranMeta metadata;
 
+  static String baseURL = "https://grantech.ir/islam/";
   get quran => instance.translators[0].data;
 
   static Function _onCreate;
   static void create(Function onCreate) async {
     _onCreate = onCreate;
-    var url = "https://grantech.ir/islam/configs.ijson";
-    await Loader().load("configs.json", url, onLoadData, null,
-        (String e) => print("error: $e"));
-  }
-
-  static void onLoadData(String data) {
     instance = Configs();
-    var map = json.decode(data);
-    instance.translators = <Person>[];
-    for (var p in map["translators"]) instance.translators.add(Person(p));
-    instance.reciters = <Person>[];
-    for (var p in map["reciters"]) instance.reciters.add(Person(p));
-
-    instance.translators[0].load(onQuranLoaded, null, null);
+    loadConfigs();
+    loadMetadata();
   }
 
-  static onQuranLoaded() async {
-    var url = "https://grantech.ir/islam/uthmani-meta.ijson";
-    await Loader().load("uthmani-meta.json", url, (String data) {
+  static Future<void> loadConfigs() async {
+    await Loader().load("configs.json", baseURL + "configs.ijson",
+        (String data) {
+      var map = json.decode(data);
+      instance.translators = <Person>[];
+      for (var p in map["translators"]) instance.translators.add(Person(p));
+      instance.reciters = <Person>[];
+      for (var p in map["reciters"]) instance.reciters.add(Person(p));
+      instance.translators[0].load(finalize, null, (String e) => print("error: $e"));
+    }, null, (String e) => print("error: $e"));
+  }
+
+  static void loadMetadata() async {
+    await Loader().load("uthmani-meta.json", baseURL + "uthmani-meta.ijson",
+        (String data) {
       var map = json.decode(data);
       instance.metadata = QuranMeta();
       var keys = map.keys;
@@ -44,8 +46,14 @@ class Configs {
         else if (k == "pages")
           for (var c in map[k]) instance.metadata.pages.add(Part(c));
       }
-      _onCreate();
+      finalize();
     }, null, (String e) => print("error: $e"));
+  }
+
+  static void finalize() {
+    if (instance.translators[0].data == null || instance.metadata == null)
+      return;
+    _onCreate();
   }
 }
 
