@@ -1,7 +1,17 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 class Utils {
+  static Function(String p1) onGetLocaleFinish;
+
+  static void getLocale(Function(String) onFinish) {
+    onGetLocaleFinish = onFinish;
+    String locale = "en";
+    locale = getLocaleByTimezone(findTimezone());
+    onGetLocaleFinish(locale);
+  }
+
   static String getLocaleByTimezone(String timezone) {
     switch (timezone) {
       case "Asia/Tehran":

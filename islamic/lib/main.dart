@@ -15,12 +15,14 @@ class MyApp extends StatefulWidget {
 }
 
 class AppState extends State<MyApp> {
+  String locale;
   bool configured = false;
-
   WaitingPage waitingPage;
+
   @override
   void initState() {
     super.initState();
+    Utils.getLocale((String l) => locale = l);
     waitingPage = WaitingPage();
     Configs.create(() {
       if (waitingPage.onLoop)
