@@ -26,8 +26,16 @@ class Configs {
       for (var p in map["translators"]) instance.translators.add(Person(p));
       instance.reciters = <Person>[];
       for (var p in map["reciters"]) instance.reciters.add(Person(p));
-      instance.translators[0].load(finalize, null, (String e) => print("error: $e"));
+      instance.translators[0].load(f_1, null, (String e) => print("error: $e"));
     }, null, (String e) => print("error: $e"));
+  }
+
+  static f_1() {
+    instance.translators[65].load(f_2, null, (String e) => print("error: $e"));
+  }
+
+  static f_2() {
+    instance.translators[33].load(finalize, null, (String e) => print("error: $e"));
   }
 
   static void loadMetadata() async {

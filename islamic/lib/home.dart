@@ -15,6 +15,7 @@ class HomePageState extends State<HomePage> {
   PageController suraPageController;
   ScrollController ayaScrollController;
 
+  TextStyle cubicStyle = TextStyle(fontFamily: 'CubicSans');
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
   TextStyle textStyleLight = TextStyle(
@@ -133,9 +134,30 @@ class HomePageState extends State<HomePage> {
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      aya,
+                      Configs.instance.translators[33].data[position][index],
+                      textAlign: TextAlign.justify,
+                      // textDirection: TextDirection.rtl,
+                    ),
+                  ),
+                  ListTile(
+                    trailing: CircleAvatar(
+                      backgroundImage: AssetImage('images/icon.png'),
+                    ),
+                    title: Text(
+                      Configs.instance.translators[65].data[position][index],
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
+                    ),
+                  ),
+                  ListTile(
+                    trailing: CircleAvatar(
+                      backgroundImage: AssetImage('images/icon.png'),
+                    ),
+                    title: Text(
+                      Configs.instance.translators[65].data[position][index],
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
+                      style: cubicStyle,
                     ),
                   )
                 ])
