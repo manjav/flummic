@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CircleButton extends GestureDetector {
+  static TextStyle style =
+      TextStyle(fontFamily: 'CubicSans', fontSize: 24, height: 1);
   // final textStyle = TextStyle(fontFamily: 'Uthmani', fontSize: 30);
   CircleButton(
       {IconData icon,
@@ -22,9 +24,7 @@ class CircleButton extends GestureDetector {
                       ? Icon(
                           icon,
                         )
-                      : Text(text,
-                          style: TextStyle(
-                              fontFamily: 'Uthmani', fontSize: 24, height: 1)),
+                      : Text(text, style: style),
                 ))
             // ),
             // elevation: 0,

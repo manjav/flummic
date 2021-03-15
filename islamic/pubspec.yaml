@@ -83,6 +83,9 @@ flutter:
     - family: Uthmani
       fonts:
         - asset: fonts/me_quran.ttf
+    - family: CubicSans
+      fonts:
+        - asset: fonts/CubicSans-regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
