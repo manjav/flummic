@@ -10,6 +10,7 @@ import 'home.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
+  static int t;
   @override
   AppState createState() => AppState();
 }
@@ -21,6 +22,7 @@ class AppState extends State<MyApp> {
 
   @override
   void initState() {
+    MyApp.t = DateTime.now().millisecondsSinceEpoch;
     super.initState();
     Utils.getLocale((String l) => locale = l);
     waitingPage = WaitingPage();
