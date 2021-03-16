@@ -4,7 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'loader.dart';
 
 class Prefs {
-  static SharedPreferences prefs;
+  static SharedPreferences instance;
+
+  static void init(Function onInit) {
+    SharedPreferences.getInstance().then((SharedPreferences prefs) {
+      instance = prefs;
+      onInit();
+    });
+  }
 }
 
 class Configs {
@@ -14,7 +21,8 @@ class Configs {
   var translators = <Person>[];
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran => instance.translators.length > 0 ? instance.translators[0].data : null;
+  get quran =>
+      instance.translators.length > 0 ? instance.translators[0].data : null;
 
   static Function _onCreate;
   static void create(Function onCreate) async {
@@ -39,7 +47,8 @@ class Configs {
   }
 
   static f_2() {
-    instance.translators[33].load(finalize, null, (String e) => print("error: $e"));
+    instance.translators[33]
+        .load(finalize, null, (String e) => print("error: $e"));
   }
 
   static void loadMetadata() async {

@@ -24,8 +24,8 @@ class AppState extends State<MyApp> {
   void initState() {
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
     super.initState();
-    Utils.getLocale((String l) => locale = l);
     waitingPage = WaitingPage();
+    Prefs.init(()=> locale = Utils.getLocale());
     Configs.create(() {
       if (waitingPage.onLoop)
         waitingPage.finish(() {
