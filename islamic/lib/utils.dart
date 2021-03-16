@@ -7,9 +7,7 @@ class Utils {
   static String getLocale() {
     if (Prefs.instance.containsKey('locale'))
       return Prefs.instance.getString('locale');
-    String locale = getLocaleByTimezone(findTimezone());
-    Prefs.instance.setString('locale', locale);
-    return locale;
+    return Prefs.setDefaults(getLocaleByTimezone(findTimezone()));
   }
 
   static String getLocaleByTimezone(String timezone) {

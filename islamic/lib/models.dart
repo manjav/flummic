@@ -6,11 +6,44 @@ import 'loader.dart';
 class Prefs {
   static SharedPreferences instance;
 
+  static String get locale => instance.getString("locale");
+  static set locale(String v) => instance.setString("locale", v);
+  static List<String> get reciters => instance.getStringList("_r");
+  static set reciters(List<String> v) => instance.setStringList("_r", v);
+  static List<String> get translators => instance.getStringList("_t");
+  static set translators(List<String> v) => instance.setStringList("_t", v);
+
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
       onInit();
     });
+  }
+
+  static String setDefaults(String _locale) {
+    locale = _locale;
+    if (instance.containsKey("_r")) return;
+
+    var _reciters = <String>[];
+    var _translators = <String>[];
+    switch (_locale) {
+      case "en":
+        _translators.add("en.sahih");
+        _reciters.add("abu_bakr_ash_shaatree");
+        _reciters.add("ibrahim_walk");
+        break;
+      case "fa":
+        _translators.add("fa.fooladvand");
+        _reciters.add("shahriar_parhizgar");
+        _reciters.add("mahdi_fooladvand");
+        break;
+      default:
+        _reciters.add("abu_bakr_ash_shaatree");
+        break;
+    }
+    reciters = _reciters;
+    translators = _translators;
+    return _locale;
   }
 }
 
