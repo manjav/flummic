@@ -3,12 +3,12 @@ import 'loader.dart';
 
 class Configs {
   static Configs instance;
-  List<Person> reciters;
-  List<Person> translators;
   QuranMeta metadata;
+  var reciters = <Person>[];
+  var translators = <Person>[];
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran => instance.translators[0].data;
+  get quran => instance.translators.length > 0 ? instance.translators[0].data : null;
 
   static Function _onCreate;
   static void create(Function onCreate) async {
@@ -22,9 +22,7 @@ class Configs {
     await Loader().load("configs.json", baseURL + "configs.ijson",
         (String data) {
       var map = json.decode(data);
-      instance.translators = <Person>[];
       for (var p in map["translators"]) instance.translators.add(Person(p));
-      instance.reciters = <Person>[];
       for (var p in map["reciters"]) instance.reciters.add(Person(p));
       instance.translators[0].load(f_1, null, (String e) => print("error: $e"));
     }, null, (String e) => print("error: $e"));
@@ -59,8 +57,7 @@ class Configs {
   }
 
   static void finalize() {
-    if (instance.translators[0].data == null || instance.metadata == null)
-      return;
+    if (instance.quran == null || instance.metadata == null) return;
     _onCreate();
   }
 }
