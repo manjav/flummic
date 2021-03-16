@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
+import 'models.dart';
+
 class Utils {
   static Function(String p1) onGetLocaleFinish;
 
@@ -11,6 +13,7 @@ class Utils {
   }
 
   static void onPrefsInit(SharedPreferences prefs) {
+    Prefs.prefs = prefs;
     String locale = "en";
     if (prefs.containsKey('locale')) {
       locale = prefs.getString('locale');
