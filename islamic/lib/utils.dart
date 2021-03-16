@@ -6,9 +6,19 @@ class Utils {
   static Function(String p1) onGetLocaleFinish;
 
   static void getLocale(Function(String) onFinish) {
+    SharedPreferences.getInstance().then(onPrefsInit);
     onGetLocaleFinish = onFinish;
+  }
+
+  static void onPrefsInit(SharedPreferences prefs) {
     String locale = "en";
+    if (prefs.containsKey('locale')) {
+      locale = prefs.getString('locale');
+      onGetLocaleFinish(locale);
+      return;
+    }
     locale = getLocaleByTimezone(findTimezone());
+    prefs.setString('locale', locale);
     onGetLocaleFinish(locale);
   }
 

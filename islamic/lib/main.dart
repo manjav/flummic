@@ -47,7 +47,7 @@ class AppState extends State<MyApp> {
         const Locale("en", ""),
         const Locale("fa", ""),
       ],
-      locale: Locale(Utils.getLocaleByTimezone(Utils.findTimezone()), ""),
+      locale: Locale(locale, ""),
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.teal),
       home: configured ? HomePage() : waitingPage,
