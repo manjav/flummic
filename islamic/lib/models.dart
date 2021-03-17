@@ -59,8 +59,8 @@ class Configs {
       instance.translators.length > 0 ? instance.translators[0].data : null;
 
   static void create(Function onCreate) async {
-    instance.onCreate = onCreate;
     instance = Configs();
+    instance.onCreate = onCreate;
     instance.loadConfigs();
     instance.loadMetadata();
   }
@@ -155,8 +155,8 @@ class Part {
 
 class Person {
   int size;
-  bool isTranslator, isSelected;
   List<List<String>> data;
+  bool isTranslator, isSelected = false;
   String url, path, name, ename, flag, mode;
 
   Person(p, bool isTranslator) {
@@ -184,9 +184,11 @@ class Person {
   }
 
   void onSelecFinish(Function onDone, String log) {
-    if (log != null) print(log);
+    if (log != null)
+      print("$path -> $log");
     isSelected = true;
-    if (Prefs.translators.indexOf(path) == -1) Prefs.translators.add(path);
+    if (isTranslator && Prefs.translators.indexOf(path) == -1)
+      Prefs.translators.add(path);
     onDone();
   }
 
@@ -200,7 +202,7 @@ class Person {
         for (var a in s) sura.add(a);
         data.add(sura);
       }
-      onDone();
+      if (onDone != null) onDone();
     }, onProgress, onError);
   }
 }
