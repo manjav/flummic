@@ -25,14 +25,16 @@ class AppState extends State<MyApp> {
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
     super.initState();
     waitingPage = WaitingPage();
-    Prefs.init(()=> locale = Utils.getLocale());
-    Configs.create(() {
-      if (waitingPage.onLoop)
-        waitingPage.finish(() {
+    Prefs.init(() {
+      locale = Utils.getLocale();
+      Configs.create(() {
+        if (waitingPage.onLoop)
+          waitingPage.finish(() {
+            setState(() => configured = true);
+          });
+        else
           setState(() => configured = true);
-        });
-      else
-        setState(() => configured = true);
+      });
     });
   }
 
