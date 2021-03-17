@@ -72,7 +72,7 @@ class Configs {
       for (var t in map["translators"])
         translators[t["path"]] = Person(t, true);
       for (var r in map["reciters"]) reciters[r["path"]] = Person(r, false);
-      translators[0].load(finalize, null, (String e) => print(e));
+      translators[0].load(loadSelecteds, null, print);
     }, null, (String e) => print("error: $e"));
   }
 
@@ -96,9 +96,20 @@ class Configs {
     }, null, (String e) => print("error: $e"));
   }
 
-  static void finalize() {
-    if (instance.quran == null || instance.metadata == null) return;
-    _onCreate();
+  void loadSelecteds() {
+    var _ts = Prefs.translators;
+    for (var t in _ts) translators[t]?.select(finalize);
+    var _rs = Prefs.reciters;
+    for (var r in _rs) reciters[r]?.select(finalize);
+  }
+
+  void finalize() {
+    if (quran == null || metadata == null) return;
+    var _ts = Prefs.translators;
+    for (var t in _ts) if (!translators[t].isSelected) return;
+    var _rs = Prefs.reciters;
+    for (var r in _rs) if (!reciters[r].isSelected) return;
+    onCreate();
   }
   }
 
@@ -159,16 +170,22 @@ class Person {
     size = p["size"];
   }
 
-  void selection(bool value, Function onDone) {
-    if (isTranslator && isSelected)
-      load(() => onSelecFinish(null), null, (String e) => onSelecFinish(e));
+  void select(Function onDone) {
+    if (isTranslator)
+      load(() => onSelecFinish(onDone, null), null,
+          (String e) => onSelecFinish(onDone, e));
     else
-      isSelected = value;
+      onSelecFinish(onDone, null);
   }
 
-  void onSelecFinish(String log) {
+  void deselect() {
+    isSelected = false;
+  }
+
+  void onSelecFinish(Function onDone, String log) {
     if (log != null) print(log);
     isSelected = true;
+    onDone();
   }
 
   void load(
