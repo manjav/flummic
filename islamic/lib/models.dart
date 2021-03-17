@@ -22,7 +22,7 @@ class Prefs {
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    if (instance.containsKey("_r")) return;
+    if (instance.containsKey("_r")) return _locale;
 
     var _reciters = <String>[];
     var _translators = <String>[];
