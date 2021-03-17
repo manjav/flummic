@@ -51,8 +51,8 @@ class Configs {
   static Configs instance;
   Function onCreate;
   QuranMeta metadata;
-  var reciters = <Person>[];
-  var translators = <Person>[];
+  var reciters = Map<String, Person>();
+  var translators = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
   get quran =>
@@ -69,9 +69,10 @@ class Configs {
     await Loader().load("configs.json", baseURL + "configs.ijson",
         (String data) {
       var map = json.decode(data);
-      for (var p in map["translators"]) translators.add(Person(p));
-      for (var p in map["reciters"]) reciters.add(Person(p));
-      instance.translators[0].load(finalize, null, (String e) => print("error: $e"));
+      for (var t in map["translators"])
+        translators[t["path"]] = Person(t, true);
+      for (var r in map["reciters"]) reciters[r["path"]] = Person(r, false);
+      translators[0].load(finalize, null, (String e) => print(e));
     }, null, (String e) => print("error: $e"));
   }
 
@@ -99,7 +100,7 @@ class Configs {
     if (instance.quran == null || instance.metadata == null) return;
     _onCreate();
   }
-}
+  }
 
 class QuranMeta {
   List<Sura> suras = <Sura>[];
@@ -143,9 +144,12 @@ class Part {
 
 class Person {
   int size;
+  bool isTranslator, isSelected;
   List<List<String>> data;
   String url, path, name, ename, flag, mode;
-  Person(p) {
+
+  Person(p, bool isTranslator) {
+    this.isTranslator = isTranslator;
     url = p["url"];
     path = p["path"];
     name = p["name"];
@@ -153,6 +157,18 @@ class Person {
     flag = p["flag"];
     mode = p["mode"];
     size = p["size"];
+  }
+
+  void selection(bool value, Function onDone) {
+    if (isTranslator && isSelected)
+      load(() => onSelecFinish(null), null, (String e) => onSelecFinish(e));
+    else
+      isSelected = value;
+  }
+
+  void onSelecFinish(String log) {
+    if (log != null) print(log);
+    isSelected = true;
   }
 
   void load(
