@@ -129,32 +129,24 @@ class HomePageState extends State<HomePage> {
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                       style: textStyle),
-                  ListTile(
+/*                   ListTile(
                     trailing: CircleAvatar(
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      Configs.instance.translators[33].data[position][index],
-                      textAlign: TextAlign.justify,
-                      // textDirection: TextDirection.rtl,
-                    ),
-                  ),
-                  ListTile(
-                    trailing: CircleAvatar(
-                      backgroundImage: AssetImage('images/icon.png'),
-                    ),
-                    title: Text(
-                      Configs.instance.translators[65].data[position][index],
+                      Configs.instance.translators["fa.fooladvand"]
+                          .data[position][index],
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                     ),
-                  ),
+                  ), */
                   ListTile(
                     trailing: CircleAvatar(
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      Configs.instance.translators[65].data[position][index],
+                      Configs.instance.translators["fa.fooladvand"]
+                          .data[position][index],
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                       style: cubicStyle,

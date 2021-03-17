@@ -22,8 +22,6 @@ class Prefs {
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    if (instance.containsKey("_r")) return _locale;
-
     var _reciters = <String>[];
     var _translators = <String>[];
     switch (_locale) {
@@ -55,8 +53,9 @@ class Configs {
   var translators = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran =>
-      instance.translators.length > 0 ? instance.translators[0].data : null;
+  get quran => instance.translators.containsKey("ar.uthmanimin")
+      ? instance.translators["ar.uthmanimin"].data
+      : null;
 
   static void create(Function onCreate) async {
     instance = Configs();
@@ -72,7 +71,7 @@ class Configs {
       for (var t in map["translators"])
         translators[t["path"]] = Person(t, true);
       for (var r in map["reciters"]) reciters[r["path"]] = Person(r, false);
-      translators[0].load(loadSelecteds, null, print);
+      translators["ar.uthmanimin"].load(loadSelecteds, null, print);
     }, null, (String e) => print("error: $e"));
   }
 
