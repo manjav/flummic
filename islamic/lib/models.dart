@@ -111,7 +111,7 @@ class Configs {
     for (var r in _rs) if (!reciters[r].isSelected) return;
     onCreate();
   }
-  }
+}
 
 class QuranMeta {
   List<Sura> suras = <Sura>[];
@@ -180,11 +180,13 @@ class Person {
 
   void deselect() {
     isSelected = false;
+    Prefs.translators.remove(path);
   }
 
   void onSelecFinish(Function onDone, String log) {
     if (log != null) print(log);
     isSelected = true;
+    if (Prefs.translators.indexOf(path) == -1) Prefs.translators.add(path);
     onDone();
   }
 
