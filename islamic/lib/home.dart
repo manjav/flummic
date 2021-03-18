@@ -1,6 +1,7 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
+import 'package:islamic/persons.dart';
 
 import 'buttons.dart';
 
@@ -27,7 +28,6 @@ class HomePageState extends State<HomePage> {
   // int selectedAyaIndex;
   int currentAyaIndex = 0;
   int currentPageValue;
-  bool isScrollingDown = false;
   double toolbarHeight;
   double startScrollBarIndicator = 0;
 
@@ -61,20 +61,29 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: toolbarHeight,
-          toolbarOpacity: toolbarHeight / _toolbarHeight,
-          centerTitle: true,
-          title: Text(widget.title, style: textStyle),
-        ),
-        body: new Directionality(
-            textDirection: TextDirection.ltr,
-            child: PageView.builder(
+    return new Directionality(
+        textDirection: TextDirection.ltr,
+        child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: toolbarHeight,
+              toolbarOpacity: toolbarHeight / _toolbarHeight,
+              centerTitle: true,
+              title: Text(widget.title, style: textStyle),
+            ),
+            body: PageView.builder(
                 reverse: true,
                 itemCount: Configs.instance.quran.length,
                 itemBuilder: suraPageBuilder,
-                controller: suraPageController)));
+                controller: suraPageController),
+            floatingActionButton: Container(
+                transform: Matrix4.identity()
+                  ..translate(0.1, _toolbarHeight * 2 - toolbarHeight * 2),
+                child: FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PersonPage()))))));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
