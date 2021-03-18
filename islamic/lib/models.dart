@@ -68,9 +68,7 @@ class Configs {
   var translators = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran => instance.translators.containsKey("ar.uthmanimin")
-      ? instance.translators["ar.uthmanimin"].data
-      : null;
+  get quran => instance.translators["ar.uthmanimin"]?.data;
 
   static void create(Function onCreate) async {
     instance = Configs();
@@ -194,8 +192,7 @@ class Person {
   }
 
   void onSelecFinish(Function onDone, String log) {
-    if (log != null)
-      print("$path -> $log");
+    if (log != null) print("$path -> $log");
     isSelected = true;
     if (isTranslator && Prefs.translators.indexOf(path) == -1)
       Prefs.translators.add(path);
