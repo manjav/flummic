@@ -29,4 +29,10 @@ class Utils {
     for (var l in locations) if (l.currentTimeZone.offset == tzo) return l.name;
     return "Europe/London";
   }
+
+  static bool equalLists(List left, List right) {
+    if (left.length != right.length) return false;
+    for (var i = 0; i < left.length; i++) if (left[i] != right[i]) return false;
+    return true;
+  }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:islamic/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'loader.dart';
@@ -8,22 +9,36 @@ class Prefs {
 
   static String get locale => instance.getString("locale");
   static set locale(String v) => instance.setString("locale", v);
-  static List<String> get reciters => instance.getStringList("_r");
-  static set reciters(List<String> v) => instance.setStringList("_r", v);
-  static List<String> get translators => instance.getStringList("_t");
-  static set translators(List<String> v) => instance.setStringList("_t", v);
+
+  static List<String> _reciters;
+  static List<String> get reciters => _reciters;
+  static set reciters(List<String> v) {
+    if (Utils.equalLists(_reciters, v)) return;
+    _reciters = v;
+    instance.setStringList("_r", v);
+  }
+
+  static List<String> _translators;
+  static List<String> get translators => _translators;
+  static set translators(List<String> v) {
+    if (Utils.equalLists(_translators, v)) return;
+    _translators = v;
+    instance.setStringList("_t", v);
+  }
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
+      _reciters = instance.getStringList("_r") ?? null;
+      _translators = instance.getStringList("_t") ?? null;
       onInit();
     });
   }
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    var _reciters = <String>[];
-    var _translators = <String>[];
+    _reciters = <String>[];
+    _translators = <String>[];
     switch (_locale) {
       case "en":
         _translators.add("en.sahih");
@@ -96,25 +111,21 @@ class Configs {
   }
 
   void loadSelecteds() {
-    var _ts = Prefs.translators;
-    for (var t in _ts) translators[t]?.select(finalize);
-    var _rs = Prefs.reciters;
-    for (var r in _rs) reciters[r]?.select(finalize);
+    for (var t in Prefs.translators) translators[t]?.select(finalize);
+    for (var r in Prefs.reciters) reciters[r]?.select(finalize);
   }
 
   void finalize() {
     if (quran == null || metadata == null) return;
-    var _ts = Prefs.translators;
-    for (var t in _ts) if (!translators[t].isSelected) return;
-    var _rs = Prefs.reciters;
-    for (var r in _rs) if (!reciters[r].isSelected) return;
+    for (var t in Prefs.translators) if (!translators[t].isSelected) return;
+    for (var r in Prefs.reciters) if (!reciters[r].isSelected) return;
     onCreate();
   }
 }
 
 class QuranMeta {
-  List<Sura> suras = <Sura>[];
   List<Juz> juzes = <Juz>[];
+  List<Sura> suras = <Sura>[];
   List<Part> hizbs = <Part>[];
   List<Part> pages = <Part>[];
 }
