@@ -138,10 +138,15 @@ class PersonListPage extends StatefulWidget {
 // _______________________________________________________________________-
 
 class PersonListPageState extends State<PersonListPage> {
+  List<Person> persons = <Person>[];
+  List<Person> defaultPersons;
 
+  Widget appBarTitle;
+  Icon searchIcon = new Icon(Icons.search);
   @override
   void initState() {
     super.initState();
+    persons = defaultPersons = Configs.instance.reciters.values.toList();
   }
 
   @override
@@ -153,6 +158,31 @@ class PersonListPageState extends State<PersonListPage> {
             onPressed: onSearchPressed,
           )
         ]),
-        body: Center());
+        body: defaultPersons == null
+            ? Center()
+            : ListView.builder(
+                itemBuilder: personItemBuilder,
+                itemCount: persons.length,
+              ));
+  }
+
+  void onSearchPressed() {
+  }
+
+  Widget personItemBuilder(BuildContext context, int index) {
+    var p = persons[index];
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: AssetImage('images/icon.png'),
+          ),
+          title: Text(
+            p.name,
+          ),
+          subtitle: Text(
+            "${p.mode} ${p.flag} ${p.size}",
+          )),
+    );
   }
 }
