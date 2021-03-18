@@ -15,6 +15,10 @@ class PersonPageState extends State<PersonPage>
     // widget.title = AppLocalizations.of(context).fab_tafsir;
     fabAnimController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    items = Prefs.reciters;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Directionality(
         textDirection: TextDirection.ltr,
@@ -30,6 +34,23 @@ class PersonPageState extends State<PersonPage>
             ],
             automaticallyImplyLeading: false,
           ),
+          body: ReorderableListView(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              children: <Widget>[
+                for (int index = 0; index < items.length; index++)
+                  ListTile(
+                    key: Key('$index'),
+                    // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
+                    title: Text('Item ${items[index]}'),
+                  ),
+              ],
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) newIndex -= 1;
+                  final item = items.removeAt(oldIndex);
+                  items.insert(newIndex, item);
+                });
+              }),
           floatingActionButton: SpeedDial(
             child: AnimatedIcon(
               icon: AnimatedIcons.add_event,
