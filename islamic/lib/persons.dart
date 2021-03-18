@@ -123,5 +123,36 @@ class PersonPageState extends State<PersonPage>
     });
   }
 
-  void speedChildPressed(int i) {}
+  void speedChildPressed(int i) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PersonListPage()));
+  }
+}
+
+class PersonListPage extends StatefulWidget {
+  String title = "";
+  @override
+  PersonListPageState createState() => PersonListPageState();
+}
+
+// _______________________________________________________________________-
+
+class PersonListPageState extends State<PersonListPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: appBarTitle, actions: [
+          IconButton(
+            icon: searchIcon,
+            onPressed: onSearchPressed,
+          )
+        ]),
+        body: Center());
+  }
 }
