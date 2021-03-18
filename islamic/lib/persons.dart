@@ -55,7 +55,7 @@ class PersonPageState extends State<PersonPage>
 
                     trailing: CircleAvatar(
                       backgroundImage: AssetImage('images/icon.png'),
-                  ),
+                    ),
                     title: Text(
                       persons[items[i]].name,
                     ),
@@ -143,10 +143,15 @@ class PersonListPageState extends State<PersonListPage> {
 
   Widget appBarTitle;
   Icon searchIcon = new Icon(Icons.search);
+  TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     persons = defaultPersons = Configs.instance.reciters.values.toList();
+    searchController.addListener(() {
+      setState(() => persons = search(searchController.text));
+    });
   }
 
   @override
@@ -167,6 +172,26 @@ class PersonListPageState extends State<PersonListPage> {
   }
 
   void onSearchPressed() {
+    setState(() {
+      if (searchIcon.icon == Icons.search) {
+        searchIcon = Icon(Icons.close);
+        appBarTitle = TextField(
+          controller: searchController,
+          decoration: new InputDecoration(
+              prefixIcon: new Icon(Icons.search), hintText: 'Search...'),
+        );
+      } else {
+        searchIcon = new Icon(Icons.search);
+        appBarTitle = Center();
+        persons = search("");
+        searchController.clear();
+      }
+    });
+  }
+
+  List<Person> search(String pattern) {
+    if (pattern.isEmpty) return defaultPersons;
+    return defaultPersons.where((p) => p.name.indexOf(pattern) > -1).toList();
   }
 
   Widget personItemBuilder(BuildContext context, int index) {
