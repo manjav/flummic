@@ -22,6 +22,13 @@ class PersonPageState extends State<PersonPage>
           appBar: AppBar(
             centerTitle: true,
             title: Text(AppLocalizations.of(context).translation_title),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.arrow_forward),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+            automaticallyImplyLeading: false,
           ),
           floatingActionButton: SpeedDial(
             child: AnimatedIcon(
