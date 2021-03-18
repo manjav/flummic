@@ -8,5 +8,11 @@
         "format": "yMd"
       }
     }
-  }
+  },
+
+  "translation_title": "Selected Texts",
+  "recitation_title": "Selected Recitations",
+  "fab_quran": "Quran",
+  "fab_translate": "Translation",
+  "fab_tafsir": "Tafsir"
 }

@@ -8,5 +8,11 @@
         "format": "yMd"
       }
     }
-  }
+  },
+  
+  "translation_title": "متون انتخاب شده",
+  "recitation_title": "اصوات انتخاب شده",
+  "fab_quran": "متن قرآن",
+  "fab_translate": "ترجمه",
+  "fab_tafsir": "تفسیر"
 }

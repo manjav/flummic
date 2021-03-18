@@ -17,6 +17,7 @@ dependencies:
   timezone: ^0.6.1
   path_provider: ^2.0.1
   cupertino_icons: ^1.0.2
+  simple_speed_dial: ^0.1.2
   shared_preferences: ^2.0.5
   draggable_scrollbar: ^0.0.4
 
