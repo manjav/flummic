@@ -14,7 +14,9 @@ class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
   AnimationController fabAnimController;
 
+  String title;
   List<String> items;
+  Map<String, Person> persons;
 
   @override
   void initState() {
@@ -24,6 +26,8 @@ class PersonPageState extends State<PersonPage>
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     items = <String>[];
     items.addAll(Prefs.reciters);
+    title = AppLocalizations.of(context).recitation_title;
+    persons = Configs.instance.reciters;
   }
 
   @override
@@ -32,6 +36,8 @@ class PersonPageState extends State<PersonPage>
         textDirection: TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
+            centerTitle: true,
+            title: Text(title),
             actions: [
               IconButton(
                 icon: Icon(Icons.arrow_forward),
