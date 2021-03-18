@@ -44,18 +44,28 @@ class PersonPageState extends State<PersonPage>
                 onPressed: () => Navigator.pop(context),
               )
             ],
-            centerTitle: true,
             automaticallyImplyLeading: false,
-            title: Text(AppLocalizations.of(context).translation_title),
           ),
           body: ReorderableListView(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
               children: <Widget>[
-                for (int index = 0; index < items.length; index++)
+                for (int i = 0; i < items.length; i++)
                   ListTile(
-                    key: Key('$index'),
+                    key: Key('$i'),
                     // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
-                    title: Text('Item ${items[index]}'),
+
+                    trailing: CircleAvatar(
+                      backgroundImage: AssetImage('images/icon.png'),
+                  ),
+                    title: Text(
+                      persons[items[i]].name,
+                    ),
+                    subtitle: Text(
+                      "${persons[items[i]].mode} ${persons[items[i]].flag}",
+                    ),
+                    leading: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => print("object"),
+                    ),
                   ),
               ],
               onReorder: (int oldIndex, int newIndex) {
