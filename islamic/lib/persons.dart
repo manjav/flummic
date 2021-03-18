@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islamic/models.dart';
+import 'package:simple_speed_dial/simple_speed_dial.dart';
+
 class PersonPage extends StatefulWidget {
   String title = "";
   @override
@@ -9,13 +14,16 @@ class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
   AnimationController fabAnimController;
 
+  List<String> items;
+
   @override
   void initState() {
     super.initState();
     // widget.title = AppLocalizations.of(context).fab_tafsir;
     fabAnimController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    items = Prefs.reciters;
+    items = <String>[];
+    items.addAll(Prefs.reciters);
   }
 
   @override
@@ -24,15 +32,15 @@ class PersonPageState extends State<PersonPage>
         textDirection: TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
-            title: Text(AppLocalizations.of(context).translation_title),
             actions: [
               IconButton(
                 icon: Icon(Icons.arrow_forward),
                 onPressed: () => Navigator.pop(context),
               )
             ],
+            centerTitle: true,
             automaticallyImplyLeading: false,
+            title: Text(AppLocalizations.of(context).translation_title),
           ),
           body: ReorderableListView(
               padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -49,6 +57,7 @@ class PersonPageState extends State<PersonPage>
                   if (oldIndex < newIndex) newIndex -= 1;
                   final item = items.removeAt(oldIndex);
                   items.insert(newIndex, item);
+                  Prefs.reciters = items;
                 });
               }),
           floatingActionButton: SpeedDial(
