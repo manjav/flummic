@@ -171,8 +171,7 @@ class PersonListPageState extends State<PersonListPage> {
 
     defaultPersons = <Person>[];
     persons = defaultPersons = widget.configPersons.values
-        .where((p) =>
-            p.mode == widget.mode && widget.prefsPersons.indexOf(p.path) <= -1)
+        .where((p) => p.mode == widget.mode)
         .toList();
 
     searchController.addListener(() {
