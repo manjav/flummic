@@ -37,25 +37,25 @@ class Prefs {
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    _reciters = <String>[];
-    _translators = <String>[];
+    var __reciters = <String>[];
+    var __translators = <String>[];
     switch (_locale) {
       case "en":
-        _translators.add("en.sahih");
-        _reciters.add("abu_bakr_ash_shaatree");
-        _reciters.add("ibrahim_walk");
+        __translators.add("en.sahih");
+        __reciters.add("abu_bakr_ash_shaatree");
+        __reciters.add("ibrahim_walk");
         break;
       case "fa":
-        _translators.add("fa.fooladvand");
-        _reciters.add("shahriar_parhizgar");
-        _reciters.add("mahdi_fooladvand");
+        __translators.add("fa.fooladvand");
+        __reciters.add("shahriar_parhizgar");
+        __reciters.add("mahdi_fooladvand");
         break;
       default:
-        _reciters.add("abu_bakr_ash_shaatree");
+        __reciters.add("abu_bakr_ash_shaatree");
         break;
     }
-    reciters = _reciters;
-    translators = _translators;
+    reciters = __reciters;
+    translators = __translators;
     return _locale;
   }
 }

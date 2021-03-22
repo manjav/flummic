@@ -31,6 +31,7 @@ class Utils {
   }
 
   static bool equalLists(List left, List right) {
+    if (left == null || right == null) return false;
     if (left.length != right.length) return false;
     for (var i = 0; i < left.length; i++) if (left[i] != right[i]) return false;
     return true;
