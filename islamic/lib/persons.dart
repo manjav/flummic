@@ -31,7 +31,7 @@ class PersonPageState extends State<PersonPage>
   void initState() {
     super.initState();
     // widget.title = AppLocalizations.of(context).fab_tafsir;
-    isRecitationMode = true;
+    isRecitationMode = false;
     prefsPersons = <String>[];
     prefsPersons.addAll(isRecitationMode ? Prefs.reciters : Prefs.translators);
     configPersons = isRecitationMode
@@ -78,7 +78,8 @@ class PersonPageState extends State<PersonPage>
                     ),
                     leading: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => removePerson(prefsPersons[i]),
+                      onPressed: () =>
+                          removePerson(configPersons[prefsPersons[i]]),
                     ),
                   ),
               ],

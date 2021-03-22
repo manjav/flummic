@@ -109,7 +109,8 @@ class Configs {
   }
 
   void loadSelecteds() {
-    for (var t in Prefs.translators) translators[t]?.select(finalize, null, print);
+    for (var t in Prefs.translators)
+      translators[t]?.select(finalize, null, print);
     for (var r in Prefs.reciters) reciters[r]?.select(finalize, null, print);
   }
 
@@ -117,7 +118,7 @@ class Configs {
     if (quran == null || metadata == null) return;
     for (var t in Prefs.translators)
       if (translators[t]?.state != PState.selected) return;
-    for (var r in Prefs.reciters)
+    for (var r in Prefs.reciters) 
       if (reciters[r]?.state != PState.selected) return;
     onCreate();
   }
@@ -170,10 +171,13 @@ class Person {
   PState state;
   List<List<String>> data;
   bool isTranslator = false;
+  double progress = 0;
   String url, path, name, ename, flag, mode;
+  Loader loader;
 
   Person(p, bool isTranslator) {
     this.isTranslator = isTranslator;
+    state = isTranslator ? PState.waiting : PState.ready;
     url = p["url"];
     path = p["path"];
     name = p["name"];
@@ -208,7 +212,10 @@ class Person {
   void load(
       Function onDone, Function(double) onProgress, Function(String) onError) {
     state = PState.downloading;
+    loader = Loader();
+    loader.load(path, url, (String _data) {
       var map = json.decode(_data);
+      print(path);
       data = <List<String>>[];
       for (var s in map) {
         var sura = <String>[];
@@ -225,5 +232,9 @@ class Person {
     });
   }
 
+  void cancelLoading() {
+    if (state != PState.downloading) return;
+    loader.abort();
+    state = PState.waiting;
   }
 }
