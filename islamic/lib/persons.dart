@@ -135,8 +135,7 @@ class PersonPageState extends State<PersonPage>
       context,
       MaterialPageRoute(
           builder: (context) => PersonListPage(
-              isRecitationMode, mode, prefsPersons, configPersons)),
-    ).then((value) => setState(() {}));
+              isRecitationMode, mode, prefsPersons, configPersons)));
   }
 }
 
@@ -232,16 +231,33 @@ class PersonListPageState extends State<PersonListPage> {
           ),
           subtitle: Text(
             "${p.mode} ${p.flag} ${p.size}",
-          )),
+        ),
+        trailing: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (p.state == PState.downloading)
+              CircularProgressIndicator(
+                strokeWidth: 2,
+                value: p.progress,
+              ),
+            downloadIcon(context, p.state)
+          ],
+        ),
+      ),
     );
   }
 
-  void addPerson(String path) {
-    widget.prefsPersons.add(path);
-    if (widget.isRecitationMode)
-      Prefs.reciters = widget.prefsPersons;
-    else
-      Prefs.translators = widget.prefsPersons;
+  void selectPerson(Person p) {
     Navigator.pop(context);
+
+  Icon downloadIcon(BuildContext context, PState state) {
+    switch (state) {
+      case PState.ready:
+        return Icon(Icons.radio_button_off);
+      case PState.selected:
+        return Icon(Icons.check_circle_outline_outlined);
+      default:
+        return Icon(Icons.cloud_download);
+    }
   }
 }
