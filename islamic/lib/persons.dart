@@ -5,6 +5,14 @@ import 'package:islamic/models.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 class PersonPage extends StatefulWidget {
+  static List<String> recitationModes = [
+    "murat_t",
+    "treci_t",
+    "mujaw_t",
+    "mualm_t"
+  ];
+  static List<String> translationModes = ["quran_t", "trans_t", "tafsi_t"];
+
   String title = "";
   @override
   PersonPageState createState() => PersonPageState();
@@ -14,7 +22,7 @@ class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
   AnimationController fabAnimController;
 
-  String title;
+  List<String> modes;
   List<String> items;
   Map<String, Person> persons;
 
@@ -24,6 +32,7 @@ class PersonPageState extends State<PersonPage>
     // widget.title = AppLocalizations.of(context).fab_tafsir;
     fabAnimController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    modes = PersonPage.recitationModes;
     items = <String>[];
     items.addAll(Prefs.reciters);
     title = AppLocalizations.of(context).recitation_title;
@@ -88,6 +97,7 @@ class PersonPageState extends State<PersonPage>
             // controller: /* Your custom animation controller goes here */,
             onPressed: handleOnPressed,
             speedDialChildren: <SpeedDialChild>[
+              for (int i = 0; i < modes.length; i++)
               SpeedDialChild(
                 child: Icon(
                   Icons.arrow_back,
@@ -95,21 +105,7 @@ class PersonPageState extends State<PersonPage>
                 foregroundColor: Colors.black,
                 // backgroundColor: Colors.red,
                 label: AppLocalizations.of(context).fab_quran,
-                onPressed: () => speedChildPressed(0),
-              ),
-              SpeedDialChild(
-                child: Icon(Icons.arrow_back),
-                foregroundColor: Colors.black,
-                // backgroundColor: Colors.yellow,
-                label: AppLocalizations.of(context).fab_translate,
-                onPressed: () => speedChildPressed(1),
-              ),
-              SpeedDialChild(
-                child: Icon(Icons.arrow_back),
-                foregroundColor: Colors.black,
-                // backgroundColor: Colors.green,
-                label: AppLocalizations.of(context).fab_tafsir,
-                onPressed: () => speedChildPressed(2),
+                  onPressed: () => speedChildPressed(modes[i]),
               ),
               //  Your other SpeeDialChildren go here.
             ],
@@ -123,19 +119,22 @@ class PersonPageState extends State<PersonPage>
     });
   }
 
-  void speedChildPressed(int i) {
+  void speedChildPressed(String mode) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PersonListPage()));
+        context, MaterialPageRoute(builder: (context) => PersonListPage(mode)));
   }
 }
 
+// _______________________________________________________________________-
+
 class PersonListPage extends StatefulWidget {
   String title = "";
+  String mode;
+  PersonListPage(this.mode) : super();
+
   @override
   PersonListPageState createState() => PersonListPageState();
 }
-
-// _______________________________________________________________________-
 
 class PersonListPageState extends State<PersonListPage> {
   List<Person> persons = <Person>[];
