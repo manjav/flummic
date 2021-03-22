@@ -161,10 +161,13 @@ class Part {
   }
 }
 
+enum PState { waiting, downloading, ready, selected }
+
 class Person {
   int size;
+  PState state;
   List<List<String>> data;
-  bool isTranslator, isSelected = false;
+  bool isTranslator = false;
   String url, path, name, ename, flag, mode;
 
   Person(p, bool isTranslator) {
@@ -179,7 +182,7 @@ class Person {
   }
 
   void select(Function onDone) {
-    if (isTranslator)
+    if (state == PState.waiting)
       load(() => onSelecFinish(onDone, null), null,
           (String e) => onSelecFinish(onDone, e));
     else
@@ -187,21 +190,24 @@ class Person {
   }
 
   void deselect() {
-    isSelected = false;
+    state = PState.ready;
     Prefs.translators.remove(path);
   }
 
   void onSelecFinish(Function onDone, String log) {
     if (log != null) print("$path -> $log");
     isSelected = true;
+    state = PState.selected;
     if (isTranslator && Prefs.translators.indexOf(path) == -1)
       Prefs.translators.add(path);
+    else if (!isTranslator && Prefs.reciters.indexOf(path) == -1)
+      Prefs.reciters.add(path);
     onDone();
   }
 
   void load(
       Function onDone, Function(double) onProgress, Function(String) onError) {
-    Loader().load(path, url, (String _data) {
+    state = PState.downloading;
       var map = json.decode(_data);
       data = <List<String>>[];
       for (var s in map) {
