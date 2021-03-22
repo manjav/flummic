@@ -76,7 +76,7 @@ class PersonPageState extends State<PersonPage>
                     ),
                     leading: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => print("object"),
+                      onPressed: () => removePerson(prefsPersons[i]),
                     ),
                   ),
               ],
@@ -114,6 +114,14 @@ class PersonPageState extends State<PersonPage>
             ],
           ),
         ));
+  }
+
+  void removePerson(String path) {
+    setState(() => prefsPersons.remove(path));
+    if (isRecitationMode)
+      Prefs.reciters = prefsPersons;
+    else
+      Prefs.translators = prefsPersons;
   }
 
   void handleOnPressed(bool isOpen) {
@@ -214,7 +222,7 @@ class PersonListPageState extends State<PersonListPage> {
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () => addPerson(p.path),
       child: ListTile(
           leading: CircleAvatar(
             backgroundImage: AssetImage('images/icon.png'),
@@ -226,5 +234,14 @@ class PersonListPageState extends State<PersonListPage> {
             "${p.mode} ${p.flag} ${p.size}",
           )),
     );
+  }
+
+  void addPerson(String path) {
+    widget.prefsPersons.add(path);
+    if (widget.isRecitationMode)
+      Prefs.reciters = widget.prefsPersons;
+    else
+      Prefs.translators = widget.prefsPersons;
+    Navigator.pop(context);
   }
 }
