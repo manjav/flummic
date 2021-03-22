@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils.dart';
@@ -43,7 +42,6 @@ class AppState extends State<MyApp> {
     return MaterialApp(
       // title: 'Title Example',
       localizationsDelegates: [
-        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
