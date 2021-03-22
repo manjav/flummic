@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:islamic/utils.dart';
 import 'package:rive/rive.dart';
+
+import 'localization.dart';
 
 class WaitingPage extends StatefulWidget {
   bool onLoop = false;
@@ -17,21 +20,21 @@ class WaitingPage extends StatefulWidget {
 }
 
 class WaitingPageState extends State<WaitingPage> {
-
   @override
   void initState() {
     super.initState();
-    rootBundle.load('anims/islam-logo.riv').then(
-      (data) async {
-        final file = RiveFile();
-        if (file.import(data)) {
-          widget.artboard = file.mainArtboard;
-          widget.artboard.addController(CallbackAnimation('start', callback:()=>widget.onLoop = true));
-          widget.artboard.addController(widget.controller = SimpleAnimation('idle'));
-          setState(() {});
-        }
-      },
-    );
+    rootBundle.load('anims/islam-logo.riv').then(animLoaded);
+  }
+
+  animLoaded(ByteData data) async {
+    await Localization.change(context, Utils.getLocale());
+    final file = RiveFile();
+    if (file.import(data)) {
+      widget.artboard = file.mainArtboard;
+      widget.artboard.addController(CallbackAnimation('start', callback: () => widget.onLoop = true));
+      widget.artboard.addController(widget.controller = SimpleAnimation('idle'));
+      setState(() {});
+    }
   }
 
   @override

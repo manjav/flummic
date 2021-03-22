@@ -12,12 +12,18 @@ class MyApp extends StatefulWidget {
   static int t;
   @override
   AppState createState() => AppState();
+  static AppState of(BuildContext context) =>
+      context.findAncestorStateOfType<AppState>();
 }
 
 class AppState extends State<MyApp> {
-  String locale;
+  Locale locale;
   bool configured = false;
   WaitingPage waitingPage;
+  var supportedLocales = [
+    const Locale("en", ""),
+    const Locale("fa", ""),
+  ];
 
   @override
   void initState() {
@@ -25,7 +31,7 @@ class AppState extends State<MyApp> {
     super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
-      locale = Utils.getLocale();
+      Utils.getLocale();
       Configs.create(() {
         if (waitingPage.onLoop)
           waitingPage.finish(() {
@@ -45,14 +51,19 @@ class AppState extends State<MyApp> {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale("en", ""),
-        const Locale("fa", ""),
-      ],
-      locale: Locale(locale, ""),
+      supportedLocales: supportedLocales,
+      locale: locale,
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.teal),
       home: configured ? HomePage() : waitingPage,
     );
+  }
+
+  void setLocale(String lang) {
+    var _loc = supportedLocales.firstWhere((l) => l.languageCode == lang);
+    if (_loc == null) return;
+    setState(() {
+      locale = _loc;
+    });
   }
 }

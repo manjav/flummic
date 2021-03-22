@@ -17,6 +17,7 @@ extension Localization on String {
     } catch (_) {
       data = await rootBundle.loadString('locs/${Platform.localeName}.json');
     }
+    MyApp.of(context).setLocale(lang);
 
     var _result = json.decode(data);
     sentences = Map();
