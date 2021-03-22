@@ -23,20 +23,23 @@ class PersonPageState extends State<PersonPage>
   AnimationController fabAnimController;
 
   List<String> modes;
-  List<String> items;
-  Map<String, Person> persons;
+  bool isRecitationMode;
+  List<String> prefsPersons;
+  Map<String, Person> configPersons;
 
   @override
   void initState() {
     super.initState();
     // widget.title = AppLocalizations.of(context).fab_tafsir;
+    isRecitationMode = true;
+    prefsPersons = <String>[];
+    prefsPersons.addAll(isRecitationMode ? Prefs.reciters : Prefs.translators);
+    configPersons = isRecitationMode
+        ? Configs.instance.reciters
+        : Configs.instance.translators;
     fabAnimController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     modes = PersonPage.recitationModes;
-    items = <String>[];
-    items.addAll(Prefs.reciters);
-    title = AppLocalizations.of(context).recitation_title;
-    persons = Configs.instance.reciters;
   }
 
   @override
@@ -57,7 +60,7 @@ class PersonPageState extends State<PersonPage>
           ),
           body: ReorderableListView(
               children: <Widget>[
-                for (int i = 0; i < items.length; i++)
+                for (int i = 0; i < prefsPersons.length; i++)
                   ListTile(
                     key: Key('$i'),
                     // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
@@ -66,10 +69,10 @@ class PersonPageState extends State<PersonPage>
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      persons[items[i]].name,
+                      configPersons[prefsPersons[i]].name,
                     ),
                     subtitle: Text(
-                      "${persons[items[i]].mode} ${persons[items[i]].flag}",
+                      "${configPersons[prefsPersons[i]].mode} ${configPersons[prefsPersons[i]].flag}",
                     ),
                     leading: IconButton(
                       icon: Icon(Icons.delete),
@@ -80,9 +83,9 @@ class PersonPageState extends State<PersonPage>
               onReorder: (int oldIndex, int newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) newIndex -= 1;
-                  final item = items.removeAt(oldIndex);
-                  items.insert(newIndex, item);
-                  Prefs.reciters = items;
+                  final item = prefsPersons.removeAt(oldIndex);
+                  prefsPersons.insert(newIndex, item);
+                  Prefs.reciters = prefsPersons;
                 });
               }),
           floatingActionButton: SpeedDial(
@@ -121,7 +124,11 @@ class PersonPageState extends State<PersonPage>
 
   void speedChildPressed(String mode) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PersonListPage(mode)));
+      context,
+      MaterialPageRoute(
+          builder: (context) => PersonListPage(
+              isRecitationMode, mode, prefsPersons, configPersons)),
+    ).then((value) => setState(() {}));
   }
 }
 
@@ -130,15 +137,20 @@ class PersonPageState extends State<PersonPage>
 class PersonListPage extends StatefulWidget {
   String title = "";
   String mode;
-  PersonListPage(this.mode) : super();
+  bool isRecitationMode;
+  List<String> prefsPersons;
+  Map<String, Person> configPersons;
+  PersonListPage(
+      this.isRecitationMode, this.mode, this.prefsPersons, this.configPersons)
+      : super();
 
   @override
   PersonListPageState createState() => PersonListPageState();
 }
 
 class PersonListPageState extends State<PersonListPage> {
-  List<Person> persons = <Person>[];
   List<Person> defaultPersons;
+  List<Person> persons = <Person>[];
 
   Widget appBarTitle;
   Icon searchIcon = new Icon(Icons.search);
@@ -147,7 +159,13 @@ class PersonListPageState extends State<PersonListPage> {
   @override
   void initState() {
     super.initState();
-    persons = defaultPersons = Configs.instance.reciters.values.toList();
+
+    defaultPersons = <Person>[];
+    persons = defaultPersons = widget.configPersons.values
+        .where((p) =>
+            p.mode == widget.mode && widget.prefsPersons.indexOf(p.path) <= -1)
+        .toList();
+
     searchController.addListener(() {
       setState(() => persons = search(searchController.text));
     });
