@@ -109,14 +109,16 @@ class Configs {
   }
 
   void loadSelecteds() {
-    for (var t in Prefs.translators) translators[t]?.select(finalize);
-    for (var r in Prefs.reciters) reciters[r]?.select(finalize);
+    for (var t in Prefs.translators) translators[t]?.select(finalize, null, print);
+    for (var r in Prefs.reciters) reciters[r]?.select(finalize, null, print);
   }
 
   void finalize() {
     if (quran == null || metadata == null) return;
-    for (var t in Prefs.translators) if (!translators[t].isSelected) return;
-    for (var r in Prefs.reciters) if (!reciters[r].isSelected) return;
+    for (var t in Prefs.translators)
+      if (translators[t]?.state != PState.selected) return;
+    for (var r in Prefs.reciters)
+      if (reciters[r]?.state != PState.selected) return;
     onCreate();
   }
 }
@@ -181,12 +183,12 @@ class Person {
     size = p["size"];
   }
 
-  void select(Function onDone) {
+  void select(
+      Function onDone, Function(double) onProgress, Function(String) onError) {
     if (state == PState.waiting)
-      load(() => onSelecFinish(onDone, null), null,
-          (String e) => onSelecFinish(onDone, e));
+      load(() => onSelecFinish(onDone), onProgress, onError);
     else
-      onSelecFinish(onDone, null);
+      onSelecFinish(onDone);
   }
 
   void deselect() {
@@ -194,9 +196,7 @@ class Person {
     Prefs.translators.remove(path);
   }
 
-  void onSelecFinish(Function onDone, String log) {
-    if (log != null) print("$path -> $log");
-    isSelected = true;
+  void onSelecFinish(Function onDone) {
     state = PState.selected;
     if (isTranslator && Prefs.translators.indexOf(path) == -1)
       Prefs.translators.add(path);
@@ -216,6 +216,14 @@ class Person {
         data.add(sura);
       }
       if (onDone != null) onDone();
-    }, onProgress, onError);
+    }, (double p) {
+      progress = p;
+      if (onProgress != null) onProgress(p);
+    }, (String e) {
+      state = PState.waiting;
+      if (onError != null) onError(e);
+    });
+  }
+
   }
 }

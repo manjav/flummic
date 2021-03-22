@@ -39,7 +39,9 @@ class PersonPageState extends State<PersonPage>
         : Configs.instance.translators;
     fabAnimController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    modes = PersonPage.recitationModes;
+    modes = isRecitationMode
+        ? PersonPage.recitationModes
+        : PersonPage.translationModes;
   }
 
   @override
@@ -49,7 +51,7 @@ class PersonPageState extends State<PersonPage>
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text(title),
+            title: Text(widget.title),
             actions: [
               IconButton(
                 icon: Icon(Icons.arrow_forward),
@@ -116,12 +118,9 @@ class PersonPageState extends State<PersonPage>
         ));
   }
 
-  void removePerson(String path) {
-    setState(() => prefsPersons.remove(path));
-    if (isRecitationMode)
-      Prefs.reciters = prefsPersons;
-    else
-      Prefs.translators = prefsPersons;
+  void removePerson(Person p) {
+    prefsPersons.remove(p.path);
+    setState(() => p.deselect());
   }
 
   void handleOnPressed(bool isOpen) {
@@ -221,7 +220,7 @@ class PersonListPageState extends State<PersonListPage> {
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
     return GestureDetector(
-      onTap: () => addPerson(p.path),
+      onTap: () => selectPerson(p),
       child: ListTile(
           leading: CircleAvatar(
             backgroundImage: AssetImage('images/icon.png'),
@@ -248,7 +247,29 @@ class PersonListPageState extends State<PersonListPage> {
   }
 
   void selectPerson(Person p) {
+    switch (p.state) {
+      case PState.selected:
+        widget.prefsPersons.remove(p.path);
+        p.deselect();
+        break;
+      case PState.ready:
+      case PState.waiting:
+        p.select(() {
+          widget.prefsPersons.add(p.path);
     Navigator.pop(context);
+          setState(() {});
+        }, (double p) {
+          setState(() {});
+        }, (String e) {
+          print(e);
+          setState(() {});
+        });
+        break;
+      default:
+        p.cancelLoading();
+    }
+    setState(() {});
+  }
 
   Icon downloadIcon(BuildContext context, PState state) {
     switch (state) {
