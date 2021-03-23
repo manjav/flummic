@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/localization.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
@@ -107,6 +108,7 @@ class PersonPageState extends State<PersonPage>
   }
 
   List<Widget> personItems() {
+    TextDirection dir = Bidi.isRtlLanguage() ? TextDirection.rtl : TextDirection.ltr;
     var items = <Widget>[];
     for (var t in prefsPersons) {
       var p = configPersons[t];
@@ -119,8 +121,8 @@ class PersonPageState extends State<PersonPage>
         trailing: CircleAvatar(
           backgroundImage: AssetImage('images/icon.png'),
         ),
-        title: Text(p.name),
-        subtitle: Text(subtitle),
+        title: Text(p.name, textDirection:dir),
+        subtitle: Text(subtitle, textDirection:dir),
         leading: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () => removePerson(p),
