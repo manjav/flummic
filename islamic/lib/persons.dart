@@ -8,6 +8,8 @@ class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
   static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
   String title = "";
+  bool isTextMode;
+  PersonPage(this.isTextMode) : super();
   @override
   PersonPageState createState() => PersonPageState();
 }
