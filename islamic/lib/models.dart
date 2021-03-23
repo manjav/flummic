@@ -10,52 +10,52 @@ class Prefs {
   static String get locale => instance.getString("locale");
   static set locale(String v) => instance.setString("locale", v);
 
-  static List<String> _reciters;
-  static List<String> get reciters => _reciters;
-  static set reciters(List<String> v) {
-    if (Utils.equalLists(_reciters, v)) return;
-    _reciters = v;
-    instance.setStringList("_r", v);
+  static List<String> _sounds;
+  static List<String> get sounds => _sounds;
+  static set sounds(List<String> v) {
+    if (Utils.equalLists(_sounds, v)) return;
+    _sounds = v;
+    instance.setStringList("_s", v);
   }
 
-  static List<String> _translators;
-  static List<String> get translators => _translators;
-  static set translators(List<String> v) {
-    if (Utils.equalLists(_translators, v)) return;
-    _translators = v;
+  static List<String> _texts;
+  static List<String> get texts => _texts;
+  static set texts(List<String> v) {
+    if (Utils.equalLists(_texts, v)) return;
+    _texts = v;
     instance.setStringList("_t", v);
   }
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
-      _reciters = instance.getStringList("_r") ?? null;
-      _translators = instance.getStringList("_t") ?? null;
+      _sounds = instance.getStringList("_s") ?? null;
+      _texts = instance.getStringList("_t") ?? null;
       onInit();
     });
   }
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    var __reciters = <String>[];
-    var __translators = <String>[];
+    var __sounds = <String>[];
+    var __texts = ["ar.uthmanimin"];
     switch (_locale) {
       case "en":
-        __translators.add("en.sahih");
-        __reciters.add("abu_bakr_ash_shaatree");
-        __reciters.add("ibrahim_walk");
+        __texts.add("en.sahih");
+        __sounds.add("abu_bakr_ash_shaatree");
+        __sounds.add("ibrahim_walk");
         break;
       case "fa":
-        __translators.add("fa.fooladvand");
-        __reciters.add("shahriar_parhizgar");
-        __reciters.add("mahdi_fooladvand");
+        __texts.add("fa.fooladvand");
+        __sounds.add("shahriar_parhizgar");
+        __sounds.add("mahdi_fooladvand");
         break;
       default:
-        __reciters.add("abu_bakr_ash_shaatree");
+        __sounds.add("abu_bakr_ash_shaatree");
         break;
     }
-    reciters = __reciters;
-    translators = __translators;
+    sounds = __sounds;
+    texts = __texts;
     return _locale;
   }
 }
@@ -64,11 +64,11 @@ class Configs {
   static Configs instance;
   Function onCreate;
   QuranMeta metadata;
-  var reciters = Map<String, Person>();
-  var translators = Map<String, Person>();
+  var sounds = Map<String, Person>();
+  var texts = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran => instance.translators["ar.uthmanimin"]?.data;
+  get quran => instance.texts["ar.uthmanimin"]?.data;
 
   static void create(Function onCreate) async {
     instance = Configs();
@@ -81,10 +81,11 @@ class Configs {
     await Loader().load("configs.json", baseURL + "configs.ijson",
         (String data) {
       var map = json.decode(data);
-      for (var t in map["translators"])
-        translators[t["path"]] = Person(t, true);
-      for (var r in map["reciters"]) reciters[r["path"]] = Person(r, false);
-      translators["ar.uthmanimin"].load(loadSelecteds, null, print);
+      for (var t in map["texts"]) texts[t["path"]] = Person(t, true);
+      for (var r in map["sounds"]) sounds[r["path"]] = Person(r, false);
+
+      for (var t in Prefs.texts) texts[t]?.select(finalize, null, print);
+      for (var r in Prefs.sounds) sounds[r]?.select(finalize, null, print);
     }, null, (String e) => print("error: $e"));
   }
 
@@ -108,18 +109,10 @@ class Configs {
     }, null, (String e) => print("error: $e"));
   }
 
-  void loadSelecteds() {
-    for (var t in Prefs.translators)
-      translators[t]?.select(finalize, null, print);
-    for (var r in Prefs.reciters) reciters[r]?.select(finalize, null, print);
-  }
-
   void finalize() {
     if (quran == null || metadata == null) return;
-    for (var t in Prefs.translators)
-      if (translators[t]?.state != PState.selected) return;
-    for (var r in Prefs.reciters) 
-      if (reciters[r]?.state != PState.selected) return;
+    for (var t in Prefs.texts) if (texts[t]?.state != PState.selected) return;
+    for (var r in Prefs.sounds) if (sounds[r]?.state != PState.selected) return;
     onCreate();
   }
 }
@@ -170,14 +163,14 @@ class Person {
   int size;
   PState state;
   List<List<String>> data;
-  bool isTranslator = false;
+  bool isText = false;
   double progress = 0;
   String url, path, name, ename, flag, mode;
   Loader loader;
 
-  Person(p, bool isTranslator) {
-    this.isTranslator = isTranslator;
-    state = isTranslator ? PState.waiting : PState.ready;
+  Person(p, bool isText) {
+    this.isText = isText;
+    state = isText ? PState.waiting : PState.ready;
     url = p["url"];
     path = p["path"];
     name = p["name"];
@@ -197,15 +190,15 @@ class Person {
 
   void deselect() {
     state = PState.ready;
-    Prefs.translators.remove(path);
+    Prefs.texts.remove(path);
   }
 
   void onSelecFinish(Function onDone) {
     state = PState.selected;
-    if (isTranslator && Prefs.translators.indexOf(path) == -1)
-      Prefs.translators.add(path);
-    else if (!isTranslator && Prefs.reciters.indexOf(path) == -1)
-      Prefs.reciters.add(path);
+    if (isText && Prefs.texts.indexOf(path) == -1)
+      Prefs.texts.add(path);
+    else if (!isText && Prefs.sounds.indexOf(path) == -1)
+      Prefs.sounds.add(path);
     onDone();
   }
 

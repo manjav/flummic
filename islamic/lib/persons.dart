@@ -5,13 +5,8 @@ import 'package:islamic/localization.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 class PersonPage extends StatefulWidget {
-  static List<String> recitationModes = [
-    "murat_t",
-    "treci_t",
-    "mujaw_t",
-    "mualm_t"
-  ];
-  static List<String> translationModes = ["quran_t", "trans_t", "tafsi_t"];
+  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
+  static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
   String title = "";
   @override
   PersonPageState createState() => PersonPageState();
@@ -19,28 +14,24 @@ class PersonPage extends StatefulWidget {
 
 class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
-  AnimationController fabAnimController;
+  AnimationController fabController;
 
   List<String> modes;
-  bool isRecitationMode;
+  bool isSoundMode;
   List<String> prefsPersons;
   Map<String, Person> configPersons;
 
   @override
   void initState() {
     super.initState();
-    isRecitationMode = false;
-    widget.title = (isRecitationMode ? "page_reciter" : "page_translator").l();
+    isSoundMode = false;
+    widget.title = (isSoundMode ? "page_sounds" : "page_texts").l();
     prefsPersons = <String>[];
-    prefsPersons.addAll(isRecitationMode ? Prefs.reciters : Prefs.translators);
-    configPersons = isRecitationMode
-        ? Configs.instance.reciters
-        : Configs.instance.translators;
-    fabAnimController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    modes = isRecitationMode
-        ? PersonPage.recitationModes
-        : PersonPage.translationModes;
+    prefsPersons.addAll(isSoundMode ? Prefs.sounds : Prefs.texts);
+    configPersons =
+        isSoundMode ? Configs.instance.sounds : Configs.instance.texts;
+    fabController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    modes = isSoundMode ? PersonPage.soundModes : PersonPage.textModes;
   }
 
   @override
@@ -66,13 +57,13 @@ class PersonPageState extends State<PersonPage>
                   if (oldIndex < newIndex) newIndex -= 1;
                   final item = prefsPersons.removeAt(oldIndex);
                   prefsPersons.insert(newIndex, item);
-                  Prefs.reciters = prefsPersons;
+                  Prefs.sounds = prefsPersons;
                 });
               }),
           floatingActionButton: SpeedDial(
             child: AnimatedIcon(
               icon: AnimatedIcons.add_event,
-              progress: fabAnimController,
+              progress: fabController,
             ),
             openBackgroundColor: Colors.redAccent,
             closedBackgroundColor: Colors.redAccent,
@@ -104,7 +95,7 @@ class PersonPageState extends State<PersonPage>
 
   void handleOnPressed(bool isOpen) {
     setState(() {
-      isOpen ? fabAnimController.forward() : fabAnimController.reverse();
+      isOpen ? fabController.forward() : fabController.reverse();
     });
   }
 
@@ -113,7 +104,7 @@ class PersonPageState extends State<PersonPage>
         context,
         MaterialPageRoute(
             builder: (context) => PersonListPage(
-                isRecitationMode, mode, prefsPersons, configPersons)));
+                isSoundMode, mode, prefsPersons, configPersons)));
   }
 
   List<Widget> personItems() {
@@ -121,7 +112,7 @@ class PersonPageState extends State<PersonPage>
     for (var t in prefsPersons) {
       var p = configPersons[t];
       var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-      if (!isRecitationMode) subtitle += " , ${p.size}";
+      if (!isSoundMode) subtitle += " , ${p.size}";
       items.add(ListTile(
         key: Key(t),
         // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
@@ -146,11 +137,11 @@ class PersonPageState extends State<PersonPage>
 class PersonListPage extends StatefulWidget {
   String title = "";
   String mode;
-  bool isRecitationMode;
+  bool isSoundMode;
   List<String> prefsPersons;
   Map<String, Person> configPersons;
   PersonListPage(
-      this.isRecitationMode, this.mode, this.prefsPersons, this.configPersons)
+      this.isSoundMode, this.mode, this.prefsPersons, this.configPersons)
       : super();
 
   @override
@@ -222,7 +213,7 @@ class PersonListPageState extends State<PersonListPage> {
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-    if (!widget.isRecitationMode) subtitle += " , ${p.size}";
+    if (!widget.isSoundMode) subtitle += " , ${p.size}";
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(

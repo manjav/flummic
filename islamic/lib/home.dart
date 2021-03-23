@@ -143,7 +143,7 @@ class HomePageState extends State<HomePage> {
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      Configs.instance.translators["fa.fooladvand"]
+                      Configs.instance.texts["fa.fooladvand"]
                           .data[position][index],
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
@@ -154,8 +154,8 @@ class HomePageState extends State<HomePage> {
                       backgroundImage: AssetImage('images/icon.png'),
                     ),
                     title: Text(
-                      Configs.instance.translators["fa.fooladvand"]
-                          .data[position][index],
+                      Configs.instance.texts["fa.fooladvand"].data[position]
+                          [index],
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
                       style: cubicStyle,
