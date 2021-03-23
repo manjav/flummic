@@ -17,21 +17,18 @@ class PersonPageState extends State<PersonPage>
   AnimationController fabController;
 
   List<String> modes;
-  bool isSoundMode;
   List<String> prefsPersons;
   Map<String, Person> configPersons;
 
   @override
   void initState() {
     super.initState();
-    isSoundMode = false;
-    widget.title = (isSoundMode ? "page_sounds" : "page_texts").l();
+    widget.title = (widget.isTextMode ? "page_texts" : "page_sounds").l();
     prefsPersons = <String>[];
-    prefsPersons.addAll(isSoundMode ? Prefs.sounds : Prefs.texts);
-    configPersons =
-        isSoundMode ? Configs.instance.sounds : Configs.instance.texts;
+    prefsPersons.addAll(widget.isTextMode ? Prefs.texts : Prefs.sounds);
+    configPersons = widget.isTextMode ? Configs.instance.texts : Configs.instance.sounds;
     fabController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    modes = isSoundMode ? PersonPage.soundModes : PersonPage.textModes;
+    modes = widget.isTextMode ? PersonPage.textModes : PersonPage.soundModes;
   }
 
   @override
@@ -104,7 +101,7 @@ class PersonPageState extends State<PersonPage>
         context,
         MaterialPageRoute(
             builder: (context) => PersonListPage(
-                isSoundMode, mode, prefsPersons, configPersons)));
+                widget.isTextMode, mode, prefsPersons, configPersons)));
   }
 
   List<Widget> personItems() {
@@ -112,7 +109,7 @@ class PersonPageState extends State<PersonPage>
     for (var t in prefsPersons) {
       var p = configPersons[t];
       var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-      if (!isSoundMode) subtitle += " , ${p.size}";
+      if (widget.isTextMode) subtitle += " , ${p.size}";
       items.add(ListTile(
         key: Key(t),
         // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
@@ -137,11 +134,11 @@ class PersonPageState extends State<PersonPage>
 class PersonListPage extends StatefulWidget {
   String title = "";
   String mode;
-  bool isSoundMode;
+  bool isTextMode;
   List<String> prefsPersons;
   Map<String, Person> configPersons;
   PersonListPage(
-      this.isSoundMode, this.mode, this.prefsPersons, this.configPersons)
+      this.isTextMode, this.mode, this.prefsPersons, this.configPersons)
       : super();
 
   @override
@@ -213,7 +210,7 @@ class PersonListPageState extends State<PersonListPage> {
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-    if (!widget.isSoundMode) subtitle += " , ${p.size}";
+    if (widget.isTextMode) subtitle += " , ${p.size}";
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
