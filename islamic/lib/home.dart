@@ -1,5 +1,6 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/persons.dart';
 
@@ -107,7 +108,6 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget ayaItemBuilder(int position, int index) {
-    var aya = Configs.instance.quran[position][index];
     currentAyaIndex = index;
     return
         /*GestureDetector(
@@ -123,46 +123,43 @@ class HomePageState extends State<HomePage> {
             // color: index == selectedAyaIndex ? Colors.white70 : Colors.white,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                child: Column(children: <Widget>[
-                  Row(
-                    children: [
-                      CircleButton(icon: Icons.bookmark),
-                      SizedBox(width: 8),
-                      CircleButton(icon: Icons.share),
-                      Spacer(),
-                      CircleButton(text: (index + 1).toString()),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text(aya,
-                      textAlign: TextAlign.justify,
-                      textDirection: TextDirection.rtl,
-                      style: textStyle),
-/*                   ListTile(
-                    trailing: CircleAvatar(
-                      backgroundImage: AssetImage('images/icon.png'),
-                    ),
-                    title: Text(
-                      Configs.instance.texts["fa.fooladvand"]
-                          .data[position][index],
-                      textAlign: TextAlign.justify,
-                      textDirection: TextDirection.rtl,
-                    ),
-                  ), */
-                  ListTile(
-                    trailing: CircleAvatar(
-                      backgroundImage: AssetImage('images/icon.png'),
-                    ),
-                    title: Text(
-                      Configs.instance.texts["fa.fooladvand"].data[position]
-                          [index],
-                      textAlign: TextAlign.justify,
-                      textDirection: TextDirection.rtl,
-                      style: cubicStyle,
-                    ),
-                  )
-                ])
-                // ),
-                ));
+                child: Column(children: textsProvider(position, index))));
+  }
+
+  List<Widget> textsProvider(int sura, int aya) {
+    var rows = <Widget>[];
+
+    // rows.add(Row(
+    //   children: [
+    //     CircleButton(icon: Icons.bookmark),
+    //     SizedBox(width: 8),
+    //     CircleButton(icon: Icons.share),
+    //     Spacer(),
+    //     CircleButton(text: (aya + 1).toString()),
+    //   ],
+    // ));
+    // rows.add(SizedBox(height: 20));
+
+    if (Prefs.texts.indexOf("ar.uthmanimin") > -1)
+      rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
+          textAlign: TextAlign.justify,
+          textDirection: TextDirection.rtl,
+          style: textStyle));
+    for (var path in Prefs.texts) {
+      if (path == "ar.uthmanimin") continue;
+      var texts = Configs.instance.texts[path];
+      var t = (rows.length < 1 ? "${aya + 1}. " : "") + texts.data[sura][aya];
+      var isRTL = Bidi.isRtlLanguage(texts.flag);
+      var icon = CircleAvatar(backgroundImage: AssetImage('images/icon.png'));
+      rows.add(ListTile(
+        leading: isRTL ? null : icon,
+        trailing: isRTL ? icon : null,
+        title: Text(t,
+            textAlign: TextAlign.justify,
+            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+            style: cubicStyle),
+      ));
+    }
+    return rows;
   }
 }
