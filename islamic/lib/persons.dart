@@ -9,8 +9,7 @@ import 'package:simple_speed_dial/simple_speed_dial.dart';
 class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
   static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
-  String title = "";
-  bool isTextMode;
+  final bool isTextMode;
   PersonPage(this.isTextMode) : super();
   @override
   PersonPageState createState() => PersonPageState();
@@ -20,6 +19,7 @@ class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
   AnimationController fabController;
 
+  String title = "";
   List<String> modes;
   List<String> prefsPersons;
   Map<String, Person> configPersons;
@@ -27,7 +27,7 @@ class PersonPageState extends State<PersonPage>
   @override
   void initState() {
     super.initState();
-    widget.title = (widget.isTextMode ? "page_texts" : "page_sounds").l();
+    title = (widget.isTextMode ? "page_texts" : "page_sounds").l();
     prefsPersons = <String>[];
     prefsPersons.addAll(widget.isTextMode ? Prefs.texts : Prefs.sounds);
     configPersons =
@@ -44,7 +44,7 @@ class PersonPageState extends State<PersonPage>
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text(widget.title),
+            title: Text(title),
             actions: [
               IconButton(
                 icon: Icon(Icons.arrow_forward),
@@ -112,7 +112,6 @@ class PersonPageState extends State<PersonPage>
 
   List<Widget> personItems() {
     var items = <Widget>[];
-    var url = "https://grantech.ir/islam/images/";
     for (var t in prefsPersons) {
       var p = configPersons[t];
       var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";

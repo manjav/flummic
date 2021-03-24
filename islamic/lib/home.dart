@@ -7,7 +7,6 @@ import 'package:islamic/persons.dart';
 import 'buttons.dart';
 
 class HomePage extends StatefulWidget {
-  String title = Configs.instance.metadata.suras[0].name;
   @override
   HomePageState createState() => HomePageState();
 }
@@ -16,6 +15,7 @@ class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   PageController suraPageController;
   ScrollController ayaScrollController;
+  String title = Configs.instance.metadata.suras[0].name;
 
   // TextStyle cubicStyle = TextStyle(fontFamily: 'CubicSans');
   TextStyle textStyle = TextStyle(
@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
         setState(() {
           toolbarHeight = _toolbarHeight;
           currentPageValue = page;
-          widget.title = Configs.instance.metadata.suras[page].name;
+          title = Configs.instance.metadata.suras[page].name;
         });
       }
     });
@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
               toolbarHeight: toolbarHeight,
               toolbarOpacity: toolbarHeight / _toolbarHeight,
               centerTitle: true,
-              title: Text(widget.title, style: textStyle),
+              title: Text(title, style: textStyle),
             ),
             body: PageView.builder(
                 reverse: true,
