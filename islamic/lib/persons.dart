@@ -30,8 +30,10 @@ class PersonPageState extends State<PersonPage>
     widget.title = (widget.isTextMode ? "page_texts" : "page_sounds").l();
     prefsPersons = <String>[];
     prefsPersons.addAll(widget.isTextMode ? Prefs.texts : Prefs.sounds);
-    configPersons = widget.isTextMode ? Configs.instance.texts : Configs.instance.sounds;
-    fabController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    configPersons =
+        widget.isTextMode ? Configs.instance.texts : Configs.instance.sounds;
+    fabController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     modes = widget.isTextMode ? PersonPage.textModes : PersonPage.soundModes;
   }
 
@@ -109,21 +111,21 @@ class PersonPageState extends State<PersonPage>
   }
 
   List<Widget> personItems() {
-    TextDirection dir = Bidi.isRtlLanguage() ? TextDirection.rtl : TextDirection.ltr;
     var items = <Widget>[];
+    var url = "https://grantech.ir/islam/images/";
     for (var t in prefsPersons) {
       var p = configPersons[t];
       var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
       if (widget.isTextMode) subtitle += " , ${p.size}";
       items.add(Directionality(
-        key: Key(t),
+          key: Key(t),
           textDirection:
               Bidi.isRtlLanguage() ? TextDirection.rtl : TextDirection.ltr,
           child: ListTile(
             trailing: Avatar(t, 24),
-            title: Text(p.name, ),
+            title: Text(p.name),
             subtitle: Text(subtitle),
-        leading: IconButton(
+            leading: IconButton(
                 icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
           )));
     }
@@ -134,11 +136,11 @@ class PersonPageState extends State<PersonPage>
 // _______________________________________________________________________-
 
 class PersonListPage extends StatefulWidget {
-  String title = "";
-  String mode;
-  bool isTextMode;
-  List<String> prefsPersons;
-  Map<String, Person> configPersons;
+  final String title = "";
+  final String mode;
+  final bool isTextMode;
+  final List<String> prefsPersons;
+  final Map<String, Person> configPersons;
   PersonListPage(
       this.isTextMode, this.mode, this.prefsPersons, this.configPersons)
       : super();

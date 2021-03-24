@@ -17,7 +17,7 @@ class HomePageState extends State<HomePage> {
   PageController suraPageController;
   ScrollController ayaScrollController;
 
-  TextStyle cubicStyle = TextStyle(fontFamily: 'CubicSans');
+  // TextStyle cubicStyle = TextStyle(fontFamily: 'CubicSans');
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
   TextStyle textStyleLight = TextStyle(
@@ -115,7 +115,8 @@ class HomePageState extends State<HomePage> {
               selectedAyaIndex = index;
             }),
         child: 
-        color: index == selectedAyaIndex ? Colors.white70 : Colors.white,*/
+        */
+        // color: index == selectedAyaIndex ? Colors.white70 : Colors.white,
         Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
             child: Column(children: textsProvider(position, index)));
@@ -123,6 +124,7 @@ class HomePageState extends State<HomePage> {
 
   List<Widget> textsProvider(int sura, int aya) {
     var rows = <Widget>[];
+
     // rows.add(Row(
     //   children: [
     //     CircleButton(icon: Icons.bookmark),
@@ -133,11 +135,13 @@ class HomePageState extends State<HomePage> {
     //   ],
     // ));
     // rows.add(SizedBox(height: 20));
+
     if (Prefs.texts.indexOf("ar.uthmanimin") > -1)
       rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
           style: textStyle));
+
     for (var path in Prefs.texts) {
       if (path == "ar.uthmanimin") continue;
       var texts = Configs.instance.texts[path];
@@ -148,14 +152,22 @@ class HomePageState extends State<HomePage> {
         textDirection: dir,
         children: <Widget>[
           Text(
-              rows.length < 1
-                  ? "\t\t\t\t\t\t\t\t${aya + 1}. ${texts.data[sura][aya]}"
-                  : "\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
+            rows.length < 1
+                ? "\t\t\t\t\t\t\t\t${aya + 1}. ${texts.data[sura][aya]}"
+                : "\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
             textAlign: TextAlign.justify,
-              textDirection: dir),
+            textDirection: dir,
+          ),
           Avatar(path, 15)
         ],
-      ));
+      )
+
+          //   ListTile(
+          //   leading: isRTL ? null : icon,
+          //   trailing: isRTL ? icon : null,
+          //   title: ,
+          // )
+          );
       rows.add(SizedBox(height: 12));
     }
     rows.add(Divider(color: Colors.black45));
