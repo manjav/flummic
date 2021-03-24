@@ -115,20 +115,14 @@ class HomePageState extends State<HomePage> {
               selectedAyaIndex = index;
             }),
         child: 
-        */
-        Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            // color: index == selectedAyaIndex ? Colors.white70 : Colors.white,
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                child: Column(children: textsProvider(position, index))));
+        color: index == selectedAyaIndex ? Colors.white70 : Colors.white,*/
+        Padding(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+            child: Column(children: textsProvider(position, index)));
   }
 
   List<Widget> textsProvider(int sura, int aya) {
     var rows = <Widget>[];
-
     // rows.add(Row(
     //   children: [
     //     CircleButton(icon: Icons.bookmark),
@@ -139,7 +133,6 @@ class HomePageState extends State<HomePage> {
     //   ],
     // ));
     // rows.add(SizedBox(height: 20));
-
     if (Prefs.texts.indexOf("ar.uthmanimin") > -1)
       rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
           textAlign: TextAlign.justify,
@@ -148,18 +141,24 @@ class HomePageState extends State<HomePage> {
     for (var path in Prefs.texts) {
       if (path == "ar.uthmanimin") continue;
       var texts = Configs.instance.texts[path];
-      var t = (rows.length < 1 ? "${aya + 1}. " : "") + texts.data[sura][aya];
-      var isRTL = Bidi.isRtlLanguage(texts.flag);
-      var icon = CircleAvatar(backgroundImage: AssetImage('images/icon.png'));
-      rows.add(ListTile(
-        leading: isRTL ? null : icon,
-        trailing: isRTL ? icon : null,
-        title: Text(t,
+      var dir = Bidi.isRtlLanguage(texts.flag)
+          ? TextDirection.rtl
+          : TextDirection.ltr;
+      rows.add(Stack(
+        textDirection: dir,
+        children: <Widget>[
+          Text(
+              rows.length < 1
+                  ? "\t\t\t\t\t\t\t\t${aya + 1}. ${texts.data[sura][aya]}"
+                  : "\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
             textAlign: TextAlign.justify,
-            textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-            style: cubicStyle),
+              textDirection: dir),
+          Avatar(path, 15)
+        ],
       ));
+      rows.add(SizedBox(height: 12));
     }
+    rows.add(Divider(color: Colors.black45));
     return rows;
   }
 }
