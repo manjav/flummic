@@ -5,6 +5,7 @@ import 'package:islamic/buttons.dart';
 import 'package:islamic/localization.dart';
 import 'package:islamic/models.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
+import 'main.dart';
 
 class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
@@ -117,12 +118,14 @@ class PersonPageState extends State<PersonPage>
       items.add(Directionality(
           key: Key(t),
           textDirection:
-              Bidi.isRtlLanguage() ? TextDirection.rtl : TextDirection.ltr,
+              Bidi.isRtlLanguage(MyApp.of(context).locale.languageCode)
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
           child: ListTile(
-            trailing: Avatar(t, 24),
+            leading: Avatar(t, 24),
             title: Text(p.name),
             subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
-            leading: IconButton(
+            trailing: IconButton(
                 icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
           )));
     }
