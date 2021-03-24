@@ -54,7 +54,7 @@ class AppState extends State<MyApp> {
       supportedLocales: supportedLocales,
       locale: locale,
       // debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.teal),
+      theme: ThemeData(primarySwatch: Colors.teal, fontFamily: "CubicSans"),
       home: configured ? HomePage() : waitingPage,
     );
   }
