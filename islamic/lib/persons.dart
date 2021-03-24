@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
-import 'package:islamic/models.dart';
+import 'package:islamic/buttons.dart';
 import 'package:islamic/localization.dart';
+import 'package:islamic/models.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 class PersonPage extends StatefulWidget {
@@ -114,20 +115,17 @@ class PersonPageState extends State<PersonPage>
       var p = configPersons[t];
       var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
       if (widget.isTextMode) subtitle += " , ${p.size}";
-      items.add(ListTile(
+      items.add(Directionality(
         key: Key(t),
-        // tileColor: items[index].isOdd ? oddItemColor : evenItemColor,
-
-        trailing: CircleAvatar(
-          backgroundImage: AssetImage('images/icon.png'),
-        ),
-        title: Text(p.name, textDirection:dir),
-        subtitle: Text(subtitle, textDirection:dir),
+          textDirection:
+              Bidi.isRtlLanguage() ? TextDirection.rtl : TextDirection.ltr,
+          child: ListTile(
+            trailing: Avatar(t, 24),
+            title: Text(p.name, ),
+            subtitle: Text(subtitle),
         leading: IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () => removePerson(p),
-        ),
-      ));
+                icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
+          )));
     }
     return items;
   }
@@ -218,9 +216,7 @@ class PersonListPageState extends State<PersonListPage> {
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage('images/icon.png'),
-        ),
+        leading: Avatar(p.path, 24),
         title: Text(p.name),
         subtitle: Text(subtitle),
         trailing: Stack(
