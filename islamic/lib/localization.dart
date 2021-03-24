@@ -81,6 +81,54 @@ extension Localization on String {
     if (Bidi.isRtlLanguage(languageString)) return this.toArabic();
     return this;
   }
+
+ /*  static String getSimpleString(String str, [String loc = "ar"]) {
+    if (loc == "ar") {
+      var signs = "َُِّْٰۭٓۢۚۖۗۦًٌٍۙۘۜۥ".split("");
+      for (var i = 0; i < signs.length; i++) str = str.replaceAll(signs[i], "");
+
+      var alefs = "إأٱآ".split("");
+      for (var i = 0; i < alefs.length; i++)
+        str = str.replaceAll(alefs[i], "ا");
+
+      str = str.replaceAll("ة", "ه");
+      str = str.replaceAll("ؤ", "و");
+      str = str.replaceAll("ي", "ی");
+      str = str.replaceAll("ى", "ی");
+      str = str.replaceAll("ك", "ک");
+      //str = str.replaceAll("ی","ي");
+    }
+    return str.toLowerCase();
+  }
+
+  static String getFullPath(
+      String path, int sura, int aya, String post /* ="dat" */) {
+    return (path +
+        "/" +
+        getZeroNum(sura.toString()) +
+        "/" +
+        getZeroNum(sura.toString()) +
+        getZeroNum(aya.toString()) +
+        "." +
+        post);
+  }
+
+  static String getFullURL(
+      String path, int sura, int aya, String post /* ="mp3" */) {
+    return (path +
+        "/" +
+        getZeroNum(sura.toString()) +
+        getZeroNum(aya.toString()) +
+        "." +
+        post);
+  }
+
+  static String getZeroNum(String _val, [int _len] /* =3 */) {
+    var zeroStr = '';
+    _len = _len < _val.length ? _val.length : _len;
+    for (var i = 0; i < _len - _val.length; i++) zeroStr += '0';
+    return zeroStr + _val;
+  } */
 }
 
 extension LocalizeInt on int {
