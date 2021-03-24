@@ -48,11 +48,9 @@ extension Localization on String {
   static void fromJson(Map<String, dynamic> json) => sentences = json;
 
   Map<String, String> toJson() => sentences;
-}
 
-extension LocalizeNums on int {
   String toArabic() {
-    return this.toString()
+    return this
         .replaceAll('0', '٠')
         .replaceAll('1', '١')
         .replaceAll('2', '٢')
@@ -66,7 +64,7 @@ extension LocalizeNums on int {
   }
 
   String toPersian() {
-    return this.toString()
+    return this
         .replaceAll('0', '٠')
         .replaceAll('1', '١')
         .replaceAll('2', '٢')
@@ -81,6 +79,34 @@ extension LocalizeNums on int {
 
   String n([String languageString]) {
     if (Bidi.isRtlLanguage(languageString)) return this.toArabic();
-    return this.toString();
+    return this;
+  }
+}
+
+extension LocalizeInt on int {
+  String toArabic() {
+    return this.toString().toArabic();
+  }
+
+  String toPersian() {
+    return this.toString().toPersian();
+  }
+
+  String n([String languageString]) {
+    return this.toString().n(languageString);
+  }
+}
+
+extension LocalizeDouble on double {
+  String toArabic() {
+    return this.toString().toArabic();
+  }
+
+  String toPersian() {
+    return this.toString().toPersian();
+  }
+
+  String n([String languageString]) {
+    return this.toString().n(languageString);
   }
 }
