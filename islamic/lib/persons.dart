@@ -114,8 +114,6 @@ class PersonPageState extends State<PersonPage>
     var items = <Widget>[];
     for (var t in prefsPersons) {
       var p = configPersons[t];
-      var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-      if (widget.isTextMode) subtitle += " , ${p.size}";
       items.add(Directionality(
           key: Key(t),
           textDirection:
@@ -123,7 +121,7 @@ class PersonPageState extends State<PersonPage>
           child: ListTile(
             trailing: Avatar(t, 24),
             title: Text(p.name),
-            subtitle: Text(subtitle),
+            subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
             leading: IconButton(
                 icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
           )));
@@ -212,8 +210,13 @@ class PersonListPageState extends State<PersonListPage> {
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
+    String size;
+    if (p.size > 1000000)
+      size = (p.size / 1048576).floor().n() + " " + "mbyte_t".l();
+    else
+      size = (p.size / 1024).floor().n() + " " + "kbyte_t".l();
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-    if (widget.isTextMode) subtitle += " , ${p.size}";
+    if (widget.isTextMode) subtitle += " , $size";
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
