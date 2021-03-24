@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CircleButton extends GestureDetector {
@@ -38,5 +39,23 @@ class CircleButton extends GestureDetector {
             //       ),
             // padding: EdgeInsets.all(15.0),
             // shape: CircleBorder(),
+            );
+}
+
+class Avatar extends CachedNetworkImage {
+  final String path;
+  final double radius;
+  Avatar(this.path, this.radius)
+      : super(
+            imageUrl: "https://grantech.ir/islam/images/$path.png",
+            width: radius * 2.0,
+            placeholder: (context, url) => CircleAvatar(
+                backgroundColor: Colors.black12,
+                backgroundImage: AssetImage("images/person.png"),
+                radius: radius),
+            // errorWidget: (context, url, error) => Icon(
+            //       Icons.person,
+            //       size: 56,
+            //     )
             );
 }
