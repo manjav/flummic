@@ -205,13 +205,16 @@ class PersonListPageState extends State<PersonListPage> {
 
   List<Person> search(String pattern) {
     if (pattern.isEmpty) return defaultPersons;
-    return defaultPersons.where((p) => p.name.indexOf(pattern) > -1).toList();
+    pattern = pattern.toLowerCase();
+    return defaultPersons
+        .where((p) => p.name.toLowerCase().indexOf(pattern) > -1)
+        .toList();
   }
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
     String size;
-    if (p.size > 1000000)
+    if (p.size > 1048576)
       size = (p.size / 1048576).floor().n() + " " + "mbyte_t".l();
     else
       size = (p.size / 1024).floor().n() + " " + "kbyte_t".l();
