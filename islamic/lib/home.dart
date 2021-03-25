@@ -90,7 +90,8 @@ class HomePageState extends State<HomePage> {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     var ayas = Configs.instance.quran[p];
-    return DraggableScrollbar.arrows(
+    return Stack(children: [
+      DraggableScrollbar.arrows(
         labelTextBuilder: (offset) {
           return ayas.length < 10
               ? null
@@ -103,9 +104,27 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).primaryColorDark,
         controller: ayaScrollController,
         child: ListView.builder(
+              padding: EdgeInsets.only(top: _toolbarHeight + 10),
             itemCount: ayas.length,
             itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-            controller: ayaScrollController));
+              controller: ayaScrollController)),
+      Transform.translate(
+          offset: Offset(0, -_toolbarHeight + toolbarHeight),
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 6.0, // changes position of shadow
+                ),
+              ],
+            ),
+            child: Text(title, style: suraStyle),
+            height: _toolbarHeight,
+          ))
+    ]);
   }
 
   Widget ayaItemBuilder(int position, int index) {
