@@ -154,6 +154,11 @@ class HomePageState extends State<HomePage> {
     //   ],
     // ));
     // rows.add(SizedBox(height: 20));
+    if (aya == 0 && sura != 0 && sura != 8) {
+      rows.add(SizedBox(height: 50));
+      rows.add(Text("", style: suraStyle));
+      rows.add(SizedBox(height: 40));
+    }
 
     if (Prefs.texts.indexOf("ar.uthmanimin") > -1)
       rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
