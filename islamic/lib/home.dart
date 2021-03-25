@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/persons.dart';
+import 'package:islamic/localization.dart';
 
 import 'buttons.dart';
 
@@ -153,7 +154,7 @@ class HomePageState extends State<HomePage> {
         children: <Widget>[
           Text(
             rows.length < 1
-                ? "\t\t\t\t\t\t\t\t${aya + 1}. ${texts.data[sura][aya]}"
+                ? "\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
                 : "\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
             textAlign: TextAlign.justify,
             textDirection: dir,
