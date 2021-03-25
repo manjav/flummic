@@ -42,3 +42,6 @@ flutter:
     - family: CubicSans
       fonts:
         - asset: fonts/CubicSans-regular.ttf
+    - family: SuraNames
+      fonts:
+        - asset: fonts/suranames.ttf

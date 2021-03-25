@@ -16,9 +16,9 @@ class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   PageController suraPageController;
   ScrollController ayaScrollController;
-  String title = Configs.instance.metadata.suras[0].name;
+  String title = String.fromCharCode(13);
 
-  // TextStyle cubicStyle = TextStyle(fontFamily: 'CubicSans');
+  TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
   TextStyle textStyle = TextStyle(
       fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
   TextStyle textStyleLight = TextStyle(
@@ -43,7 +43,7 @@ class HomePageState extends State<HomePage> {
         setState(() {
           toolbarHeight = _toolbarHeight;
           currentPageValue = page;
-          title = Configs.instance.metadata.suras[page].name;
+          title = String.fromCharCode(page + 13);
         });
       }
     });
@@ -67,10 +67,9 @@ class HomePageState extends State<HomePage> {
         textDirection: TextDirection.ltr,
         child: Scaffold(
             appBar: AppBar(
-              toolbarHeight: toolbarHeight,
-              toolbarOpacity: toolbarHeight / _toolbarHeight,
-              centerTitle: true,
-              title: Text(title, style: textStyle),
+              elevation: 0,
+              // toolbarHeight: toolbarHeight,
+              // toolbarOpacity: toolbarHeight / _toolbarHeight
             ),
             body: PageView.builder(
                 reverse: true,
@@ -92,21 +91,21 @@ class HomePageState extends State<HomePage> {
     var ayas = Configs.instance.quran[p];
     return Stack(children: [
       DraggableScrollbar.arrows(
-        labelTextBuilder: (offset) {
-          return ayas.length < 10
-              ? null
-              : Text(
-                  "${currentAyaIndex + 1}",
-                  style: textStyleLight,
-                );
-        },
-        labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
-        backgroundColor: Theme.of(context).primaryColorDark,
-        controller: ayaScrollController,
-        child: ListView.builder(
+          labelTextBuilder: (offset) {
+            return ayas.length < 10
+                ? null
+                : Text(
+                    "${currentAyaIndex + 1}",
+                    style: textStyleLight,
+                  );
+          },
+          labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
+          backgroundColor: Theme.of(context).primaryColorDark,
+          controller: ayaScrollController,
+          child: ListView.builder(
               padding: EdgeInsets.only(top: _toolbarHeight + 10),
-            itemCount: ayas.length,
-            itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+              itemCount: ayas.length,
+              itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
               controller: ayaScrollController)),
       Transform.translate(
           offset: Offset(0, -_toolbarHeight + toolbarHeight),
