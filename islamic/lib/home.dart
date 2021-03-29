@@ -33,8 +33,11 @@ class HomePageState extends State<HomePage> {
   double toolbarHeight;
   double startScrollBarIndicator = 0;
 
+  bool hasQuranText = false;
+
   void initState() {
     super.initState();
+    hasQuranText = Prefs.texts.indexOf("ar.uthmanimin") > -1;
     toolbarHeight = _toolbarHeight;
     suraPageController = PageController();
     suraPageController.addListener(() {
@@ -160,7 +163,7 @@ class HomePageState extends State<HomePage> {
       rows.add(SizedBox(height: 40));
     }
 
-    if (Prefs.texts.indexOf("ar.uthmanimin") > -1)
+    if (hasQuranText)
       rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
