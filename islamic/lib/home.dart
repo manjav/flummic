@@ -84,7 +84,7 @@ class HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PersonPage(true)))))));
+                            builder: (context) => PersonPage(PType.text)))))));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {

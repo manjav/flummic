@@ -158,19 +158,19 @@ class Part {
 }
 
 enum PState { waiting, downloading, ready, selected }
+enum PType { text, sound, athan }
 
 class Person {
   int size;
+  PType type;
   PState state;
   List<List<String>> data;
-  bool isText = false;
   double progress = 0;
   String url, path, name, ename, flag, mode;
   Loader loader;
 
-  Person(p, bool isText) {
-    this.isText = isText;
-    state = isText ? PState.waiting : PState.ready;
+  Person(this.type, p) {
+    state = type == PType.text ? PState.waiting : PState.ready;
     url = p["url"];
     path = p["path"];
     name = p["name"];

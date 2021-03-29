@@ -10,8 +10,8 @@ import 'main.dart';
 class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
   static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
-  final bool isTextMode;
-  PersonPage(this.isTextMode) : super();
+  final PType type;
+  PersonPage(this.type) : super();
   @override
   PersonPageState createState() => PersonPageState();
 }
@@ -28,14 +28,14 @@ class PersonPageState extends State<PersonPage>
   @override
   void initState() {
     super.initState();
-    title = (widget.isTextMode ? "page_texts" : "page_sounds").l();
+    var t = widget.type == PType.text;
+    title = (t ? "page_texts" : "page_sounds").l();
     prefsPersons = <String>[];
-    prefsPersons.addAll(widget.isTextMode ? Prefs.texts : Prefs.sounds);
-    configPersons =
-        widget.isTextMode ? Configs.instance.texts : Configs.instance.sounds;
+    prefsPersons.addAll(t ? Prefs.texts : Prefs.sounds);
+    configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
     fabController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    modes = widget.isTextMode ? PersonPage.textModes : PersonPage.soundModes;
+    modes = t ? PersonPage.textModes : PersonPage.soundModes;
   }
 
   @override
@@ -61,7 +61,7 @@ class PersonPageState extends State<PersonPage>
                   if (oldIndex < newIndex) newIndex -= 1;
                   final item = prefsPersons.removeAt(oldIndex);
                   prefsPersons.insert(newIndex, item);
-                  Prefs.sounds = prefsPersons;
+                  Prefs.update(widget.type, prefsPersons);
                 });
               }),
           floatingActionButton: SpeedDial(
@@ -108,7 +108,7 @@ class PersonPageState extends State<PersonPage>
         context,
         MaterialPageRoute(
             builder: (context) => PersonListPage(
-                widget.isTextMode, mode, prefsPersons, configPersons)));
+                widget.type, mode, prefsPersons, configPersons)));
   }
 
   List<Widget> personItems() {
@@ -138,11 +138,10 @@ class PersonPageState extends State<PersonPage>
 class PersonListPage extends StatefulWidget {
   final String title = "";
   final String mode;
-  final bool isTextMode;
+  final PType type;
   final List<String> prefsPersons;
   final Map<String, Person> configPersons;
-  PersonListPage(
-      this.isTextMode, this.mode, this.prefsPersons, this.configPersons)
+  PersonListPage(this.type, this.mode, this.prefsPersons, this.configPersons)
       : super();
 
   @override
@@ -222,7 +221,7 @@ class PersonListPageState extends State<PersonListPage> {
     else
       size = (p.size / 1024).floor().n() + " " + "kbyte_t".l();
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-    if (widget.isTextMode) subtitle += " , $size";
+    if (widget.type == PType.text) subtitle += " , $size";
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
