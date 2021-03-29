@@ -9,66 +9,55 @@ class Prefs {
   static String get locale => instance.getString("locale");
   static set locale(String v) => instance.setString("locale", v);
 
-  static List<String> _sounds;
-  static List<String> _texts;
+  static Map<PType, List<String>> persons = Map();
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
-      Prefs.instance.clear();
-      _sounds = instance.getStringList("_s") ?? null;
-      _texts = instance.getStringList("_t") ?? null;
+
+      // Prefs.instance.clear();
+      persons[PType.text] =
+          instance.getStringList(PType.text.toString()) ?? null;
+      persons[PType.sound] =
+          instance.getStringList(PType.sound.toString()) ?? null;
       onInit();
     });
   }
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    _sounds = <String>[];
-    _texts = ["ar.uthmanimin"];
+    persons[PType.sound] = <String>[];
+    persons[PType.text] = ["ar.uthmanimin"];
     switch (_locale) {
       case "en":
-        _texts.add("en.sahih");
-        _sounds.add("abu_bakr_ash_shaatree");
-        _sounds.add("ibrahim_walk");
+        persons[PType.text].add("en.sahih");
+        persons[PType.sound].add("abu_bakr_ash_shaatree");
+        persons[PType.sound].add("ibrahim_walk");
         break;
       case "fa":
-        _texts.add("fa.fooladvand");
-        _sounds.add("shahriar_parhizgar");
-        _sounds.add("mahdi_fooladvand");
+        persons[PType.text].add("fa.fooladvand");
+        persons[PType.sound].add("shahriar_parhizgar");
+        persons[PType.sound].add("mahdi_fooladvand");
         break;
       default:
-        _sounds.add("abu_bakr_ash_shaatree");
+        persons[PType.sound].add("abu_bakr_ash_shaatree");
         break;
     }
-    instance.setStringList("_t", _texts);
-    instance.setStringList("_s", _sounds);
+    instance.setStringList(PType.text.toString(), persons[PType.text]);
+    instance.setStringList(PType.sound.toString(), persons[PType.sound]);
     return _locale;
   }
 
-  static List define(PType type) {
-    if (type == PType.text) return ["_t", _texts];
-    return ["_s", _sounds];
+  static void addPerson(PType type, String path) {
+    if (persons[type].indexOf(path) > -1) return;
+    persons[type].add(path);
+    instance.setStringList(type.toString(), persons[type]);
   }
 
-  static void add(PType type, String path) {
-    var def = define(type);
-    if (def[1].indexOf(path) > -1) return;
-    def[1].add(path);
-    instance.setStringList(def[0], def[1]);
-  }
-
-  static void remove(PType type, String path) {
-    var def = define(type);
-    if (def[1].indexOf(path) < 0) return;
-    def[1].remove(path);
-    instance.setStringList(def[0], def[1]);
-  }
-
-  static void update(PType type, List<String> value) {
-    var def = define(type);
-    def[1] = value;
-    instance.setStringList(def[0], def[1]);
+  static void removePerson(PType type, String path) {
+    if (persons[type].indexOf(path) < 0) return;
+    persons[type].remove(path);
+    instance.setStringList(type.toString(), persons[type]);
   }
 }
 
@@ -93,11 +82,13 @@ class Configs {
     await Loader().load("configs.json", baseURL + "configs.ijson",
         (String data) {
       var map = json.decode(data);
-      for (var t in map["texts"]) texts[t["path"]] = Person(t, true);
-      for (var r in map["sounds"]) sounds[r["path"]] = Person(r, false);
+      for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
+      for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
 
-      for (var t in Prefs.texts) texts[t]?.select(finalize, null, print);
-      for (var r in Prefs.sounds) sounds[r]?.select(finalize, null, print);
+      for (var t in Prefs.persons[PType.text])
+        texts[t]?.select(finalize, null, print);
+      for (var s in Prefs.persons[PType.sound])
+        sounds[s]?.select(finalize, null, print);
     }, null, print);
   }
 
@@ -122,9 +113,11 @@ class Configs {
   }
 
   void finalize() {
-    if (quran == null || metadata == null) return;
-    for (var t in Prefs.texts) if (texts[t]?.state != PState.selected) return;
-    for (var r in Prefs.sounds) if (sounds[r]?.state != PState.selected) return;
+    if (metadata == null) return;
+    for (var t in Prefs.persons[PType.text])
+      if (texts[t]?.state != PState.selected) return;
+    for (var r in Prefs.persons[PType.sound])
+      if (sounds[r]?.state != PState.selected) return;
     onCreate();
   }
 }
@@ -203,12 +196,12 @@ class Person {
 
   void deselect() {
     state = PState.ready;
-    Prefs.remove(type, path);
+    Prefs.removePerson(type, path);
   }
 
   void onSelecFinish(Function onDone) {
     state = PState.selected;
-    Prefs.add(type, path);
+    Prefs.addPerson(type, path);
     onDone();
   }
 

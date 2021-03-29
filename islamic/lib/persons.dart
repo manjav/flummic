@@ -22,7 +22,6 @@ class PersonPageState extends State<PersonPage>
 
   String title = "";
   List<String> modes;
-  List<String> prefsPersons;
   Map<String, Person> configPersons;
 
   @override
@@ -30,11 +29,8 @@ class PersonPageState extends State<PersonPage>
     super.initState();
     var t = widget.type == PType.text;
     title = (t ? "page_texts" : "page_sounds").l();
-    prefsPersons = <String>[];
-    prefsPersons.addAll(t ? Prefs.texts : Prefs.sounds);
     configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
-    fabController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    fabController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     modes = t ? PersonPage.textModes : PersonPage.soundModes;
   }
 
@@ -59,9 +55,9 @@ class PersonPageState extends State<PersonPage>
               onReorder: (int oldIndex, int newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) newIndex -= 1;
-                  final item = prefsPersons.removeAt(oldIndex);
-                  prefsPersons.insert(newIndex, item);
-                  Prefs.update(widget.type, prefsPersons);
+                  final item = Prefs.persons[widget.type].removeAt(oldIndex);
+                  Prefs.persons[widget.type].insert(newIndex, item);
+                  Prefs.instance.setStringList(widget.type.toString(), Prefs.persons[widget.type]);
                 });
               }),
           floatingActionButton: SpeedDial(
@@ -93,7 +89,7 @@ class PersonPageState extends State<PersonPage>
   }
 
   void removePerson(Person p) {
-    prefsPersons.remove(p.path);
+    Prefs.removePerson(p.type, p.path);
     setState(() => p.deselect());
   }
 
@@ -108,12 +104,12 @@ class PersonPageState extends State<PersonPage>
         context,
         MaterialPageRoute(
             builder: (context) => PersonListPage(
-                widget.type, mode, prefsPersons, configPersons)));
+                widget.type, mode, configPersons)));
   }
 
   List<Widget> personItems() {
     var items = <Widget>[];
-    for (var t in prefsPersons) {
+    for (var t in Prefs.persons[widget.type]) {
       var p = configPersons[t];
       items.add(Directionality(
           key: Key(t),
@@ -139,9 +135,8 @@ class PersonListPage extends StatefulWidget {
   final String title = "";
   final String mode;
   final PType type;
-  final List<String> prefsPersons;
   final Map<String, Person> configPersons;
-  PersonListPage(this.type, this.mode, this.prefsPersons, this.configPersons)
+  PersonListPage(this.type, this.mode, this.configPersons)
       : super();
 
   @override
@@ -246,13 +241,11 @@ class PersonListPageState extends State<PersonListPage> {
   void selectPerson(Person p) {
     switch (p.state) {
       case PState.selected:
-        widget.prefsPersons.remove(p.path);
         p.deselect();
         break;
       case PState.ready:
       case PState.waiting:
         p.select(() {
-          widget.prefsPersons.add(p.path);
           Navigator.pop(context);
           setState(() {});
         }, (double p) {

@@ -37,7 +37,7 @@ class HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
-    hasQuranText = Prefs.texts.indexOf("ar.uthmanimin") > -1;
+    hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
     toolbarHeight = _toolbarHeight;
     suraPageController = PageController();
     suraPageController.addListener(() {
@@ -76,7 +76,7 @@ class HomePageState extends State<HomePage> {
             ),
             body: PageView.builder(
                 reverse: true,
-                itemCount: Configs.instance.quran.length,
+                itemCount: Configs.instance.metadata.suras.length,
                 itemBuilder: suraPageBuilder,
                 controller: suraPageController),
             floatingActionButton: Container(
@@ -91,11 +91,11 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
-    var ayas = Configs.instance.quran[p];
+    var len = Configs.instance.metadata.suras[p].ayas;
     return Stack(children: [
       DraggableScrollbar.arrows(
           labelTextBuilder: (offset) {
-            return ayas.length < 10
+            return len < 10
                 ? null
                 : Text(
                     "${currentAyaIndex + 1}",
@@ -107,7 +107,7 @@ class HomePageState extends State<HomePage> {
           controller: ayaScrollController,
           child: ListView.builder(
               padding: EdgeInsets.only(top: _toolbarHeight + 10),
-              itemCount: ayas.length,
+              itemCount: len,
               itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
               controller: ayaScrollController)),
       Transform.translate(
@@ -169,7 +169,7 @@ class HomePageState extends State<HomePage> {
           textDirection: TextDirection.rtl,
           style: textStyle));
 
-    for (var path in Prefs.texts) {
+    for (var path in Prefs.persons[PType.text]) {
       if (path == "ar.uthmanimin") continue;
       var texts = Configs.instance.texts[path];
       var dir = Bidi.isRtlLanguage(texts.flag)
