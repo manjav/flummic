@@ -83,11 +83,7 @@ class HomePageState extends State<HomePage> {
                 transform: Matrix4.identity()
                   ..translate(0.1, _toolbarHeight * 2 - toolbarHeight * 2),
                 child: FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PersonPage(true)))))));
+                    child: Icon(Icons.add), onPressed: fabPressed))));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
@@ -199,5 +195,14 @@ class HomePageState extends State<HomePage> {
     }
     rows.add(Divider(color: Colors.black45));
     return rows;
+  }
+
+  Future<void> fabPressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PersonPage(PType.text)),
+    );
+    setState(() =>
+        hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);
   }
 }
