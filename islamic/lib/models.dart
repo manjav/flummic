@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:islamic/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'loader.dart';
@@ -11,24 +10,12 @@ class Prefs {
   static set locale(String v) => instance.setString("locale", v);
 
   static List<String> _sounds;
-  static List<String> get sounds => _sounds;
-  static set sounds(List<String> v) {
-    if (Utils.equalLists(_sounds, v)) return;
-    _sounds = v;
-    instance.setStringList("_s", v);
-  }
-
   static List<String> _texts;
-  static List<String> get texts => _texts;
-  static set texts(List<String> v) {
-    if (Utils.equalLists(_texts, v)) return;
-    _texts = v;
-    instance.setStringList("_t", v);
-  }
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
+      Prefs.instance.clear();
       _sounds = instance.getStringList("_s") ?? null;
       _texts = instance.getStringList("_t") ?? null;
       onInit();
@@ -37,26 +24,51 @@ class Prefs {
 
   static String setDefaults(String _locale) {
     locale = _locale;
-    var __sounds = <String>[];
-    var __texts = ["ar.uthmanimin"];
+    _sounds = <String>[];
+    _texts = ["ar.uthmanimin"];
     switch (_locale) {
       case "en":
-        __texts.add("en.sahih");
-        __sounds.add("abu_bakr_ash_shaatree");
-        __sounds.add("ibrahim_walk");
+        _texts.add("en.sahih");
+        _sounds.add("abu_bakr_ash_shaatree");
+        _sounds.add("ibrahim_walk");
         break;
       case "fa":
-        __texts.add("fa.fooladvand");
-        __sounds.add("shahriar_parhizgar");
-        __sounds.add("mahdi_fooladvand");
+        _texts.add("fa.fooladvand");
+        _sounds.add("shahriar_parhizgar");
+        _sounds.add("mahdi_fooladvand");
         break;
       default:
-        __sounds.add("abu_bakr_ash_shaatree");
+        _sounds.add("abu_bakr_ash_shaatree");
         break;
     }
-    sounds = __sounds;
-    texts = __texts;
+    instance.setStringList("_t", _texts);
+    instance.setStringList("_s", _sounds);
     return _locale;
+  }
+
+  static List define(PType type) {
+    if (type == PType.text) return ["_t", _texts];
+    return ["_s", _sounds];
+  }
+
+  static void add(PType type, String path) {
+    var def = define(type);
+    if (def[1].indexOf(path) > -1) return;
+    def[1].add(path);
+    instance.setStringList(def[0], def[1]);
+  }
+
+  static void remove(PType type, String path) {
+    var def = define(type);
+    if (def[1].indexOf(path) < 0) return;
+    def[1].remove(path);
+    instance.setStringList(def[0], def[1]);
+  }
+
+  static void update(PType type, List<String> value) {
+    var def = define(type);
+    def[1] = value;
+    instance.setStringList(def[0], def[1]);
   }
 }
 
@@ -86,7 +98,7 @@ class Configs {
 
       for (var t in Prefs.texts) texts[t]?.select(finalize, null, print);
       for (var r in Prefs.sounds) sounds[r]?.select(finalize, null, print);
-    }, null, (String e) => print("error: $e"));
+    }, null, print);
   }
 
   void loadMetadata() async {
@@ -182,6 +194,7 @@ class Person {
 
   void select(
       Function onDone, Function(double) onProgress, Function(String) onError) {
+    print("select $path");
     if (state == PState.waiting)
       load(() => onSelecFinish(onDone), onProgress, onError);
     else
@@ -190,15 +203,12 @@ class Person {
 
   void deselect() {
     state = PState.ready;
-    Prefs.texts.remove(path);
+    Prefs.remove(type, path);
   }
 
   void onSelecFinish(Function onDone) {
     state = PState.selected;
-    if (isText && Prefs.texts.indexOf(path) == -1)
-      Prefs.texts.add(path);
-    else if (!isText && Prefs.sounds.indexOf(path) == -1)
-      Prefs.sounds.add(path);
+    Prefs.add(type, path);
     onDone();
   }
 

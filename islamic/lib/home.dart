@@ -20,7 +20,7 @@ class HomePageState extends State<HomePage> {
 
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
   TextStyle textStyle = TextStyle(
-      fontFamily: 'Uthmani', fontSize: 22, height: 2, letterSpacing: 2);
+      fontFamily: 'Uthmani', fontSize: 20, height: 2, letterSpacing: 2);
   TextStyle textStyleLight = TextStyle(
       fontFamily: 'Uthmani',
       fontSize: 22,
@@ -87,7 +87,7 @@ class HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PersonPage(PType.text)))))));
+                            builder: (context) => PersonPage(true)))))));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
