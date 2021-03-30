@@ -71,9 +71,26 @@ class HomePageState extends State<HomePage> {
         child: Scaffold(
             appBar: AppBar(
               elevation: 0,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+              leading: Row(children: [
+                IconButton(
+                  icon: new Icon(Icons.settings),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: new Icon(Icons.search),
+                  onPressed: () {},
+                )
+              ]),
               // toolbarHeight: toolbarHeight,
               // toolbarOpacity: toolbarHeight / _toolbarHeight
-            ),
+              leadingWidth: _toolbarHeight * 2,
+              automaticallyImplyLeading: false),
             body: PageView.builder(
                 reverse: true,
                 itemCount: Configs.instance.metadata.suras.length,
