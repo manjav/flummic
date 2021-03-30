@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:islamic/utils.dart';
 import 'package:rive/rive.dart';
 
 import 'localization.dart';
+import 'models.dart';
 
 class WaitingPage extends StatefulWidget {
-  bool onLoop = false;
-  Artboard artboard;
-  RiveAnimationController controller;
+  WaitingPageState page;
 
   @override
-  WaitingPageState createState() => WaitingPageState();
-
-  void finish(Function onFinish) {
-    artboard.addController(
-        controller = CallbackAnimation('end', callback: onFinish));
+  WaitingPageState createState() {
+    return page = WaitingPageState();
   }
 }
 
 class WaitingPageState extends State<WaitingPage> {
+  int state = 0;
+  Artboard artboard;
+  RiveAnimationController controller;
+
   @override
   void initState() {
     super.initState();
@@ -27,12 +26,14 @@ class WaitingPageState extends State<WaitingPage> {
   }
 
   animLoaded(ByteData data) async {
-    await Localization.change(context, Utils.getLocale());
+    await Localization.change(context, Prefs.locale);
     final file = RiveFile();
     if (file.import(data)) {
-      widget.artboard = file.mainArtboard;
-      widget.artboard.addController(CallbackAnimation('start', callback: () => widget.onLoop = true));
-      widget.artboard.addController(widget.controller = SimpleAnimation('idle'));
+      artboard = file.mainArtboard;
+      artboard.addController(SimpleAnimation('start'));
+      artboard.addController(SimpleAnimation('idle'));
+      Future.delayed(const Duration(milliseconds: 500), () => state = 2);
+      state = 1;
       setState(() {});
     }
   }
@@ -41,18 +42,26 @@ class WaitingPageState extends State<WaitingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: widget.artboard == null
+        child: state < 1
             ? const SizedBox()
             : Rive(
-                artboard: widget.artboard,
+                artboard: artboard,
                 fit: BoxFit.none,
               ),
       ),
     );
   }
+
+  void end(Function onFinish) {
+    artboard.addController(SimpleAnimation('end'));
+    Future.delayed(const Duration(milliseconds: 700), () {
+      state = 3;
+      onFinish();
+    });
+  }
 }
 
-class CallbackAnimation extends SimpleAnimation {
+/* class CallbackAnimation extends SimpleAnimation {
   CallbackAnimation(
     String animationName, {
     @required this.callback,
@@ -63,6 +72,7 @@ class CallbackAnimation extends SimpleAnimation {
 
   @override
   void apply(RuntimeArtboard artboard, double elapsedSeconds) {
+    print(animationName);
     // Apply the animation to the artboard with the appropriate level of mix
     instance.animation.apply(instance.time, coreContext: artboard, mix: mix);
     // If false, the animation has ended (it doesn't loop)
@@ -71,4 +81,4 @@ class CallbackAnimation extends SimpleAnimation {
       callback();
     }
   }
-}
+} */

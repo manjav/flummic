@@ -31,10 +31,9 @@ class AppState extends State<MyApp> {
     super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
-      Utils.getLocale();
       Configs.create(() {
-        if (waitingPage.onLoop)
-          waitingPage.finish(() {
+        if (waitingPage.page.state > 1)
+          waitingPage.page.end(() {
             setState(() => configured = true);
           });
         else
