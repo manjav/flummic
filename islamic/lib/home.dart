@@ -102,7 +102,7 @@ class HomePageState extends State<HomePage> {
           backgroundColor: Theme.of(context).primaryColorDark,
           controller: ayaScrollController,
           child: ListView.builder(
-              padding: EdgeInsets.only(top: _toolbarHeight + 10),
+              padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 16),
               itemCount: len,
               itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
               controller: ayaScrollController)),
@@ -132,12 +132,11 @@ class HomePageState extends State<HomePage> {
         onTap: () => setState(() {
               selectedAyaIndex = index;
             }),
-        child: 
-        */
-        // color: index == selectedAyaIndex ? Colors.white70 : Colors.white,
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-            child: Column(children: textsProvider(position, index)));
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: textsProvider(position, index))));
   }
 
   List<Widget> textsProvider(int sura, int aya) {
@@ -159,8 +158,10 @@ class HomePageState extends State<HomePage> {
       rows.add(SizedBox(height: 40));
     }
 
+    rows.add(SizedBox(height: 16));
     if (hasQuranText)
-      rows.add(Text("${aya + 1}. ${Configs.instance.quran[sura][aya]}",
+      rows.add(Text(
+          "${Configs.instance.quran[sura][aya]} ﴿${(aya + 1).toArabic()}﴾",
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
           style: textStyle));
@@ -176,8 +177,8 @@ class HomePageState extends State<HomePage> {
         children: <Widget>[
           Text(
             rows.length < 1
-                ? "\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
-                : "\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
+                ? "\t\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
+                : "\t\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
             textAlign: TextAlign.justify,
             textDirection: dir,
           ),
