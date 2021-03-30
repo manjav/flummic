@@ -37,6 +37,7 @@ class PersonPageState extends State<PersonPage>
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Directionality(
         textDirection: TextDirection.ltr,
         child: Scaffold(
@@ -67,8 +68,8 @@ class PersonPageState extends State<PersonPage>
               icon: AnimatedIcons.add_event,
               progress: fabController,
             ),
-            openBackgroundColor: Colors.redAccent,
-            closedBackgroundColor: Colors.redAccent,
+            openBackgroundColor: theme.primaryColor,
+            closedBackgroundColor: theme.primaryColor,
             // closedForegroundColor: Colors.black,
             // labelsStyle: /* Your label TextStyle goes here */,
             // controller: /* Your custom animation controller goes here */,

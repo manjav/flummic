@@ -73,7 +73,7 @@ class HomePageState extends State<HomePage> {
     return new Directionality(
         textDirection: TextDirection.ltr,
         child: Scaffold(
-            appBar: AppBar(
+          appBar: AppBar(
               elevation: 0,
               actions: [
                 IconButton(
@@ -95,11 +95,11 @@ class HomePageState extends State<HomePage> {
               // toolbarOpacity: toolbarHeight / _toolbarHeight
               leadingWidth: _toolbarHeight * 2,
               automaticallyImplyLeading: false),
-            body: PageView.builder(
-                reverse: true,
-                itemCount: Configs.instance.metadata.suras.length,
-                itemBuilder: suraPageBuilder,
-                controller: suraPageController),
+          body: PageView.builder(
+              reverse: true,
+              itemCount: Configs.instance.metadata.suras.length,
+              itemBuilder: suraPageBuilder,
+              controller: suraPageController),
               )
         );
   }
@@ -149,10 +149,10 @@ class HomePageState extends State<HomePage> {
     return Container(
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
-        onTap: () => setState(() {
+            onTap: () => setState(() {
                   // var tween = Tween<double>(begin: -200, end: 0);
                   toolbarHeight = _toolbarHeight;
-            }),
+                }),
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: Column(
@@ -223,7 +223,35 @@ class HomePageState extends State<HomePage> {
     return rows;
   }
 
-  Future<void> fabPressed() async {
+  Widget footer() {
+    return Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+            transform: Matrix4.identity()
+              ..translate(0.1, _toolbarHeight * 2 - toolbarHeight * 2),
+            height: 56,
+            child: Row(
+              children: [
+                IconButton(
+                    icon: Icon(
+                      Icons.add_comment_outlined,
+                      color: theme.focusColor,
+                    ),
+                    onPressed: () => footerPressed(PType.sound)),
+                IconButton(
+                    icon: Icon(Icons.headset_sharp, color: theme.focusColor),
+                    onPressed: () => footerPressed(PType.sound)),
+              ],
+            ),
+            decoration: new BoxDecoration(
+              color: theme.primaryColor,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+            )));
+  }
+
+  Future<void> footerPressed(PType type) async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PersonPage(type)),
