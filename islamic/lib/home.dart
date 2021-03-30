@@ -19,21 +19,15 @@ class HomePageState extends State<HomePage> {
   String title = String.fromCharCode(13);
 
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
-  TextStyle textStyle = TextStyle(
-      fontFamily: 'Uthmani', fontSize: 20, height: 2, letterSpacing: 2);
-  TextStyle textStyleLight = TextStyle(
-      fontFamily: 'Uthmani',
-      fontSize: 22,
-      height: 2,
-      letterSpacing: 2,
-      color: Colors.white);
+  TextStyle textStyle;
+  TextStyle textStyleLight;
   // int selectedAyaIndex;
   int currentAyaIndex = 0;
   int currentPageValue;
   double toolbarHeight;
   double startScrollBarIndicator = 0;
-
   bool hasQuranText = false;
+  ThemeData theme;
 
   void initState() {
     super.initState();
@@ -66,6 +60,16 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
+    textStyle = TextStyle(
+        fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
+    textStyleLight = TextStyle(
+        fontFamily: 'Uthmani',
+        fontSize: 22,
+        height: 2,
+        letterSpacing: 2,
+        color: theme.backgroundColor);
+
     return new Directionality(
         textDirection: TextDirection.ltr,
         child: Scaffold(
@@ -96,11 +100,8 @@ class HomePageState extends State<HomePage> {
                 itemCount: Configs.instance.metadata.suras.length,
                 itemBuilder: suraPageBuilder,
                 controller: suraPageController),
-            floatingActionButton: Container(
-                transform: Matrix4.identity()
-                  ..translate(0.1, _toolbarHeight * 2 - toolbarHeight * 2),
-                child: FloatingActionButton(
-                    child: Icon(Icons.add), onPressed: fabPressed))));
+              )
+        );
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
@@ -116,7 +117,7 @@ class HomePageState extends State<HomePage> {
                   );
           },
           labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
-          backgroundColor: Theme.of(context).primaryColorDark,
+          backgroundColor: theme.cardColor,
           controller: ayaScrollController,
           child: ListView.builder(
               padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 16),
@@ -128,32 +129,35 @@ class HomePageState extends State<HomePage> {
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey,
+                  color: Colors.black,
                   blurRadius: 6.0, // changes position of shadow
                 ),
               ],
             ),
             child: Text(title, style: suraStyle),
             height: _toolbarHeight,
-          ))
+          )),
+      footer(),
     ]);
   }
 
   Widget ayaItemBuilder(int position, int index) {
     currentAyaIndex = index;
-    return
-        /*GestureDetector(
+    return Container(
+        color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+        child: GestureDetector(
         onTap: () => setState(() {
-              selectedAyaIndex = index;
+                  // var tween = Tween<double>(begin: -200, end: 0);
+                  toolbarHeight = _toolbarHeight;
             }),
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: textsProvider(position, index))));
+                    children: textsProvider(position, index)))));
   }
 
   List<Widget> textsProvider(int sura, int aya) {
@@ -171,7 +175,11 @@ class HomePageState extends State<HomePage> {
     // rows.add(SizedBox(height: 20));
     if (aya == 0 && sura != 0 && sura != 8) {
       rows.add(SizedBox(height: 50));
-      rows.add(Text("", style: suraStyle));
+      rows.add(Text(
+        "",
+        style: suraStyle,
+        textAlign: TextAlign.center,
+      ));
       rows.add(SizedBox(height: 40));
     }
 
@@ -209,16 +217,16 @@ class HomePageState extends State<HomePage> {
           //   title: ,
           // )
           );
-      rows.add(SizedBox(height: 12));
+      // rows.add(SizedBox(height: 6));
     }
-    rows.add(Divider(color: Colors.black45));
+    // rows.add(Divider(color: Colors.black45));
     return rows;
   }
 
   Future<void> fabPressed() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PersonPage(PType.text)),
+      MaterialPageRoute(builder: (context) => PersonPage(type)),
     );
     setState(() =>
         hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);

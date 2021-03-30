@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/models.dart';
-import 'package:islamic/utils.dart';
 import 'package:islamic/waiting.dart';
 
 import 'home.dart';
+import 'utils/themes.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,7 +53,8 @@ class AppState extends State<MyApp> {
       supportedLocales: supportedLocales,
       locale: locale,
       // debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.teal, fontFamily: "CubicSans"),
+      theme: Themes.data,
+      // darkTheme: Themes.darkData,
       home: configured ? HomePage() : waitingPage,
     );
   }
@@ -63,6 +64,7 @@ class AppState extends State<MyApp> {
     if (_loc == null) return;
     setState(() {
       locale = _loc;
+      Prefs.locale = lang;
     });
   }
 }
