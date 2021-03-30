@@ -8,7 +8,7 @@ import 'package:simple_speed_dial/simple_speed_dial.dart';
 import 'main.dart';
 
 class PersonPage extends StatefulWidget {
-  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "mualm_t"];
+  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "muall_t"];
   static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
   final PType type;
   PersonPage(this.type) : super();
@@ -30,7 +30,8 @@ class PersonPageState extends State<PersonPage>
     var t = widget.type == PType.text;
     title = (t ? "page_texts" : "page_sounds").l();
     configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
-    fabController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    fabController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     modes = t ? PersonPage.textModes : PersonPage.soundModes;
   }
 
@@ -57,7 +58,8 @@ class PersonPageState extends State<PersonPage>
                   if (oldIndex < newIndex) newIndex -= 1;
                   final item = Prefs.persons[widget.type].removeAt(oldIndex);
                   Prefs.persons[widget.type].insert(newIndex, item);
-                  Prefs.instance.setStringList(widget.type.toString(), Prefs.persons[widget.type]);
+                  Prefs.instance.setStringList(
+                      widget.type.toString(), Prefs.persons[widget.type]);
                 });
               }),
           floatingActionButton: SpeedDial(
@@ -103,8 +105,8 @@ class PersonPageState extends State<PersonPage>
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PersonListPage(
-                widget.type, mode, configPersons)));
+            builder: (context) =>
+                PersonListPage(widget.type, mode, configPersons)));
   }
 
   List<Widget> personItems() {
@@ -136,8 +138,7 @@ class PersonListPage extends StatefulWidget {
   final String mode;
   final PType type;
   final Map<String, Person> configPersons;
-  PersonListPage(this.type, this.mode, this.configPersons)
-      : super();
+  PersonListPage(this.type, this.mode, this.configPersons) : super();
 
   @override
   PersonListPageState createState() => PersonListPageState();
