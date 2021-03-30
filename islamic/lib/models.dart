@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:islamic/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'loader.dart';
@@ -15,37 +16,40 @@ class Prefs {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
 
-      // Prefs.instance.clear();
-      persons[PType.text] =
-          instance.getStringList(PType.text.toString()) ?? null;
-      persons[PType.sound] =
-          instance.getStringList(PType.sound.toString()) ?? null;
+      var initialized = instance.containsKey("locale");
+      if (initialized) {
+        persons[PType.text] =
+            instance.getStringList(PType.text.toString()) ?? null;
+        persons[PType.sound] =
+            instance.getStringList(PType.sound.toString()) ?? null;
+        onInit();
+        return;
+      }
+
+      var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
+      persons[PType.text] = ["ar.uthmanimin"];
+      persons[PType.sound] = <String>[];
+      switch (_locale) {
+        case "en":
+          persons[PType.text].add("en.sahih");
+          persons[PType.sound].add("abu_bakr_ash_shaatree");
+          persons[PType.sound].add("ibrahim_walk");
+          break;
+        case "fa":
+          persons[PType.text].add("fa.fooladvand");
+          persons[PType.sound].add("shahriar_parhizgar");
+          persons[PType.sound].add("mahdi_fooladvand");
+          break;
+        default:
+          persons[PType.sound].add("abu_bakr_ash_shaatree");
+          break;
+      }
+      locale = _locale;
+      instance.setStringList(PType.text.toString(), persons[PType.text]);
+      instance.setStringList(PType.sound.toString(), persons[PType.sound]);
+
       onInit();
     });
-  }
-
-  static String setDefaults(String _locale) {
-    locale = _locale;
-    persons[PType.sound] = <String>[];
-    persons[PType.text] = ["ar.uthmanimin"];
-    switch (_locale) {
-      case "en":
-        persons[PType.text].add("en.sahih");
-        persons[PType.sound].add("abu_bakr_ash_shaatree");
-        persons[PType.sound].add("ibrahim_walk");
-        break;
-      case "fa":
-        persons[PType.text].add("fa.fooladvand");
-        persons[PType.sound].add("shahriar_parhizgar");
-        persons[PType.sound].add("mahdi_fooladvand");
-        break;
-      default:
-        persons[PType.sound].add("abu_bakr_ash_shaatree");
-        break;
-    }
-    instance.setStringList(PType.text.toString(), persons[PType.text]);
-    instance.setStringList(PType.sound.toString(), persons[PType.sound]);
-    return _locale;
   }
 
   static void addPerson(PType type, String path) {

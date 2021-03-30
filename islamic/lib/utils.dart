@@ -1,14 +1,7 @@
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'models.dart';
-
 class Utils {
-  static String getLocale() {
-    if (Prefs.instance.containsKey('locale'))
-      return Prefs.instance.getString('locale');
-    return Prefs.setDefaults(getLocaleByTimezone(findTimezone()));
-  }
 
   static String getLocaleByTimezone(String timezone) {
     switch (timezone) {
