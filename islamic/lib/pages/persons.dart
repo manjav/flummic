@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
-import 'package:islamic/buttons.dart';
-import 'package:islamic/localization.dart';
-import 'package:islamic/models.dart';
+import '../buttons.dart';
+import '../utils/localization.dart';
+import '../models.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
-import 'main.dart';
+import '../main.dart';
 
 class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "muall_t"];

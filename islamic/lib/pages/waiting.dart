@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-import 'localization.dart';
-import 'models.dart';
+import '../utils/localization.dart';
+import '../models.dart';
 
 class WaitingPage extends StatefulWidget {
   WaitingPageState page;

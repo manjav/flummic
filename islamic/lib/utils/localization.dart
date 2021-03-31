@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import 'main.dart';
+import '../main.dart';
 
 extension Localization on String {
   static Map<String, String> sentences;

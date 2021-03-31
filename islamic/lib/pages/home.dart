@@ -1,12 +1,11 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
-import 'package:islamic/models.dart';
-import 'package:islamic/persons.dart';
-import 'package:islamic/localization.dart';
-
-import 'buttons.dart';
-import 'main.dart';
+import '../models.dart';
+import '../pages/persons.dart';
+import '../utils/localization.dart';
+import '../buttons.dart';
+import '../main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -34,7 +33,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
     toolbarHeight = _toolbarHeight;
-    suraPageController = PageController();
+    suraPageController = PageController(keepPage: true, initialPage: 12);
     suraPageController.addListener(() {
       var page = suraPageController.page.round();
       if (page != currentPageValue) {
@@ -143,7 +142,7 @@ class HomePageState extends State<HomePage> {
         backgroundColor: theme.cardColor,
         controller: ayaScrollController,
         child: ListView.builder(
-            padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 16),
+            padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 24),
             itemCount: len,
             itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
             controller: ayaScrollController));

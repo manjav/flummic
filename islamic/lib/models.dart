@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:islamic/utils.dart';
+import 'utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'loader.dart';
+import 'utils/loader.dart';
 
 class Prefs {
   static SharedPreferences instance;

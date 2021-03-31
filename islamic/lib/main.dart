@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:islamic/models.dart';
-import 'package:islamic/waiting.dart';
-
-import 'home.dart';
+import 'models.dart';
+import 'pages/waiting.dart';
+import 'pages/home.dart';
 import 'utils/themes.dart';
 
 void main() => runApp(MyApp());
@@ -32,7 +31,7 @@ class AppState extends State<MyApp> {
     super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
-      themeMode = Prefs.instance.getInt("themeMode") as ThemeMode;
+      setTheme(ThemeMode.values[Prefs.instance.getInt("themeMode")]);
       Configs.create(() {
         if (waitingPage.page.state > 1)
           waitingPage.page.end(() {
