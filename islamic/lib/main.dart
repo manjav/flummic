@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:islamic/pages/Index.dart';
+
 import 'models.dart';
 import 'pages/waiting.dart';
-import 'pages/home.dart';
 import 'utils/themes.dart';
 
 void main() => runApp(MyApp());
@@ -57,7 +58,7 @@ class AppState extends State<MyApp> {
       theme: Themes.data,
       darkTheme: Themes.darkData,
       themeMode: themeMode,
-      home: configured ? HomePage() : waitingPage,
+      home: configured ? IndexPage() : waitingPage,
     );
   }
 

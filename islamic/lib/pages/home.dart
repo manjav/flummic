@@ -8,6 +8,10 @@ import '../buttons.dart';
 import '../main.dart';
 
 class HomePage extends StatefulWidget {
+  final selectedSura;
+  final selectedAya;
+  HomePage(this.selectedSura, this.selectedAya);
+
   @override
   HomePageState createState() => HomePageState();
 }
@@ -16,31 +20,32 @@ class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   PageController suraPageController;
   ScrollController ayaScrollController;
-  String title = String.fromCharCode(13);
 
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
   TextStyle textStyle;
-  TextStyle textStyleLight;
-  // int selectedAyaIndex;
-  int currentAyaIndex = 0;
-  int currentPageValue;
+  TextStyle uthmaniStyle;
+  TextStyle uthmaniStyleLight;
+  int selectedSura = 0;
+  int selectedAya = 0;
   double toolbarHeight;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
   ThemeData theme;
 
   void initState() {
+    selectedSura = widget.selectedSura;
+    selectedAya = widget.selectedAya;
     super.initState();
     hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
     toolbarHeight = _toolbarHeight;
-    suraPageController = PageController(keepPage: true, initialPage: 12);
+    suraPageController =
+        PageController(keepPage: true, initialPage: widget.selectedSura);
     suraPageController.addListener(() {
       var page = suraPageController.page.round();
-      if (page != currentPageValue) {
+      if (page != selectedSura) {
         setState(() {
           toolbarHeight = _toolbarHeight;
-          currentPageValue = page;
-          title = String.fromCharCode(page + 13);
+          selectedSura = page;
         });
       }
     });
@@ -62,9 +67,10 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     var app = MyApp.of(context);
-    textStyle = TextStyle(
+    textStyle = TextStyle(color: theme.textTheme.caption.color);
+    uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
-    textStyleLight = TextStyle(
+    uthmaniStyleLight = TextStyle(
         fontFamily: 'Uthmani',
         fontSize: 22,
         height: 2,
@@ -119,7 +125,8 @@ class HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      child: Text(title, style: suraStyle),
+                      child: Text(String.fromCharCode(selectedSura + 13),
+                          style: suraStyle),
                       height: _toolbarHeight,
                     )),
                 footer()
@@ -134,8 +141,8 @@ class HomePageState extends State<HomePage> {
           return len < 10
               ? null
               : Text(
-                  "${currentAyaIndex + 1}",
-                  style: textStyleLight,
+                  "${selectedAya + 1}",
+                  style: uthmaniStyleLight,
                 );
         },
         labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
@@ -149,7 +156,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget ayaItemBuilder(int position, int index) {
-    currentAyaIndex = index;
+    selectedAya = index;
     return Container(
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
@@ -193,7 +200,7 @@ class HomePageState extends State<HomePage> {
           "${Configs.instance.quran[sura][aya]} ﴿${(aya + 1).toArabic()}﴾",
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
-          style: textStyle));
+          style: uthmaniStyle));
 
     for (var path in Prefs.persons[PType.text]) {
       if (path == "ar.uthmanimin") continue;
@@ -205,12 +212,12 @@ class HomePageState extends State<HomePage> {
         textDirection: dir,
         children: <Widget>[
           Text(
-            rows.length < 1
-                ? "\t\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
-                : "\t\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
-            textAlign: TextAlign.justify,
-            textDirection: dir,
-          ),
+              rows.length < 1
+                  ? "\t\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
+                  : "\t\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
+              textAlign: TextAlign.justify,
+              textDirection: dir,
+              style: textStyle),
           Avatar(path, 15)
         ],
       )
