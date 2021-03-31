@@ -6,6 +6,7 @@ import 'package:islamic/persons.dart';
 import 'package:islamic/localization.dart';
 
 import 'buttons.dart';
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   @override

@@ -18,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class AppState extends State<MyApp> {
   Locale locale;
+  ThemeMode themeMode;
   bool configured = false;
   WaitingPage waitingPage;
   var supportedLocales = [
@@ -31,6 +32,7 @@ class AppState extends State<MyApp> {
     super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
+      themeMode = Prefs.instance.getInt("themeMode") as ThemeMode;
       Configs.create(() {
         if (waitingPage.page.state > 1)
           waitingPage.page.end(() {
@@ -54,9 +56,17 @@ class AppState extends State<MyApp> {
       locale: locale,
       // debugShowCheckedModeBanner: false,
       theme: Themes.data,
-      // darkTheme: Themes.darkData,
+      darkTheme: Themes.darkData,
+      themeMode: themeMode,
       home: configured ? HomePage() : waitingPage,
     );
+  }
+
+  void setTheme(ThemeMode mode) {
+    if (themeMode == mode) return;
+    themeMode = mode;
+    Prefs.instance.setInt("themeMode", mode.index);
+    setState(() {});
   }
 
   void setLocale(String lang) {
