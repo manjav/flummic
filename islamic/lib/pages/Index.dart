@@ -17,11 +17,33 @@ class IndexPageState extends State<IndexPage> {
   TextStyle uthmaniStyle;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
 
-  List<Sura> get suras => Configs.instance.metadata.suras;
+  final _toolbarHeight = 56.0;
+  double toolbarHeight = 0;
+  double startScrollBarIndicator = 0;
+
+  ScrollController suraListController;
+
+  List<Sura> suras;
+
+  String lastSort;
 
   @override
   void initState() {
     super.initState();
+
+    toolbarHeight = _toolbarHeight;
+    suraListController = ScrollController();
+    suraListController.addListener(() {
+      var changes =
+          startScrollBarIndicator - suraListController.position.pixels;
+      startScrollBarIndicator = suraListController.position.pixels;
+      var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
+      if (toolbarHeight != h) {
+        toolbarHeight = h;
+        setState(() {});
+      }
+    });
+    suras = Configs.instance.metadata.suras;
   }
 
   @override
@@ -30,16 +52,22 @@ class IndexPageState extends State<IndexPage> {
     uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     return Scaffold(
-        appBar: AppBar(title: appBarTitle, actions: [
+        appBar: AppBar(
+            title: appBarTitle,
+            toolbarHeight: toolbarHeight,
+            elevation: 0,
+            actions: [
           IconButton(
             icon: searchIcon,
             onPressed: onSearchPressed,
           )
         ]),
-        body: ListView.builder(
+        body: Stack(children: [
+          ListView.builder(
+              padding: EdgeInsets.only(top: _toolbarHeight),
           itemBuilder: suraItemBuilder,
-          itemCount: suras.length,
-        ));
+              controller: suraListController,
+              itemCount: suras.length),
   }
 
   Widget suraItemBuilder(context, int index) {
