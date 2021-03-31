@@ -62,6 +62,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
+    var app = MyApp.of(context);
     textStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     textStyleLight = TextStyle(
@@ -74,75 +75,78 @@ class HomePageState extends State<HomePage> {
     return new Directionality(
         textDirection: TextDirection.ltr,
         child: Scaffold(
-          appBar: AppBar(
-              elevation: 0,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  onPressed: () => Navigator.pop(context),
-                )
+            appBar: AppBar(
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+                leading: Row(children: [
+                  IconButton(
+                    icon: new Icon(Icons.settings),
+                    onPressed: () => app.setTheme(
+                        app.themeMode == ThemeMode.dark
+                            ? ThemeMode.light
+                            : ThemeMode.dark),
+                  ),
+                  IconButton(
+                    icon: new Icon(Icons.search),
+                    onPressed: () {},
+                  )
+                ]),
+                // toolbarHeight: toolbarHeight,
+                // toolbarOpacity: toolbarHeight / _toolbarHeight
+                leadingWidth: _toolbarHeight * 2,
+                automaticallyImplyLeading: false),
+            body: Stack(
+              children: [
+                PageView.builder(
+                    reverse: true,
+                    itemCount: Configs.instance.metadata.suras.length,
+                    itemBuilder: suraPageBuilder,
+                    controller: suraPageController),
+                Transform.translate(
+                    offset: Offset(0, -_toolbarHeight + toolbarHeight),
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: theme.cardColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 6.0, // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Text(title, style: suraStyle),
+                      height: _toolbarHeight,
+                    )),
+                footer()
               ],
-              leading: Row(children: [
-                IconButton(
-                  icon: new Icon(Icons.settings),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: new Icon(Icons.search),
-                  onPressed: () {},
-                )
-              ]),
-              // toolbarHeight: toolbarHeight,
-              // toolbarOpacity: toolbarHeight / _toolbarHeight
-              leadingWidth: _toolbarHeight * 2,
-              automaticallyImplyLeading: false),
-          body: PageView.builder(
-              reverse: true,
-              itemCount: Configs.instance.metadata.suras.length,
-              itemBuilder: suraPageBuilder,
-              controller: suraPageController),
-              )
-        );
+            )));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
-    return Stack(children: [
-      DraggableScrollbar.arrows(
-          labelTextBuilder: (offset) {
-            return len < 10
-                ? null
-                : Text(
-                    "${currentAyaIndex + 1}",
-                    style: textStyleLight,
-                  );
-          },
-          labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
-          backgroundColor: theme.cardColor,
-          controller: ayaScrollController,
-          child: ListView.builder(
-              padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 16),
-              itemCount: len,
-              itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-              controller: ayaScrollController)),
-      Transform.translate(
-          offset: Offset(0, -_toolbarHeight + toolbarHeight),
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: theme.cardColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 6.0, // changes position of shadow
-                ),
-              ],
-            ),
-            child: Text(title, style: suraStyle),
-            height: _toolbarHeight,
-          )),
-      footer(),
-    ]);
+    return DraggableScrollbar.arrows(
+        labelTextBuilder: (offset) {
+          return len < 10
+              ? null
+              : Text(
+                  "${currentAyaIndex + 1}",
+                  style: textStyleLight,
+                );
+        },
+        labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
+        backgroundColor: theme.cardColor,
+        controller: ayaScrollController,
+        child: ListView.builder(
+            padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 16),
+            itemCount: len,
+            itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+            controller: ayaScrollController));
   }
 
   Widget ayaItemBuilder(int position, int index) {
@@ -234,18 +238,17 @@ class HomePageState extends State<HomePage> {
             child: Row(
               children: [
                 IconButton(
-                    icon: Icon(
-                      Icons.add_comment_outlined,
-                      color: theme.focusColor,
-                    ),
-                    onPressed: () => footerPressed(PType.sound)),
+                    icon: Icon(Icons.add_comment_outlined,
+                        color: theme.appBarTheme.iconTheme.color),
+                    onPressed: () => footerPressed(PType.text)),
                 IconButton(
-                    icon: Icon(Icons.headset_sharp, color: theme.focusColor),
+                    icon: Icon(Icons.headset_sharp,
+                        color: theme.appBarTheme.iconTheme.color),
                     onPressed: () => footerPressed(PType.sound)),
               ],
             ),
             decoration: new BoxDecoration(
-              color: theme.primaryColor,
+              color: theme.appBarTheme.backgroundColor,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),
