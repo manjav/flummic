@@ -1,8 +1,8 @@
 {
-    "suras_in": "Sureler",
+    "suras_l": "Sureler",
     "number_in": "Numara",
-    "order_in": "Düzen",
-    "verses_in": "Ayetler",
+    "order_l": "Düzen",
+    "ayas_l": "Ayetler",
     "medinan_in": "Medine'li",
     "meccan_in": "Mekke'li",
     "sura_l": "Sura",

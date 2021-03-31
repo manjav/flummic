@@ -1,8 +1,8 @@
 {
-    "suras_in": "السور",
+    "suras_l": "السور",
     "number_in": "عدد",
-    "order_in": "ترتيب",
-    "verses_in": "أياس",
+    "order_l": "ترتيب",
+    "ayas_l": "أياس",
     "medinan_in": "المدينية",
     "meccan_in": "المكية",
     "sura_l": "سورة",

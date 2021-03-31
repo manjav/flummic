@@ -1,8 +1,8 @@
 {
-    "suras_in": "Sourates",
+    "suras_l": "Sourates",
     "number_in": "Nombre",
-    "order_in": "Commander",
-    "verses_in": "Ayas",
+    "order_l": "Commander",
+    "ayas_l": "Ayas",
     "medinan_in": "Medinan",
     "meccan_in": "mecquoise",
     "sura_l": "Sura",

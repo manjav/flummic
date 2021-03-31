@@ -1,8 +1,8 @@
 {
-    "suras_in": "Sura",
+    "suras_l": "Sura",
     "number_in": "Nomor",
-    "order_in": "Order",
-    "verses_in": "Ayas",
+    "order_l": "Order",
+    "ayas_l": "Ayas",
     "medinan_in": "Madinah",
     "meccan_in": "Mekah",
     "sura_l": "Sura",

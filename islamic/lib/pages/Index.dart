@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
+import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -57,17 +58,42 @@ class IndexPageState extends State<IndexPage> {
             toolbarHeight: toolbarHeight,
             elevation: 0,
             actions: [
-          IconButton(
-            icon: searchIcon,
-            onPressed: onSearchPressed,
-          )
-        ]),
+              IconButton(
+                icon: searchIcon,
+                onPressed: onSearchPressed,
+              )
+            ]),
         body: Stack(children: [
           ListView.builder(
               padding: EdgeInsets.only(top: _toolbarHeight),
-          itemBuilder: suraItemBuilder,
+              itemBuilder: suraItemBuilder,
               controller: suraListController,
               itemCount: suras.length),
+          Container(
+              height: _toolbarHeight,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 6.0, // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: getHeader("suras"),
+                      ),
+                      getHeader("order"),
+                      getHeader("ayas"),
+                      getHeader("page")
+                    ],
+                  )))
+        ]));
   }
 
   Widget suraItemBuilder(context, int index) {
@@ -91,10 +117,11 @@ class IndexPageState extends State<IndexPage> {
                             color: sura.type == 0 ? Colors.blue : Colors.amber),
                         child: Align(
                             heightFactor: 0.8,
-                            child: Text("${index + 1}", style: uthmaniStyle))),
+                            child: Text("${sura.index + 1}",
+                                style: uthmaniStyle))),
                     SizedBox(width: 8, height: 48),
                     Expanded(
-                      child: Text("${String.fromCharCode(index + 13)}",
+                      child: Text("${String.fromCharCode(sura.index + 13)}",
                           style: suraStyle, textAlign: TextAlign.right),
                     ),
                     getText(sura.order),
@@ -106,10 +133,44 @@ class IndexPageState extends State<IndexPage> {
 
   Container getText(int value) {
     return Container(
-        width: 56,
+        width: 64,
         height: 24,
         alignment: Alignment.center,
         child: Text("$value", style: uthmaniStyle));
+  }
+
+  GestureDetector getHeader(String value) {
+    return GestureDetector(
+        onTap: () {
+          if (lastSort == value) {
+            suras = suras.reversed.toList();
+          } else {
+            lastSort = value;
+            suras.sort((Sura l, Sura r) {
+              if (value == "ayas")
+                return l.ayas.compareTo(r.ayas);
+              else if (value == "order")
+                return l.order.compareTo(r.order);
+              else if (value == "page")
+                return l.page.compareTo(r.page);
+              else
+                return l.index.compareTo(r.index);
+            });
+          }
+          setState(() {});
+        },
+        child: Container(
+            width: 64,
+            height: _toolbarHeight,
+            child: Stack(alignment: Alignment.topCenter,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("${value}_l".l()),
+                  Positioned(
+                    child: Icon(Icons.arrow_drop_down),
+                    top: 24,
+                  )
+                ])));
   }
 
   void onSearchPressed() {}

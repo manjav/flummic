@@ -113,6 +113,8 @@ class Configs {
         else if (k == "pages")
           for (var c in map[k]) instance.metadata.pages.add(Part(c));
       }
+      for (var i = 0; i < instance.metadata.suras.length; i++)
+        instance.metadata.suras[i].index = i;
       finalize();
     }, null, (String e) => print("error: $e"));
   }
@@ -135,7 +137,7 @@ class QuranMeta {
 }
 
 class Sura {
-  int ayas, start, order, rukus, page, type;
+  int index, ayas, start, order, rukus, page, type;
   String name, tname, ename;
   Sura(s) {
     ayas = s["ayas"];
