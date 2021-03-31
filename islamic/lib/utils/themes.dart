@@ -4,14 +4,14 @@ class Themes {
   static Map<int, Color> get primaries => <int, Color>{
         50: Color(0xFFF0F9FF),
         100: Color(0xFFD2E6F0),
-        200: Color(0xFF90C6CB),
+        200: Color(0xFF90C0CB),
         300: Color(0xFF4DAFB6),
         400: Color(0xFF269DA6),
         500: Color(0xFF008C96),
         600: Color(0xFF005560),
         700: Color(0xFF003540),
-        800: Color(0xFF001A2A),
-        900: Color(0xFF001525),
+        800: Color(0xFF051A2A),
+        900: Color(0xFF051222),
         910: Color(0xFF5A5A4A),
         920: Color(0xFF3A3A2A),
       };
