@@ -45,6 +45,7 @@ class Prefs {
           break;
       }
       locale = _locale;
+      instance.setInt("themeMode", 0);
       instance.setStringList(PType.text.toString(), persons[PType.text]);
       instance.setStringList(PType.sound.toString(), persons[PType.sound]);
 
