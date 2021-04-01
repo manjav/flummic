@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
 import '../utils/localization.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class IndexPageState extends State<IndexPage> {
 
   ThemeData theme;
   TextStyle uthmaniStyle;
-  TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
+  TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 28);
 
   final _toolbarHeight = 56.0;
   double toolbarHeight = 0;
@@ -99,30 +100,44 @@ class IndexPageState extends State<IndexPage> {
   Widget suraItemBuilder(context, int index) {
     var sura = suras[index];
     return Container(
+        height: 56,
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
-            onTap: () => setState(() => Navigator.push(
+            onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage(index, 0)),
-                )),
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(sura.index, 0)),
+                ),
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                 child: Row(
                   children: [
-                    Container(
-                        width: 36,
-                        height: 36,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: sura.type == 0 ? Colors.blue : Colors.amber),
-                        child: Align(
-                            heightFactor: 0.8,
-                            child: Text("${sura.index + 1}",
-                                style: uthmaniStyle))),
+                    Stack(children: [
+                      SvgPicture.asset(
+                        "images/${sura.type == 0 ? 'meccan' : 'median'}.svg",
+                        color: theme.primaryColor,
+                        width: 50,
+                        height: 50,
+                      ),
+                      Positioned(
+                          top: 10,
+                          bottom: 10,
+                          right: 4,
+                          left: 4,
+                          child: Text(
+                            "${sura.index + 1}",
+                            style: uthmaniStyle,
+                            textAlign: TextAlign.center,
+                          ))
+                    ]),
                     SizedBox(width: 8, height: 48),
                     Expanded(
-                      child: Text("${String.fromCharCode(sura.index + 13)}",
-                          style: suraStyle, textAlign: TextAlign.right),
+                      child: Text(
+                        "${String.fromCharCode(sura.index + 13)}",
+                        style: suraStyle,
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.ltr,
+                      ),
                     ),
                     getText(sura.order),
                     getText(sura.ayas),
@@ -151,8 +166,6 @@ class IndexPageState extends State<IndexPage> {
                 return l.ayas.compareTo(r.ayas);
               else if (value == "order")
                 return l.order.compareTo(r.order);
-              else if (value == "page")
-                return l.page.compareTo(r.page);
               else
                 return l.index.compareTo(r.index);
             });

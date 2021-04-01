@@ -15,6 +15,7 @@ dependencies:
   rive: ^0.6.8
   intl: ^0.17.0
   timezone: ^0.6.1
+  flutter_svg: ^0.20.0-nullsafety.1
   path_provider: ^2.0.1
   cupertino_icons: ^1.0.2
   simple_speed_dial: ^0.1.2
