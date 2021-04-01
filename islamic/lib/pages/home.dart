@@ -165,7 +165,7 @@ class HomePageState extends State<HomePage> {
                   toolbarHeight = _toolbarHeight;
                 }),
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: textsProvider(position, index)))));

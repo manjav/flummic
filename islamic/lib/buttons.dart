@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CircleButton extends GestureDetector {
   static TextStyle style =
@@ -49,13 +50,6 @@ class Avatar extends CachedNetworkImage {
       : super(
             imageUrl: "https://grantech.ir/islam/images/$path.png",
             width: radius * 2.0,
-            placeholder: (context, url) => CircleAvatar(
-                backgroundColor: Colors.black12,
-                backgroundImage: AssetImage("images/person.png"),
-                radius: radius),
-            // errorWidget: (context, url, error) => Icon(
-            //       Icons.person,
-            //       size: 56,
-            //     )
-            );
+            placeholder: (context, url) =>
+                SvgPicture.asset("images/person.svg"));
 }
