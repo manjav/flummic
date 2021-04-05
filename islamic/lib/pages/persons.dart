@@ -212,13 +212,15 @@ class PersonListPageState extends State<PersonListPage> {
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
-    String size;
-    if (p.size > 1048576)
-      size = (p.size / 1048576).floor().n() + " " + "mbyte_t".l();
-    else
-      size = (p.size / 1024).floor().n() + " " + "kbyte_t".l();
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
-    if (widget.type == PType.text) subtitle += " , $size";
+    if (widget.type == PType.text) {
+      String size;
+      if (p.size > 1048576)
+        size = (p.size / 1048576).floor().n() + " " + "mbyte_t".l();
+      else
+        size = (p.size / 1024).floor().n() + " " + "kbyte_t".l();
+      subtitle += " , $size";
+    }
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
