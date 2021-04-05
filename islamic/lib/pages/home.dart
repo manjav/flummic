@@ -1,6 +1,7 @@
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
+import 'package:islamic/widgets/player.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../models.dart';
 import '../pages/persons.dart';
 import '../utils/localization.dart';
@@ -19,8 +20,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   PageController suraPageController;
-  ScrollController ayaScrollController;
-
+  ItemScrollController itemScrollController;
+  ItemPositionsListener itemPositionsListener;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
   TextStyle textStyle;
   TextStyle uthmaniStyle;
@@ -47,18 +48,6 @@ class HomePageState extends State<HomePage> {
           toolbarHeight = _toolbarHeight;
           selectedSura = page;
         });
-      }
-    });
-
-    ayaScrollController = ScrollController();
-    ayaScrollController.addListener(() {
-      var changes =
-          startScrollBarIndicator - ayaScrollController.position.pixels;
-      startScrollBarIndicator = ayaScrollController.position.pixels;
-      var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
-      if (toolbarHeight != h) {
-        toolbarHeight = h;
-        setState(() {});
       }
     });
   }
@@ -98,7 +87,12 @@ class HomePageState extends State<HomePage> {
                   ),
                   IconButton(
                     icon: new Icon(Icons.search),
-                    onPressed: () {},
+                    onPressed: () {
+                      itemScrollController.scrollTo(
+                          index: 123,
+                          duration: Duration(seconds: 1),
+                          curve: Curves.easeInOut);
+                    },
                   )
                 ]),
                 // toolbarHeight: toolbarHeight,
@@ -136,23 +130,26 @@ class HomePageState extends State<HomePage> {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
-    return DraggableScrollbar.arrows(
-        labelTextBuilder: (offset) {
-          return len < 10
-              ? null
-              : Text(
-                  "${selectedAya + 1}",
-                  style: uthmaniStyleLight,
-                );
-        },
-        labelConstraints: BoxConstraints.tightFor(width: 80.0, height: 30.0),
-        backgroundColor: theme.cardColor,
-        controller: ayaScrollController,
-        child: ListView.builder(
-            padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 24),
-            itemCount: len,
-            itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-            controller: ayaScrollController));
+    return ScrollablePositionedList.builder(
+      itemScrollController: itemScrollController = ItemScrollController(),
+      itemPositionsListener: itemPositionsListener =
+          ItemPositionsListener.create(),
+      padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 24),
+      itemCount: len,
+      itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+      onScroll: onPageScroll,
+      // controller: ayaScrollController
+    );
+  }
+
+  void onPageScroll(ScrollPosition position) {
+    var changes = startScrollBarIndicator - position.pixels;
+    startScrollBarIndicator = position.pixels;
+    var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
+    if (toolbarHeight != h) {
+      toolbarHeight = h;
+      setState(() {});
+    }
   }
 
   Widget ayaItemBuilder(int position, int index) {
@@ -269,5 +266,15 @@ class HomePageState extends State<HomePage> {
     );
     setState(() =>
         hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);
+  }
+
+  Future<void> playerOnChange(int sura, int aya, int index) async {
+    if (sura != selectedSura)
+      await suraPageController.animateToPage(sura,
+          duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    else
+      await itemScrollController.scrollTo(
+          index: aya, duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    print("sura$sura aya$aya index$index");
   }
 }
