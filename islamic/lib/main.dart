@@ -64,7 +64,6 @@ class AppState extends State<MyApp> {
   }
 
   Widget preparedPage() {
-    print("loadingState $loadingState");
     switch (loadingState) {
       case 1:
         return waitingPage;
