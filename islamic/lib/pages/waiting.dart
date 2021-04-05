@@ -26,7 +26,7 @@ class WaitingPageState extends State<WaitingPage> {
   }
 
   animLoaded(ByteData data) async {
-    await Localization.change(context, Prefs.locale);
+    await Localization.change(context, Prefs.instance.getString("locale"));
     final file = RiveFile();
     if (file.import(data)) {
       artboard = file.mainArtboard;

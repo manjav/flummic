@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 class AppState extends State<MyApp> {
   Locale locale;
   ThemeMode themeMode;
-  bool configured = false;
+  int loadingState = 0;
   WaitingPage waitingPage;
   var supportedLocales = [
     const Locale("en", ""),
@@ -32,14 +32,15 @@ class AppState extends State<MyApp> {
     super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
+      setState(() => loadingState = 1);
       setTheme(ThemeMode.values[Prefs.instance.getInt("themeMode")]);
       Configs.create(() {
         if (waitingPage.page.state > 1)
           waitingPage.page.end(() {
-            setState(() => configured = true);
+            setState(() => loadingState = 2);
           });
         else
-          setState(() => configured = true);
+          setState(() => loadingState = 2);
       });
     });
   }
@@ -58,10 +59,22 @@ class AppState extends State<MyApp> {
       theme: Themes.data,
       darkTheme: Themes.darkData,
       themeMode: themeMode,
-      home: configured ? IndexPage() : waitingPage,
+      home: preparedPage(),
     );
   }
 
+  Widget preparedPage() {
+    print("loadingState $loadingState");
+    switch (loadingState) {
+      case 1:
+        return waitingPage;
+      case 2:
+        return IndexPage();
+      default:
+        return Container(color: Colors.red);
+    }
+  }
+  
   void setTheme(ThemeMode mode) {
     if (themeMode == mode) return;
     themeMode = mode;
@@ -74,7 +87,7 @@ class AppState extends State<MyApp> {
     if (_loc == null) return;
     setState(() {
       locale = _loc;
-      Prefs.locale = lang;
+      Prefs.instance.setString("locale", lang);
     });
   }
 }

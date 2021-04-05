@@ -1,15 +1,13 @@
 import 'dart:convert';
-import 'utils/utils.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/loader.dart';
+import 'utils/utils.dart';
 
 class Prefs {
   static SharedPreferences instance;
-
-  static String get locale => instance.getString("locale");
-  static set locale(String v) => instance.setString("locale", v);
-
   static Map<PType, List<String>> persons = Map();
 
   static void init(Function onInit) {
@@ -44,8 +42,8 @@ class Prefs {
           persons[PType.sound].add("abu_bakr_ash_shaatree");
           break;
       }
-      locale = _locale;
       instance.setInt("themeMode", 0);
+      instance.setString("locale", _locale);
       instance.setStringList(PType.text.toString(), persons[PType.text]);
       instance.setStringList(PType.sound.toString(), persons[PType.sound]);
 
