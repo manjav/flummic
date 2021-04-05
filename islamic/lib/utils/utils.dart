@@ -2,7 +2,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class Utils {
-
   static String getLocaleByTimezone(String timezone) {
     switch (timezone) {
       case "Asia/Tehran":
@@ -23,10 +22,16 @@ class Utils {
     return "Europe/London";
   }
 
-  static bool equalLists(List left, List right) {
+   static bool equalLists(List left, List right) {
     if (left == null || right == null) return false;
     if (left.length != right.length) return false;
     for (var i = 0; i < left.length; i++) if (left[i] != right[i]) return false;
     return true;
+  }
+
+  static String fillZero(int number) {
+    if (number < 10) return "00$number";
+    if (number < 100) return "0$number";
+    return "$number";
   }
 }

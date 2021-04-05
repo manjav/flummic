@@ -113,22 +113,8 @@ extension Localization on String {
         post);
   }
 
-  static String getFullURL(
-      String path, int sura, int aya, String post /* ="mp3" */) {
-    return (path +
-        "/" +
-        getZeroNum(sura.toString()) +
-        getZeroNum(aya.toString()) +
-        "." +
-        post);
-  }
 
-  static String getZeroNum(String _val, [int _len] /* =3 */) {
-    var zeroStr = '';
-    _len = _len < _val.length ? _val.length : _len;
-    for (var i = 0; i < _len - _val.length; i++) zeroStr += '0';
-    return zeroStr + _val;
-  } */
+   */
 }
 
 extension LocalizeInt on int {

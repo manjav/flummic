@@ -240,4 +240,10 @@ class Person {
     loader.abort();
     state = PState.waiting;
   }
+
+  String getURL(int sura, int aya) {
+    debugPrint(
+        "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3");
+    return "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3";
+  }
 }

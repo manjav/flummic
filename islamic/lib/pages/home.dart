@@ -251,6 +251,7 @@ class HomePageState extends State<HomePage> {
                     icon: Icon(Icons.headset_sharp,
                         color: theme.appBarTheme.iconTheme.color),
                     onPressed: () => footerPressed(PType.sound)),
+                Player.create(selectedSura, 0, playerOnChange)
               ],
             ),
             decoration: new BoxDecoration(
