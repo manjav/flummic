@@ -23,7 +23,6 @@ class HomePageState extends State<HomePage> {
   ItemScrollController itemScrollController;
   ItemPositionsListener itemPositionsListener;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
-  TextStyle textStyle;
   TextStyle uthmaniStyle;
   TextStyle uthmaniStyleLight;
   int selectedSura = 0;
@@ -214,7 +213,7 @@ class HomePageState extends State<HomePage> {
                   : "\t\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
               textAlign: TextAlign.justify,
               textDirection: dir,
-              style: textStyle),
+              style: theme.textTheme.caption),
           Avatar(path, 15)
         ],
       )

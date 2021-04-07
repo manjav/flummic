@@ -21,7 +21,9 @@ class Themes {
         bodyText1: TextStyle(color: primaries[920]),
         bodyText2: TextStyle(color: primaries[920]),
         subtitle1: TextStyle(color: primaries[920]),
-        caption: TextStyle(color: primaries[910]),
+        subtitle2: TextStyle(color: primaries[100]),
+        caption: TextStyle(
+            color: primaries[910], fontSize: 15, fontWeight: FontWeight.w100),
         button: TextStyle(color: primaries[50]),
         headline6: TextStyle(
             color: primaries[100],
@@ -34,6 +36,8 @@ class Themes {
             backgroundColor: primaries[500],
             textTheme: textTheme,
             iconTheme: IconThemeData(color: Colors.white)),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: primaries[500], foregroundColor: primaries[100]),
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
         cardColor: primaries[100],
@@ -59,8 +63,9 @@ class Themes {
         bodyText1: TextStyle(color: primaries[100]),
         bodyText2: TextStyle(color: primaries[100]),
         subtitle1: TextStyle(color: primaries[100]),
-        subtitle2: TextStyle(color: primaries[100]),
-        caption: TextStyle(color: primaries[200]),
+        subtitle2: TextStyle(color: primaries[200]),
+        caption: TextStyle(
+            color: primaries[200], fontSize: 15, fontWeight: FontWeight.w100),
         button: TextStyle(color: primaries[900]),
         headline6: TextStyle(
             color: primaries[100],
@@ -73,6 +78,8 @@ class Themes {
           backgroundColor: primaries[700],
           textTheme: textTheme,
           iconTheme: IconThemeData(color: primaries[100])),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: primaries[500], foregroundColor: primaries[100]),
       fontFamily: "CubicSans",
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],
