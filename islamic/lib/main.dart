@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
+import 'package:islamic/widgets/player.dart';
 
 import 'models.dart';
 import 'pages/waiting.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatefulWidget {
 
 class AppState extends State<MyApp> {
   Locale locale;
+  Player player;
   ThemeMode themeMode;
   int loadingState = 0;
   WaitingPage waitingPage;
@@ -73,7 +75,7 @@ class AppState extends State<MyApp> {
         return Container(color: Colors.red);
     }
   }
-  
+
   void setTheme(ThemeMode mode) {
     if (themeMode == mode) return;
     themeMode = mode;

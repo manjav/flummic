@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/widgets/player.dart';
@@ -31,6 +32,7 @@ class HomePageState extends State<HomePage> {
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
   ThemeData theme;
+  AppState app;
 
   void initState() {
     selectedSura = widget.selectedSura;
@@ -49,13 +51,15 @@ class HomePageState extends State<HomePage> {
         });
       }
     });
+
+    app = MyApp.of(context);
+    if (app.player == null) app.player = Player();
+    app.player.onStateChange = playerOnStateChange;
   }
 
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
-    var app = MyApp.of(context);
-    textStyle = TextStyle(color: theme.textTheme.caption.color);
     uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     uthmaniStyleLight = TextStyle(
@@ -130,9 +134,11 @@ class HomePageState extends State<HomePage> {
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
     return ScrollablePositionedList.builder(
+      
       itemScrollController: itemScrollController = ItemScrollController(),
       itemPositionsListener: itemPositionsListener =
           ItemPositionsListener.create(),
+      initialScrollIndex: selectedAya,
       padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 24),
       itemCount: len,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
@@ -152,13 +158,14 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget ayaItemBuilder(int position, int index) {
-    selectedAya = index;
+    // selectedAya = index;
     return Container(
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
             onTap: () => setState(() {
                   // var tween = Tween<double>(begin: -200, end: 0);
                   toolbarHeight = _toolbarHeight;
+                  // app.player.select(selectedSura, index, 0, true);
                 }),
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -231,23 +238,57 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget footer() {
+    if (app.player == null) return Container();
+    var coef = (_toolbarHeight - toolbarHeight);
     return Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-            transform: Matrix4.identity()
-              ..translate(0.1, _toolbarHeight * 2 - toolbarHeight * 2),
+            transform: Matrix4.identity()..translate(0.001, coef * 0.4),
             height: 56,
-            child: Row(
+            child: Stack(
+              fit: StackFit.expand,
+              clipBehavior: Clip.none,
               children: [
-                IconButton(
-                    icon: Icon(Icons.add_comment_outlined,
-                        color: theme.appBarTheme.iconTheme.color),
-                    onPressed: () => footerPressed(PType.text)),
-                IconButton(
-                    icon: Icon(Icons.headset_sharp,
-                        color: theme.appBarTheme.iconTheme.color),
-                    onPressed: () => footerPressed(PType.sound)),
-                Player.create(selectedSura, 0, playerOnChange)
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    child: Opacity(
+                        opacity: toolbarHeight / _toolbarHeight,
+                        child: IconButton(
+                            icon: Icon(Icons.add_comment_outlined,
+                                color: theme.appBarTheme.iconTheme.color),
+                            onPressed: () => footerPressed(PType.text)))),
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 48,
+                    child: Opacity(
+                        opacity: toolbarHeight / _toolbarHeight,
+                        child: IconButton(
+                            icon: Icon(Icons.headset_sharp,
+                                color: theme.appBarTheme.iconTheme.color),
+                            onPressed: () => footerPressed(PType.sound)))),
+                Positioned(
+                    top: 10 - coef * 0.11,
+                    right: 86 - coef * 0.4,
+                    child: Avatar(app.player.sound.path, 20 - coef * 0.12)),
+                Positioned(
+                    top: 10 - coef * 0.2,
+                    right: 132 - coef * 0.65,
+                    child: Text(
+                      app.player.sound.name,
+                      style: theme.textTheme.subtitle2,
+                      textAlign: TextAlign.right,
+                    )),
+                Positioned(
+                    top: -_toolbarHeight * 0.5 + coef * 0.15,
+                    right: _toolbarHeight * 0.5 - coef * 0.15,
+                    child: SizedBox(
+                        height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
+                        width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
+                        child: FloatingActionButton(
+                            child: Icon(getIcon()),
+                            onPressed: onTogglePressed)))
               ],
             ),
             decoration: new BoxDecoration(
@@ -267,13 +308,57 @@ class HomePageState extends State<HomePage> {
         hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);
   }
 
-  Future<void> playerOnChange(int sura, int aya, int index) async {
-    if (sura != selectedSura)
-      await suraPageController.animateToPage(sura,
-          duration: Duration(seconds: 1), curve: Curves.easeInOut);
+  Future<void> playerOnStateChange(AudioPlayerState state) async {
+    setState(() {});
+    if (state != AudioPlayerState.PLAYING) return;
+    goto(app.player.sura, app.player.aya);
+  }
+
+  void goto(int sura, int aya) {
+    if (sura != selectedSura) {
+      selectedAya = aya;
+      var dis = (sura - selectedSura).abs();
+      gotoSura(sura, dis > 3 ? 0 : 400);
+      // gotoAya(aya, 0);
+    } else {
+      gotoAya(aya, 800);
+    }
+    // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
+  }
+
+  void gotoSura(int sura, int duration) {
+    if (duration == 0)
+      suraPageController.jumpToPage(sura);
     else
-      await itemScrollController.scrollTo(
-          index: aya, duration: Duration(seconds: 1), curve: Curves.easeInOut);
-    print("sura$sura aya$aya index$index");
+      suraPageController.animateToPage(sura,
+          duration: Duration(milliseconds: duration), curve: Curves.easeInOut);
+  }
+
+  void gotoAya(int aya, int duration) {
+    print("aya $aya, duration $duration");
+    if (duration == 0) {
+      itemScrollController.jumpTo(index: aya);
+    } else {
+      itemScrollController.scrollTo(
+          index: aya,
+          duration: Duration(milliseconds: duration),
+          curve: Curves.easeInOut);
+    }
+  }
+
+  IconData getIcon() {
+    switch (app.player.playerState) {
+      case AudioPlayerState.PLAYING:
+        return Icons.pause;
+      default:
+        return Icons.play_arrow;
+    }
+  }
+
+  void onTogglePressed() {
+    if (app.player.sura == null)
+      app.player.select(selectedSura, selectedAya, 0, true);
+    else
+      app.player.toggle();
   }
 }

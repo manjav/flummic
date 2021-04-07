@@ -1,44 +1,24 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../models.dart';
 
 class Player {
-  static Player instance;
   AudioPlayer player;
+  Person get sound =>
+      Configs.instance.sounds[Prefs.persons[PType.sound][index]];
+  int sura, aya, index = 0;
   AudioPlayerState playerState;
-  int index, sura, aya;
-  List<Person> sounds;
 
-  Function(int sura, int aya, int index) listener;
+  Function(AudioPlayerState state) onStateChange;
 
   Player() {
-    // AudioPlayer.logEnabled = true;
+    AudioPlayer.logEnabled = false;
     player = AudioPlayer();
     player.onPlayerStateChanged.listen(onPlayerStateChanged);
-
-    sounds = <Person>[];
-    for (var s in Prefs.persons[PType.sound])
-      sounds.add(Configs.instance.sounds[s]);
   }
 
-  static Widget create(int sura, int aya, Function(int, int, int) listener) {
-    if (instance == null) {
-      instance = Player();
-      instance.init(sura, aya, 0, false);
-    }
-    instance.listener = listener;
-    return Stack(children: [
-      IconButton(
-          icon: Icon(instance.playerState == AudioPlayerState.PLAYING
-              ? Icons.pause
-              : Icons.play_arrow),
-          onPressed: instance.toggle)
-    ]);
-  }
-
-  Future<void> init(int sura, int aya, int index, bool autoPlay) async {
+  Future<void> select(int sura, int aya, int index, bool autoPlay) async {
+    print("select sura $sura aya $aya index $index");
     this.sura = sura;
     this.aya = aya;
     this.index = index;
@@ -47,32 +27,36 @@ class Player {
       playerState = AudioPlayerState.STOPPED;
       return;
     }
-    int result = await player.play(sounds[index].getURL(sura, aya));
-    if (result == 1 && listener != null) listener(sura, aya, index);
+    await player.play(sound.getURL(sura, aya));
   }
 
   Future<void> toggle() async {
     if (playerState == AudioPlayerState.STOPPED)
-      await player.play(sounds[index].getURL(sura, aya));
+      await player.play(sound.getURL(sura, aya));
     if (playerState == AudioPlayerState.PLAYING)
       player.pause();
     else
       player.resume();
   }
 
+  void pause() {
+    player.pause();
+  }
+
   void onPlayerStateChanged(AudioPlayerState state) {
     playerState = state;
-    if (state == AudioPlayerState.COMPLETED) {
-      if (index >= sounds.length - 1) {
-        if (aya >= Configs.instance.metadata.suras[sura].ayas - 1) {
-          if (sura >= Configs.instance.metadata.suras.length - 1) return;
-          init(sura + 1, 0, 0, true);
-        } else {
-          init(sura, aya + 1, 0, true);
-        }
+    if (onStateChange != null) onStateChange(state);
+    if (state != AudioPlayerState.COMPLETED) return;
+    print("change sura $sura aya $aya index $index");
+    if (index >= Prefs.persons[PType.sound].length - 1) {
+      if (aya >= Configs.instance.metadata.suras[sura].ayas - 1) {
+        if (sura >= Configs.instance.metadata.suras.length - 1) return;
+        select(sura + 1, 0, 0, true);
       } else {
-        init(sura, aya, index + 1, true);
+        select(sura, aya + 1, 0, true);
       }
+    } else {
+      select(sura, aya, index + 1, true);
     }
   }
 }
