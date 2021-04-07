@@ -51,5 +51,5 @@ class Avatar extends CachedNetworkImage {
             imageUrl: "https://grantech.ir/islam/images/$path.png",
             width: radius * 2.0,
             placeholder: (context, url) =>
-                SvgPicture.asset("images/person.svg"));
+                SvgPicture.asset("images/person.svg"), height: radius * 2.0);
 }
