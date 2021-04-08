@@ -4,21 +4,28 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show Bidi;
 
 import '../main.dart';
 
 extension Localization on String {
+  static bool isRTL = true;
+  static String languageCode;
   static Map<String, String> sentences;
-  static Future<void> change(BuildContext context, String lang) async {
+  static TextDirection dir;
+
+  static Future<void> change(BuildContext context, String _languageCode) async {
     String data;
-    debugPrint('Load $lang.json');
+    debugPrint('Load $_languageCode.json');
     try {
-      data = await rootBundle.loadString('locs/$lang.json');
+      data = await rootBundle.loadString('locs/$_languageCode.json');
     } catch (_) {
       data = await rootBundle.loadString('locs/${Platform.localeName}.json');
     }
-    MyApp.of(context).setLocale(lang);
+    languageCode = _languageCode;
+    isRTL = Bidi.isRtlLanguage(languageCode);
+    dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
+    MyApp.of(context).setLocale(languageCode);
 
     var _result = json.decode(data);
     sentences = Map();
