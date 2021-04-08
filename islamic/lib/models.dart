@@ -285,10 +285,10 @@ class Person {
     state = PState.downloading;
     loader = Loader();
     loader.load(path, url, (String _data) {
-      var map = json.decode(_data);
+      var list = json.decode(_data);
       print(path);
       data = <List<String>>[];
-      for (var s in map) {
+      for (var s in list) {
         var sura = <String>[];
         for (var a in s) sura.add(a);
         data.add(sura);

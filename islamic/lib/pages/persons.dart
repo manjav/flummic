@@ -197,6 +197,7 @@ class PersonListPageState extends State<PersonListPage> {
       if (searchIcon.icon == Icons.search) {
         searchIcon = Icon(Icons.close);
         appBarTitle = TextField(
+          autofocus: true,
           controller: searchController,
           decoration: InputDecoration(
               prefixIcon: Icon(Icons.search), hintText: 'search_in'.l()),
