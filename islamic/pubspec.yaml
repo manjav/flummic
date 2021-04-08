@@ -22,6 +22,7 @@ dependencies:
   simple_speed_dial: ^0.1.2
   shared_preferences: ^2.0.5
   cached_network_image: ^3.0.0
+  autocomplete_textfield: ^1.7.3
   flutter_svg: ^0.20.0-nullsafety.1
   scrollable_positioned_list: ^0.1.10
 

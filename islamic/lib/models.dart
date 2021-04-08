@@ -94,6 +94,10 @@ class Configs {
   static Configs instance;
   Function onCreate;
   QuranMeta metadata;
+
+  List<Word> words;
+  List<List<String>> simpleQuran;
+
   var sounds = Map<String, Person>();
   var texts = Map<String, Person>();
 
@@ -151,6 +155,30 @@ class Configs {
       if (sounds[r]?.state != PState.selected) return;
     onCreate();
   }
+
+  Future<void> loadSearchAssets(Function onDone) async {
+    if (simpleQuran != null) {
+      onDone();
+      return;
+    }
+    await Loader().load("words.json", baseURL + "words.ijson",
+        (String data) async {
+      var list = json.decode(data);
+      words = <Word>[];
+      for (var w in list) words.add(new Word(w));
+      await Loader().load("simple.json", baseURL + "simple.ijson",
+          (String data) {
+        var list = json.decode(data);
+        simpleQuran = <List<String>>[];
+        for (var s in list) {
+          var sura = <String>[];
+          for (var a in s) sura.add(a);
+          simpleQuran.add(sura);
+        }
+        onDone();
+      }, null, print);
+    }, null, print);
+  }
 }
 
 class QuranMeta {
@@ -191,6 +219,22 @@ class Part {
     sura = p["sura"];
     aya = p["aya"];
   }
+}
+
+class Word {
+  Word(w) {
+    t = w["t"];
+    c = w["c"];
+  }
+  String t;
+  int c;
+}
+
+class Search {
+  int sura;
+  int aya;
+  int index;
+  Search(this.sura, this.aya, this.index);
 }
 
 enum PState { waiting, downloading, ready, selected }

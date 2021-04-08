@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
+import 'package:islamic/pages/search.dart';
 import 'package:islamic/widgets/player.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -96,14 +97,7 @@ class HomePageState extends State<HomePage> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          itemScrollController.scrollTo(
-                              index: 123,
-                              duration: Duration(seconds: 1),
-                              curve: Curves.easeInOut);
-                        },
-                      )
+                          icon: Icon(Icons.search), onPressed: searchPressed)
                     ]),
                     // toolbarHeight: toolbarHeight,
                     // toolbarOpacity: toolbarHeight / _toolbarHeight
@@ -335,6 +329,14 @@ class HomePageState extends State<HomePage> {
     );
     setState(() =>
         hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);
+  }
+
+  Future<void> searchPressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchPage()),
+    );
+    setState(() {});
   }
 
   Future<void> playerOnStateChange(AudioPlayerState state) async {
