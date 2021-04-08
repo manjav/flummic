@@ -99,6 +99,18 @@ class AyaDetailsState extends State<AyaDetails> {
   }
 }
 
+                Positioned(
+                    bottom: p,
+                    left: isRtl ? p : null,
+                    right: isRtl ? null : p,
+                    child: Text(
+                        "${'app_title'.l()}  ${'app_ver'.l()} ${'1.0.1'.n()}",
+                        style: theme.textTheme.caption))
+              ])),
+        ));
+  }
+}
+
 class Generics {
   static Widget draggable(ThemeData theme) {
     return Positioned(
@@ -113,4 +125,16 @@ class Generics {
         ));
   }
 
+  static Widget text(
+      ThemeData theme, String text, double top, double right, double left) {
+    return Positioned(
+      top: top,
+      left: left,
+      right: right,
+      child: Text(
+        text,
+        style: theme.textTheme.subtitle1,
+      ),
+    );
+  }
 }

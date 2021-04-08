@@ -82,10 +82,14 @@ class HomePageState extends State<HomePage> {
                 leading: Row(children: [
                   IconButton(
                     icon: Icon(Icons.settings),
-                    onPressed: () => app.setTheme(
-                        app.themeMode == ThemeMode.dark
-                            ? ThemeMode.light
-                            : ThemeMode.dark),
+                        onPressed: () => showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: theme.dialogBackgroundColor,
+                          context: context,
+                          builder: (context) => Settings(() => setState(() {})),
+                        ),
                   ),
                   IconButton(
                     icon: Icon(Icons.search),
