@@ -45,6 +45,11 @@ class Themes {
             iconTheme: IconThemeData(color: Colors.white)),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: primaries[500], foregroundColor: primaries[100]),
+        sliderTheme: SliderThemeData(
+            thumbColor: primaries[700],
+            activeTrackColor: primaries[300],
+            inactiveTrackColor: primaries[300],
+            overlayColor: primaries[200]),
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
         cardColor: primaries[100],
@@ -94,6 +99,11 @@ class Themes {
           iconTheme: IconThemeData(color: primaries[100])),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: primaries[500], foregroundColor: primaries[100]),
+      sliderTheme: SliderThemeData(
+          thumbColor: primaries[300],
+          activeTrackColor: primaries[700],
+          inactiveTrackColor: primaries[700],
+          overlayColor: primaries[700]),
       fontFamily: "CubicSans",
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],

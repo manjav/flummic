@@ -11,6 +11,9 @@ class Prefs {
   static Map<PType, List<String>> persons = Map();
   static Map<String, String> _bookmarks = Map();
 
+  static double get textScale => instance.getDouble("textScale") ?? 1;
+  static set textScale(double s) => instance.setDouble("textScale", s);
+
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
   static int get selectedAya => instance.getInt("a") ?? 0;

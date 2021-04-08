@@ -38,56 +38,61 @@ class PersonPageState extends State<PersonPage>
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(title),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-            automaticallyImplyLeading: false,
-          ),
-          body: ReorderableListView(
-              children: personItems(),
-              onReorder: (int oldIndex, int newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) newIndex -= 1;
-                  final item = Prefs.persons[widget.type].removeAt(oldIndex);
-                  Prefs.persons[widget.type].insert(newIndex, item);
-                  Prefs.instance.setStringList(
-                      widget.type.toString(), Prefs.persons[widget.type]);
-                });
-              }),
-          floatingActionButton: SpeedDial(
-            child: AnimatedIcon(
-              icon: AnimatedIcons.add_event,
-              progress: fabController,
-            ),
-            openBackgroundColor: theme.primaryColor,
-            closedBackgroundColor: theme.primaryColor,
+    var queryData = MediaQuery.of(context);
+    return MediaQuery(
+        data: queryData.copyWith(
+            textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
+        child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: Text(title),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+                automaticallyImplyLeading: false,
+              ),
+              body: ReorderableListView(
+                  children: personItems(),
+                  onReorder: (int oldIndex, int newIndex) {
+                    setState(() {
+                      if (oldIndex < newIndex) newIndex -= 1;
+                      final item =
+                          Prefs.persons[widget.type].removeAt(oldIndex);
+                      Prefs.persons[widget.type].insert(newIndex, item);
+                      Prefs.instance.setStringList(
+                          widget.type.toString(), Prefs.persons[widget.type]);
+                    });
+                  }),
+              floatingActionButton: SpeedDial(
+                child: AnimatedIcon(
+                  icon: AnimatedIcons.add_event,
+                  progress: fabController,
+                ),
+                openBackgroundColor: theme.primaryColor,
+                closedBackgroundColor: theme.primaryColor,
                 openForegroundColor: theme.backgroundColor,
                 labelsStyle: theme.textTheme.caption,
-            // controller: /* Your custom animation controller goes here */,
-            onPressed: handleOnPressed,
-            speedDialChildren: <SpeedDialChild>[
-              for (int i = 0; i < modes.length; i++)
-                SpeedDialChild(
-                  child: Icon(
-                    Icons.arrow_back,
-                  ),
+                // controller: /* Your custom animation controller goes here */,
+                onPressed: handleOnPressed,
+                speedDialChildren: <SpeedDialChild>[
+                  for (int i = 0; i < modes.length; i++)
+                    SpeedDialChild(
+                      child: Icon(
+                        Icons.arrow_back,
+                      ),
                       foregroundColor: theme.textTheme.button.color,
-                  label: modes[i].l(),
-                  onPressed: () => speedChildPressed(modes[i]),
-                ),
-              //  Your other SpeeDialChildren go here.
-            ],
-          ),
-        ));
+                      label: modes[i].l(),
+                      onPressed: () => speedChildPressed(modes[i]),
+                    ),
+                  //  Your other SpeeDialChildren go here.
+                ],
+              ),
+            )));
   }
 
   void removePerson(Person p) {
@@ -168,19 +173,23 @@ class PersonListPageState extends State<PersonListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: appBarTitle, actions: [
-          IconButton(
-            icon: searchIcon,
-            onPressed: onSearchPressed,
-          )
-        ]),
-        body: defaultPersons == null
-            ? Center()
-            : ListView.builder(
-                itemBuilder: personItemBuilder,
-                itemCount: persons.length,
-              ));
+    var queryData = MediaQuery.of(context);
+    return MediaQuery(
+        data: queryData.copyWith(
+            textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
+        child: Scaffold(
+            appBar: AppBar(title: appBarTitle, actions: [
+              IconButton(
+                icon: searchIcon,
+                onPressed: onSearchPressed,
+              )
+            ]),
+            body: defaultPersons == null
+                ? Center()
+                : ListView.builder(
+                    itemBuilder: personItemBuilder,
+                    itemCount: persons.length,
+                  )));
   }
 
   void onSearchPressed() {

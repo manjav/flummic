@@ -170,6 +170,34 @@ class SettingsState extends State<Settings> {
                                   ))
                           .toList(),
                     )),
+                Generics.text(theme, "text_size".l(), 188, isRtl ? p : null,
+                    isRtl ? null : p),
+                Positioned(
+                    top: 220,
+                    right: p,
+                    left: p,
+                    child: Slider(
+                        autofocus: true,
+                        min: 0.85,
+                        max: 1.3,
+                        value: Prefs.textScale,
+                        divisions: 3,
+                        onChanged: (double value) {
+                          setState(() {
+                            Prefs.textScale = value;
+                          });
+                          widget.updater();
+                        })),
+                Positioned(
+                    top: 260,
+                    right: -p * 2,
+                    left: -p * 2,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          for (var i = 0; i < 4; i++)
+                            Text("text_$i".l(), style: theme.textTheme.caption)
+                        ])),
                 Positioned(
                     bottom: p,
                     left: isRtl ? p : null,

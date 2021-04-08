@@ -68,20 +68,24 @@ class HomePageState extends State<HomePage> {
         letterSpacing: 2,
         color: theme.backgroundColor);
 
-    return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Scaffold(
-            appBar: AppBar(
-                elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_forward),
-                    onPressed: () => Navigator.pop(context),
-                  )
-                ],
-                leading: Row(children: [
-                  IconButton(
-                    icon: Icon(Icons.settings),
+    var queryData = MediaQuery.of(context);
+    return MediaQuery(
+        data: queryData.copyWith(
+            textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
+        child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Scaffold(
+                appBar: AppBar(
+                    elevation: 0,
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_forward),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                    leading: Row(children: [
+                      IconButton(
+                        icon: Icon(Icons.settings),
                         onPressed: () => showModalBottomSheet(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -90,48 +94,48 @@ class HomePageState extends State<HomePage> {
                           context: context,
                           builder: (context) => Settings(() => setState(() {})),
                         ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      itemScrollController.scrollTo(
-                          index: 123,
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut);
-                    },
-                  )
-                ]),
-                // toolbarHeight: toolbarHeight,
-                // toolbarOpacity: toolbarHeight / _toolbarHeight
-                leadingWidth: _toolbarHeight * 2,
-                automaticallyImplyLeading: false),
-            body: Stack(
-              children: [
-                PageView.builder(
-                    reverse: true,
-                    itemCount: Configs.instance.metadata.suras.length,
-                    itemBuilder: suraPageBuilder,
-                    controller: suraPageController),
-                Transform.translate(
-                    offset: Offset(0, -_toolbarHeight + toolbarHeight),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: theme.cardColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 6.0, // changes position of shadow
-                          ),
-                        ],
                       ),
-                      child: Text(String.fromCharCode(selectedSura + 13),
-                          style: suraStyle),
-                      height: _toolbarHeight,
-                    )),
-                footer()
-              ],
-            )));
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          itemScrollController.scrollTo(
+                              index: 123,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeInOut);
+                        },
+                      )
+                    ]),
+                    // toolbarHeight: toolbarHeight,
+                    // toolbarOpacity: toolbarHeight / _toolbarHeight
+                    leadingWidth: _toolbarHeight * 2,
+                    automaticallyImplyLeading: false),
+                body: Stack(
+                  children: [
+                    PageView.builder(
+                        reverse: true,
+                        itemCount: Configs.instance.metadata.suras.length,
+                        itemBuilder: suraPageBuilder,
+                        controller: suraPageController),
+                    Transform.translate(
+                        offset: Offset(0, -_toolbarHeight + toolbarHeight),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: theme.cardColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 6.0, // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Text(String.fromCharCode(selectedSura + 13),
+                              style: suraStyle),
+                          height: _toolbarHeight,
+                        )),
+                    footer()
+                  ],
+                ))));
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
