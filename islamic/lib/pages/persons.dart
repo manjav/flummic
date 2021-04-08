@@ -8,7 +8,7 @@ import 'package:simple_speed_dial/simple_speed_dial.dart';
 import '../main.dart';
 
 class PersonPage extends StatefulWidget {
-  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t", "muall_t"];
+  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t"]; //muall_t
   static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
   final PType type;
   PersonPage(this.type) : super();
@@ -70,8 +70,8 @@ class PersonPageState extends State<PersonPage>
             ),
             openBackgroundColor: theme.primaryColor,
             closedBackgroundColor: theme.primaryColor,
-            // closedForegroundColor: Colors.black,
-            // labelsStyle: /* Your label TextStyle goes here */,
+                openForegroundColor: theme.backgroundColor,
+                labelsStyle: theme.textTheme.caption,
             // controller: /* Your custom animation controller goes here */,
             onPressed: handleOnPressed,
             speedDialChildren: <SpeedDialChild>[
@@ -80,8 +80,7 @@ class PersonPageState extends State<PersonPage>
                   child: Icon(
                     Icons.arrow_back,
                   ),
-                  foregroundColor: Colors.black,
-                  // backgroundColor: Colors.red,
+                      foregroundColor: theme.textTheme.button.color,
                   label: modes[i].l(),
                   onPressed: () => speedChildPressed(modes[i]),
                 ),
@@ -191,7 +190,7 @@ class PersonListPageState extends State<PersonListPage> {
         appBarTitle = TextField(
           controller: searchController,
           decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+              prefixIcon: Icon(Icons.search), hintText: 'search_in'.l()),
         );
       } else {
         searchIcon = Icon(Icons.search);
