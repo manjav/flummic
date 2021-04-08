@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show Bidi;
-import '../buttons.dart';
-import '../utils/localization.dart';
-import '../models.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
-import '../main.dart';
+
+import '../buttons.dart';
+import '../models.dart';
+import '../utils/localization.dart';
 
 class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t"]; //muall_t
@@ -120,13 +119,10 @@ class PersonPageState extends State<PersonPage>
       var p = configPersons[t];
       items.add(Directionality(
           key: Key(t),
-          textDirection:
-              Bidi.isRtlLanguage(MyApp.of(context).locale.languageCode)
-                  ? TextDirection.rtl
-                  : TextDirection.ltr,
+          textDirection: Localization.dir,
           child: ListTile(
             leading: Avatar(t, 24),
-            title: Text(p.name),
+            title: Text(p.title),
             subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
             trailing: IconButton(
                 icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
@@ -234,7 +230,7 @@ class PersonListPageState extends State<PersonListPage> {
       onTap: () => selectPerson(p),
       child: ListTile(
         leading: Avatar(p.path, 24),
-        title: Text(p.name),
+        title: Text(p.title),
         subtitle: Text(subtitle),
         trailing: Stack(
           alignment: Alignment.center,

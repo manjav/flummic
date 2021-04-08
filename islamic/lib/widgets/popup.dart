@@ -32,7 +32,7 @@ class AyaDetailsState extends State<AyaDetails> {
               Positioned(
                 top: 20,
                 child: Text(
-                  "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].name} - ${'verse_l'.l()} ${(widget.aya + 1).toArabic()}",
+                  "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].name} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
                   style: theme.textTheme.headline5,
                 ),
               ),

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
+
 import '../utils/localization.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -19,15 +20,12 @@ class IndexPageState extends State<IndexPage> {
   TextStyle uthmaniStyle;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 28);
 
-  final _toolbarHeight = 56.0;
-  double toolbarHeight = 0;
-  double startScrollBarIndicator = 0;
-
-  ScrollController suraListController;
-
-  List<Sura> suras;
-
   String lastSort;
+  List<Sura> suras;
+  double toolbarHeight = 0;
+  final _toolbarHeight = 56.0;
+  double startScrollBarIndicator = 0;
+  ScrollController suraListController;
 
   @override
   void initState() {

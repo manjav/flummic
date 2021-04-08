@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:islamic/utils/localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/loader.dart';
@@ -202,6 +203,8 @@ class Sura {
     ename = s["ename"];
     type = s["type"];
   }
+
+  String get title => Localization.isRTL ? name : tname;
 }
 
 class Juz extends Part {
@@ -314,4 +317,6 @@ class Person {
         "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3");
     return "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3";
   }
+
+  String get title => Localization.isRTL || type == PType.text ? name : ename;
 }
