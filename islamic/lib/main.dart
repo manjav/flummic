@@ -24,8 +24,15 @@ class AppState extends State<MyApp> {
   int loadingState = 0;
   WaitingPage waitingPage;
   var supportedLocales = [
+    const Locale("ar", ""),
     const Locale("en", ""),
+    const Locale("es", ""),
     const Locale("fa", ""),
+    const Locale("fr", ""),
+    const Locale("id", ""),
+    const Locale("ru", ""),
+    const Locale("tr", ""),
+    const Locale("ur", "")
   ];
 
   @override

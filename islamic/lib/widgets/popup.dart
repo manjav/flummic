@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:share/share.dart';
@@ -99,6 +100,76 @@ class AyaDetailsState extends State<AyaDetails> {
   }
 }
 
+class Settings extends StatefulWidget {
+  final Function updater;
+  Settings(this.updater);
+
+  @override
+  State<StatefulWidget> createState() => SettingsState();
+}
+
+class SettingsState extends State<Settings> {
+  int themeMode = Prefs.instance.getInt("themeMode");
+  @override
+  Widget build(BuildContext context) {
+    var app = MyApp.of(context);
+    var theme = Theme.of(context);
+    var p = 24.0;
+    var isRtl = Bidi.isRtlLanguage(app.locale.languageCode);
+    var queryData = MediaQuery.of(context);
+
+    return Container(
+        height: 440,
+        child: MediaQuery(
+          data: queryData.copyWith(
+              textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
+          child: Directionality(
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              child: Stack(alignment: Alignment.topCenter, children: [
+                Generics.draggable(theme),
+                Generics.text(theme, "theme_mode".l(), 48, isRtl ? p : null,
+                    isRtl ? null : p),
+                Positioned(
+                    top: 40,
+                    left: isRtl ? p : null,
+                    right: isRtl ? null : p,
+                    child: DropdownButton<int>(
+                      value: themeMode,
+                      style: theme.textTheme.caption,
+                      onChanged: (int newValue) {
+                        themeMode = newValue;
+                        app.setTheme(ThemeMode.values[themeMode]);
+                        Navigator.pop(context);
+                      },
+                      items: <int>[0, 1, 2]
+                          .map<DropdownMenuItem<int>>(
+                              (int value) => DropdownMenuItem<int>(
+                                    value: value,
+                                    child: Text("theme_$value".l()),
+                                  ))
+                          .toList(),
+                    )),
+                Generics.text(theme, "select_loc".l(), 118, isRtl ? p : null,
+                    isRtl ? null : p),
+                Positioned(
+                    top: 110,
+                    left: isRtl ? p : null,
+                    right: isRtl ? null : p,
+                    child: DropdownButton<Locale>(
+                      value: app.locale,
+                      style: theme.textTheme.caption,
+                      onChanged: (Locale newValue) {
+                        Localization.change(context, newValue.languageCode);
+                        setState(() {});
+                      },
+                      items: app.supportedLocales
+                          .map<DropdownMenuItem<Locale>>(
+                              (Locale value) => DropdownMenuItem<Locale>(
+                                    value: value,
+                                    child: Text("${value.languageCode}_fl".l()),
+                                  ))
+                          .toList(),
+                    )),
                 Positioned(
                     bottom: p,
                     left: isRtl ? p : null,
