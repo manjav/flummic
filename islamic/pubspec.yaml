@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   rive: ^0.6.8
   intl: ^0.17.0
+  share: ^2.0.1
   timezone: ^0.6.1
   audioplayers: ^0.18.3
   path_provider: ^2.0.1

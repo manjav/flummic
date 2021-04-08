@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
+import 'package:share/share.dart';
 
 import '../main.dart';
 
@@ -66,6 +67,18 @@ class AyaDetailsState extends State<AyaDetails> {
     var s = widget.sura;
     var a = widget.aya;
     switch (type) {
+      case "share":
+        var subject =
+            "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].name} ${'verse_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
+        var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
+            Configs.instance.quran[s][a];
+        if (Prefs.persons[PType.text].length > 1) {
+          var p = Configs.instance.texts[Prefs.persons[PType.text][1]];
+          text += "\n\n${p.data[s][a]}\n\n${'trans_t'.l()} ${p.name}";
+        }
+        text += "\n\n$subject";
+        Share.share(text, subject: subject);
+        break;
 
       case "bookmark":
         break;
