@@ -9,6 +9,7 @@ import 'utils/utils.dart';
 class Prefs {
   static SharedPreferences instance;
   static Map<PType, List<String>> persons = Map();
+  static Map<String, String> _bookmarks = Map();
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
@@ -20,6 +21,8 @@ class Prefs {
             instance.getStringList(PType.text.toString()) ?? null;
         persons[PType.sound] =
             instance.getStringList(PType.sound.toString()) ?? null;
+        Map<String, dynamic> map = jsonDecode(instance.getString("bookmarks"));
+        _bookmarks = map.cast();
         onInit();
         return;
       }
@@ -44,6 +47,7 @@ class Prefs {
       }
       instance.setInt("themeMode", 0);
       instance.setString("locale", _locale);
+      instance.setString("bookmarks", "{}");
       instance.setStringList(PType.text.toString(), persons[PType.text]);
       instance.setStringList(PType.sound.toString(), persons[PType.sound]);
 
@@ -61,6 +65,20 @@ class Prefs {
     if (persons[type].indexOf(path) < 0) return;
     persons[type].remove(path);
     instance.setStringList(type.toString(), persons[type]);
+  }
+
+  static void addBookmark(int sura, int aya, String note) {
+    _bookmarks["${Utils.fillZero(sura)}${Utils.fillZero(aya)}"] = note;
+    instance.setString("bookmarks", jsonEncode(_bookmarks));
+  }
+
+  static void removeBookmark(int sura, int aya) {
+    _bookmarks.remove("${Utils.fillZero(sura)}${Utils.fillZero(aya)}");
+    instance.setString("bookmarks", jsonEncode(_bookmarks));
+  }
+
+  static String getBookmark(int sura, int aya) {
+    return _bookmarks["${Utils.fillZero(sura)}${Utils.fillZero(aya)}"];
   }
 }
 

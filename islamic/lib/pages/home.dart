@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
@@ -158,29 +160,43 @@ class HomePageState extends State<HomePage> {
 
   Widget ayaItemBuilder(int position, int index) {
     var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
-    return Container(
-        color: index == selectedAya ? theme.focusColor : color,
-        child: GestureDetector(
-            onTap: () => setState(() {
-                  // var tween = Tween<double>(begin: -200, end: 0);
-                  toolbarHeight = _toolbarHeight;
-                }),
-            onLongPress: () {
-              showModalBottomSheet(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: theme.dialogBackgroundColor,
-                context: context,
-                builder: (context) => AyaDetails(position, index),
-              );
-            },
-            child: Padding(
-                padding:
-                    EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: textsProvider(position, index)))));
+    return Stack(children: [
+      Container(
+          color: index == selectedAya ? theme.focusColor : color,
+          child: GestureDetector(
+              onTap: () => setState(() {
+                    // var tween = Tween<double>(begin: -200, end: 0);
+                    toolbarHeight = _toolbarHeight;
+                  }),
+              onLongPress: () {
+                showModalBottomSheet(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: theme.dialogBackgroundColor,
+                  context: context,
+                  builder: (context) => AyaDetails(position, index),
+                ).then((value) {
+                  setState(() {});
+                });
+              },
+              child: Padding(
+                  padding:
+                      EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: textsProvider(position, index))))),
+      Prefs.getBookmark(position, index) == null
+          ? SizedBox()
+          : Positioned(
+              top: -2,
+              left: 8,
+              child: Icon(
+                Icons.bookmark_sharp,
+                size: 14,
+                color: theme.textTheme.caption.color,
+              ))
+    ]);
   }
 
   List<Widget> textsProvider(int sura, int aya) {

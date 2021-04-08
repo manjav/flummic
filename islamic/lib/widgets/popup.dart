@@ -16,9 +16,11 @@ class AyaDetails extends StatefulWidget {
 }
 
 class AyaDetailsState extends State<AyaDetails> {
+  String bookmark;
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    bookmark = Prefs.getBookmark(widget.sura, widget.aya);
     return Container(
         height: 160,
         child: Stack(alignment: Alignment.topCenter,
@@ -50,7 +52,7 @@ class AyaDetailsState extends State<AyaDetails> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         getButton(Icons.play_circle_fill, "play", theme),
-                        getButton(Icons.bookmark_border, "bookmark", theme),
+                        getButton(getBookmarkIcon(), "bookmark", theme),
                         getButton(Icons.share, "share", theme)
                       ]))
             ]));
@@ -78,15 +80,30 @@ class AyaDetailsState extends State<AyaDetails> {
         }
         text += "\n\n$subject";
         Share.share(text, subject: subject);
+        Navigator.of(context).pop();
         break;
 
       case "bookmark":
+        setState(() {
+          bookmark == null
+              ? Prefs.addBookmark(s, a, "")
+              : Prefs.removeBookmark(s, a);
+        });
         break;
 
       default:
         MyApp.of(context).player.select(widget.sura, widget.aya, 0, true);
+        Navigator.of(context).pop();
         break;
     }
-    Navigator.of(context).pop();
+  }
+
+  IconData getBookmarkIcon() {
+    if (bookmark == null)
+      return Icons.bookmark_border;
+    else if (bookmark == "")
+      return Icons.bookmark;
+    else
+      return Icons.bookmark;
   }
 }
