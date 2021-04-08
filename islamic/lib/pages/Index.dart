@@ -12,7 +12,7 @@ class IndexPage extends StatefulWidget {
 
 class IndexPageState extends State<IndexPage> {
   Widget appBarTitle;
-  Icon searchIcon = new Icon(Icons.search);
+  Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
   ThemeData theme;

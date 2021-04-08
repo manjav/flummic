@@ -150,7 +150,7 @@ class PersonListPageState extends State<PersonListPage> {
   List<Person> persons = <Person>[];
 
   Widget appBarTitle;
-  Icon searchIcon = new Icon(Icons.search);
+  Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -190,11 +190,11 @@ class PersonListPageState extends State<PersonListPage> {
         searchIcon = Icon(Icons.close);
         appBarTitle = TextField(
           controller: searchController,
-          decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search), hintText: 'Search...'),
+          decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search), hintText: 'Search...'),
         );
       } else {
-        searchIcon = new Icon(Icons.search);
+        searchIcon = Icon(Icons.search);
         appBarTitle = Center();
         persons = search("");
         searchController.clear();

@@ -8,13 +8,13 @@ class Loader {
   Future<Loader> load(String path, String url, Function(String) onDone,
       Function(double) onProgress, Function(String) onError) async {
     var baseURL = (await getApplicationSupportDirectory()).path;
-    var file = new File('$baseURL/$path');
+    var file = File('$baseURL/$path');
     if (await file.exists()) {
       var str = await file.readAsString();
       onDone(str);
       return this;
     }
-    httpClient = new HttpClient();
+    httpClient = HttpClient();
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var contentLength = response.contentLength;

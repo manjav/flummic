@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
         letterSpacing: 2,
         color: theme.backgroundColor);
 
-    return new Directionality(
+    return Directionality(
         textDirection: TextDirection.ltr,
         child: Scaffold(
             appBar: AppBar(
@@ -82,14 +82,14 @@ class HomePageState extends State<HomePage> {
                 ],
                 leading: Row(children: [
                   IconButton(
-                    icon: new Icon(Icons.settings),
+                    icon: Icon(Icons.settings),
                     onPressed: () => app.setTheme(
                         app.themeMode == ThemeMode.dark
                             ? ThemeMode.light
                             : ThemeMode.dark),
                   ),
                   IconButton(
-                    icon: new Icon(Icons.search),
+                    icon: Icon(Icons.search),
                     onPressed: () {
                       itemScrollController.scrollTo(
                           index: 123,
@@ -134,16 +134,14 @@ class HomePageState extends State<HomePage> {
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
     return ScrollablePositionedList.builder(
-      
       itemScrollController: itemScrollController = ItemScrollController(),
       itemPositionsListener: itemPositionsListener =
           ItemPositionsListener.create(),
       initialScrollIndex: selectedAya,
-      padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 24),
+      padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 48),
       itemCount: len,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
       onScroll: onPageScroll,
-      // controller: ayaScrollController
     );
   }
 
@@ -291,7 +289,7 @@ class HomePageState extends State<HomePage> {
                             onPressed: onTogglePressed)))
               ],
             ),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: theme.appBarTheme.backgroundColor,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.only(
