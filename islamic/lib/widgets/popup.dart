@@ -27,16 +27,7 @@ class AyaDetailsState extends State<AyaDetails> {
             // fit: StackFit.expand,
             // clipBehavior: Clip.none,
             children: [
-              Positioned(
-                  top: 12,
-                  width: 32,
-                  height: 4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: theme.appBarTheme.iconTheme.color,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.all(Radius.circular(4))),
-                  )),
+              Generics.draggable(theme),
               Positioned(
                 top: 20,
                 child: Text(
@@ -106,4 +97,20 @@ class AyaDetailsState extends State<AyaDetails> {
     else
       return Icons.bookmark;
   }
+}
+
+class Generics {
+  static Widget draggable(ThemeData theme) {
+    return Positioned(
+        top: 12,
+        width: 32,
+        height: 4,
+        child: Container(
+          decoration: BoxDecoration(
+              color: theme.appBarTheme.iconTheme.color,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(4))),
+        ));
+  }
+
 }
