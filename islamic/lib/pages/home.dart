@@ -157,8 +157,9 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget ayaItemBuilder(int position, int index) {
+    var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
     return Container(
-        color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+        color: index == selectedAya ? theme.focusColor : color,
         child: GestureDetector(
             onTap: () => setState(() {
                   // var tween = Tween<double>(begin: -200, end: 0);
@@ -175,7 +176,8 @@ class HomePageState extends State<HomePage> {
               );
             },
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                padding:
+                    EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: textsProvider(position, index)))));
@@ -323,13 +325,15 @@ class HomePageState extends State<HomePage> {
 
   void goto(int sura, int aya) {
     if (sura != selectedSura) {
-      selectedAya = aya;
       var dis = (sura - selectedSura).abs();
       gotoSura(sura, dis > 3 ? 0 : 400);
       // gotoAya(aya, 0);
     } else {
       gotoAya(aya, 800);
     }
+    selectedSura = sura;
+    selectedAya = aya;
+    setState(() {});
     // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
   }
 

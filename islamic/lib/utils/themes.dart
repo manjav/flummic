@@ -10,6 +10,7 @@ class Themes {
         500: Color(0xFF008C96),
         600: Color(0xFF005560),
         700: Color(0xFF003540),
+        750: Color(0xFF00203A),
         800: Color(0xFF051A2A),
         900: Color(0xFF051222),
         910: Color(0xFF5A5A4A),
@@ -48,7 +49,7 @@ class Themes {
         backgroundColor: primaries[50],
         cardColor: primaries[100],
         primaryColor: primaries[500],
-        focusColor: primaries[50],
+        focusColor: primaries[200],
         textTheme: textTheme,
         dialogBackgroundColor: primaries[100],
         colorScheme: ColorScheme.light(
@@ -98,7 +99,7 @@ class Themes {
       backgroundColor: primaries[900],
       cardColor: primaries[800],
       primaryColor: primaries[700],
-      focusColor: primaries[100],
+      focusColor: primaries[750],
       textTheme: textTheme,
       dialogBackgroundColor: primaries[800],
       colorScheme: ColorScheme.dark(
