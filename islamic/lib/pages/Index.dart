@@ -55,15 +55,10 @@ class IndexPageState extends State<IndexPage> {
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     return Scaffold(
         appBar: AppBar(
-            title: appBarTitle,
-            toolbarHeight: toolbarHeight,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: searchIcon,
-                onPressed: onSearchPressed,
-              )
-            ]),
+          title: appBarTitle,
+          toolbarHeight: toolbarHeight,
+          elevation: 0,
+        ),
         body: Stack(children: [
           ListView.builder(
               padding: EdgeInsets.only(top: _toolbarHeight),
@@ -99,18 +94,18 @@ class IndexPageState extends State<IndexPage> {
 
   Widget suraItemBuilder(context, int index) {
     var sura = suras[index];
-    return Container(
-        height: 56,
-        color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
-        child: GestureDetector(
-            onTap: () {
-              Prefs.selectedSura = sura.index;
-              Prefs.selectedAya = 0;
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
+    return GestureDetector(
+        onTap: () {
+          Prefs.selectedSura = sura.index;
+          Prefs.selectedAya = 0;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        },
+        child: Container(
+            height: 56,
+            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                 child: Row(
