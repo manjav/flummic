@@ -103,11 +103,14 @@ class IndexPageState extends State<IndexPage> {
         height: 56,
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
-            onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(sura.index, 0)),
-                ),
+            onTap: () {
+              Prefs.selectedSura = sura.index;
+              Prefs.selectedAya = 0;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                 child: Row(

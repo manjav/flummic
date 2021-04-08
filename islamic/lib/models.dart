@@ -11,6 +11,11 @@ class Prefs {
   static Map<PType, List<String>> persons = Map();
   static Map<String, String> _bookmarks = Map();
 
+  static int get selectedSura => instance.getInt("s") ?? 0;
+  static set selectedSura(int s) => instance.setInt("s", s);
+  static int get selectedAya => instance.getInt("a") ?? 0;
+  static set selectedAya(int a) => instance.setInt("a", a);
+
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;

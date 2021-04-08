@@ -13,10 +13,6 @@ import '../buttons.dart';
 import '../main.dart';
 
 class HomePage extends StatefulWidget {
-  final selectedSura;
-  final selectedAya;
-  HomePage(this.selectedSura, this.selectedAya);
-
   @override
   HomePageState createState() => HomePageState();
 }
@@ -38,13 +34,13 @@ class HomePageState extends State<HomePage> {
   AppState app;
 
   void initState() {
-    selectedSura = widget.selectedSura;
-    selectedAya = widget.selectedAya;
+    selectedSura = Prefs.selectedSura;
+    selectedAya = Prefs.selectedAya;
     super.initState();
     hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
     toolbarHeight = _toolbarHeight;
     suraPageController =
-        PageController(keepPage: true, initialPage: widget.selectedSura);
+        PageController(keepPage: true, initialPage: selectedSura);
     suraPageController.addListener(() {
       var page = suraPageController.page.round();
       if (page != selectedSura) {
@@ -136,12 +132,12 @@ class HomePageState extends State<HomePage> {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
+    selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
     return ScrollablePositionedList.builder(
       itemScrollController: itemScrollController = ItemScrollController(),
       itemPositionsListener: itemPositionsListener =
           ItemPositionsListener.create(),
-      initialScrollIndex: selectedAya,
-      padding: EdgeInsets.only(top: _toolbarHeight + 10, bottom: 48),
+      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
       itemCount: len,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
       onScroll: onPageScroll,
@@ -347,8 +343,8 @@ class HomePageState extends State<HomePage> {
     } else {
       gotoAya(aya, 800);
     }
-    selectedSura = sura;
-    selectedAya = aya;
+    Prefs.selectedSura = selectedSura = sura;
+    Prefs.selectedAya = selectedAya = aya;
     setState(() {});
     // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
   }
