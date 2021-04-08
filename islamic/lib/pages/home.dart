@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/widgets/player.dart';
+import 'package:islamic/widgets/popup.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../models.dart';
 import '../pages/persons.dart';
@@ -156,15 +157,23 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget ayaItemBuilder(int position, int index) {
-    // selectedAya = index;
     return Container(
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
             onTap: () => setState(() {
                   // var tween = Tween<double>(begin: -200, end: 0);
                   toolbarHeight = _toolbarHeight;
-                  // app.player.select(selectedSura, index, 0, true);
                 }),
+            onLongPress: () {
+              showModalBottomSheet(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                backgroundColor: theme.dialogBackgroundColor,
+                context: context,
+                builder: (context) => AyaDetails(position, index),
+              );
+            },
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
                 child: Column(
