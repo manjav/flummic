@@ -7,12 +7,14 @@ import 'package:islamic/pages/home.dart';
 import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
+  const IndexPage({Key key}) : super(key: key);
   @override
   IndexPageState createState() => IndexPageState();
 }
 
-class IndexPageState extends State<IndexPage> {
-  Widget appBarTitle;
+class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
+  TabController _tabController;
+
   Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
@@ -20,7 +22,7 @@ class IndexPageState extends State<IndexPage> {
   TextStyle uthmaniStyle;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 28);
 
-  String lastSort;
+  String lastSort = "suras";
   List<Sura> suras;
   double toolbarHeight = 0;
   final _toolbarHeight = 56.0;
@@ -48,59 +50,69 @@ class IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    _tabController = TabController(length: 2, vsync: this);
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     return Scaffold(
-        appBar: AppBar(
-          title: appBarTitle,
-          toolbarHeight: toolbarHeight,
-          elevation: 0,
+      appBar: AppBar(
+        toolbarHeight: _toolbarHeight - 8,
+        // toolbarOpacity: toolbarHeight / _toolbarHeight,
+        // title: const Text('TabBar Widget'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: "sura_l".l()),
+            Tab(text: "juze_l".l()),
+            // Tab(text: "page_bookmarks".l())
+          ],
         ),
-        body: Stack(children: [
-          ListView.builder(
-              padding: EdgeInsets.only(top: _toolbarHeight),
-              itemBuilder: suraItemBuilder,
-              controller: suraListController,
-              itemCount: suras.length),
-          Container(
-              height: _toolbarHeight,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 6.0, // changes position of shadow
-                  ),
-                ],
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [getSuras(), getJuzes()],
+      ),
+    );
+  }
+
+  Widget getSuras() {
+    return Stack(children: [
+      ListView.builder(
+          padding: EdgeInsets.only(top: _toolbarHeight),
+          itemBuilder: suraItemBuilder,
+          controller: suraListController,
+          itemCount: suras.length),
+      Container(
+          height: _toolbarHeight,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 6.0, // changes position of shadow
               ),
-              child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: getHeader("suras"),
-                      ),
-                      getHeader("order"),
-                      getHeader("ayas"),
-                      getHeader("page")
-                    ],
-                  )))
-        ]));
+            ],
+          ),
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: getHeader("suras"),
+                  ),
+                  getHeader("order"),
+                  getHeader("ayas"),
+                  getHeader("page")
+                ],
+              )))
+    ]);
   }
 
   Widget suraItemBuilder(context, int index) {
     var sura = suras[index];
     return GestureDetector(
-        onTap: () {
-          Prefs.selectedSura = sura.index;
-          Prefs.selectedAya = 0;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        },
+        onTap: () => goto(sura.index, 0),
         child: Container(
             height: 56,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
@@ -182,5 +194,60 @@ class IndexPageState extends State<IndexPage> {
                 ])));
   }
 
-  void onSearchPressed() {}
+// ____________________________________________________________
+  Widget getJuzes() {
+    return ListView.builder(
+        itemBuilder: juzeItemBuilder,
+        itemCount: Configs.instance.metadata.juzes.length);
+  }
+
+  Widget juzeItemBuilder(context, int index) {
+    var juz = Configs.instance.metadata.juzes[index];
+    return GestureDetector(
+        onTap: () => goto(juz.sura - 1, juz.aya - 1),
+        child: Container(
+            height: 72,
+            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+            child: Padding(
+                padding: EdgeInsets.only(right: 16, left: 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "juze_l".l() + " " + "j_${index + 1}".l(),
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.ltr,
+                      ),
+                    ),
+                    getHizb(index * 8),
+                    getHizb(index * 8 + 1),
+                    getHizb(index * 8 + 2),
+                    getHizb(index * 8 + 3)
+                  ],
+                ))));
+  }
+
+  Widget getHizb(int index) {
+    var hizb = Configs.instance.metadata.hizbs[index];
+    return IconButton(
+      iconSize: 40,
+      icon: SvgPicture.asset(
+        "images/quarter_${index % 8}.svg",
+        width: 40,
+        height: 40,
+      ),
+      onPressed: () => goto(hizb.sura - 1, hizb.aya - 1),
+    );
+  }
+
+  Widget getNotes() {
+    return SizedBox();
+  }
+
+  void goto(int sura, int aya) {
+    Prefs.selectedSura = sura;
+    Prefs.selectedAya = aya;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
 }
