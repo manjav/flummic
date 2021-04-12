@@ -18,8 +18,11 @@ dependencies:
   timezone: ^0.6.1
   audioplayers: ^0.18.3
   path_provider: ^2.0.1
+  firebase_core: ^1.0.3
   cupertino_icons: ^1.0.2
   simple_speed_dial: ^0.1.2
+  firebase_analytics: ^7.1.1
+  firebase_messaging: ^9.1.1
   shared_preferences: ^2.0.5
   cached_network_image: ^3.0.0
   autocomplete_textfield: ^1.7.3

@@ -1,3 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
@@ -7,10 +10,15 @@ import 'models.dart';
 import 'pages/waiting.dart';
 import 'utils/themes.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   static int t;
+
   @override
   AppState createState() => AppState();
   static AppState of(BuildContext context) =>
@@ -34,6 +42,9 @@ class AppState extends State<MyApp> {
     const Locale("tr", ""),
     const Locale("ur", "")
   ];
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   void initState() {
@@ -57,6 +68,7 @@ class AppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: <NavigatorObserver>[observer],
       // title: 'Title Example',
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

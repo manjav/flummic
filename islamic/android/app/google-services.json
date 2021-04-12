@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "647415877470",
+    "project_id": "islamic-ce6bd",
+    "storage_bucket": "islamic-ce6bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647415877470:android:ae5617fb21dec5648409cf",
+        "android_client_info": {
+          "package_name": "com.gerantech.islamic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647415877470-i0kke5p1rlc9fqhgt2a6gdpkcqn1ibp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx-VArLkLBy2Y-0TWr_iZ-SWwyu0lmvcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647415877470-i0kke5p1rlc9fqhgt2a6gdpkcqn1ibp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
