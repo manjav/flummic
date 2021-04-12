@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 class Loader {
   HttpClient httpClient;
   Future<Loader> load(String path, String url, Function(String) onDone,
       Function(double) onProgress, Function(String) onError) async {
     var baseURL = (await getApplicationSupportDirectory()).path;
+    var ext = p.extension(url);
     var file = File('$baseURL/$path');
     if (await file.exists()) {
       var str = await file.readAsString();
@@ -25,6 +28,10 @@ class Loader {
         if (onProgress != null) onProgress(bytes.length / contentLength);
       },
       onDone: () async {
+        if (ext == ".zip" || ext == ".zson") {
+          Archive archive = ZipDecoder().decodeBytes(bytes);
+          bytes = archive.first.content as List<int>;
+        }
         await file.writeAsBytes(bytes);
         onDone(utf8.decode(bytes));
       },

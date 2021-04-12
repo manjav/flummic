@@ -162,13 +162,12 @@ class Configs {
       onDone();
       return;
     }
-    await Loader().load("words.json", baseURL + "words.ijson",
+    await Loader().load("words.json", baseURL + "words.zip",
         (String data) async {
       var list = json.decode(data);
       words = <Word>[];
       for (var w in list) words.add(new Word(w));
-      await Loader().load("simple.json", baseURL + "simple.ijson",
-          (String data) {
+      await Loader().load("simple.json", baseURL + "simple.zip", (String data) {
         var list = json.decode(data);
         simpleQuran = <List<String>>[];
         for (var s in list) {
