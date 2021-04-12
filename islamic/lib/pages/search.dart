@@ -20,15 +20,20 @@ class SearchPageState extends State<SearchPage> {
 
   List<List<String>> quran;
 
+  FocusNode focusNode;
+
   @override
   void initState() {
     super.initState();
     Configs.instance.loadSearchAssets(() {
       assetsLoaded = true;
       quran = Configs.instance.simpleQuran;
+      focusNode = FocusNode();
       textField = AutoCompleteTextField<Word>(
           key: key,
           minLength: 2,
+          focusNode: focusNode,
+          textInputAction: TextInputAction.none,
           decoration: InputDecoration(
               errorText: "!",
               hintText: "search_in".l(),
@@ -40,8 +45,9 @@ class SearchPageState extends State<SearchPage> {
           itemBuilder: suggestionBuilder,
           itemSorter: (a, b) => b.c - a.c,
           itemFilter: (w, t) => w.t.indexOf(t) > -1,
-          clearOnSubmit: true,
+          clearOnSubmit: false,
           itemSubmitted: (Word w) => setState(() => results = search(w.t)));
+      focusNode.requestFocus();
       setState(() {});
     });
     results = <Search>[];
@@ -119,5 +125,11 @@ class SearchPageState extends State<SearchPage> {
       }
     }
     return result;
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 }
