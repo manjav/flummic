@@ -78,30 +78,16 @@ class HomePageState extends State<HomePage> {
             child: Scaffold(
                 appBar: AppBar(
                     elevation: 0,
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_forward),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                    leading: Row(children: [
-                      IconButton(
-                        icon: Icon(Icons.settings),
-                        onPressed: () => showModalBottomSheet(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          backgroundColor: theme.dialogBackgroundColor,
-                          context: context,
-                          builder: (context) => Settings(() => setState(() {})),
-                        ),
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.search), onPressed: searchPressed)
-                    ]),
-                    // toolbarHeight: toolbarHeight,
-                    // toolbarOpacity: toolbarHeight / _toolbarHeight
-                    leadingWidth: _toolbarHeight * 2,
+                    actions: Localization.isRTL
+                        ? [getButton("forward")]
+                        : [getButton("search"), getButton("settings")],
+                    leading: Localization.isRTL
+                        ? Row(children: [
+                            getButton("settings"),
+                            getButton("search")
+                          ])
+                        : getButton("back"),
+                    leadingWidth: _toolbarHeight * (Localization.isRTL ? 2 : 1),
                     automaticallyImplyLeading: false),
                 body: Stack(
                   children: [
@@ -277,20 +263,14 @@ class HomePageState extends State<HomePage> {
                     bottom: 0,
                     child: Opacity(
                         opacity: toolbarHeight / _toolbarHeight,
-                        child: IconButton(
-                            icon: Icon(Icons.add_comment_outlined,
-                                color: theme.appBarTheme.iconTheme.color),
-                            onPressed: () => footerPressed(PType.text)))),
+                        child: getButton("texts"))),
                 Positioned(
                     top: 0,
                     bottom: 0,
                     left: 48,
                     child: Opacity(
                         opacity: toolbarHeight / _toolbarHeight,
-                        child: IconButton(
-                            icon: Icon(Icons.headset_sharp,
-                                color: theme.appBarTheme.iconTheme.color),
-                            onPressed: () => footerPressed(PType.sound)))),
+                        child: getButton("sounds"))),
                 Positioned(
                     top: 10 - coef * 0.11,
                     right: 86 - coef * 0.4,
@@ -393,5 +373,40 @@ class HomePageState extends State<HomePage> {
       app.player.select(selectedSura, selectedAya, 0, true);
     else
       app.player.toggle();
+  }
+
+  IconButton getButton(String type) {
+    switch (type) {
+      case "settings":
+        return IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () => showModalBottomSheet(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            backgroundColor: theme.dialogBackgroundColor,
+            context: context,
+            builder: (context) => Settings(() => setState(() {})),
+          ),
+        );
+      case "search":
+        return IconButton(icon: Icon(Icons.search), onPressed: searchPressed);
+      case "forward":
+      case "back":
+        return IconButton(
+          icon: Icon(type == "back" ? Icons.arrow_back : Icons.arrow_forward),
+          onPressed: () => Navigator.pop(context),
+        );
+      case "texts":
+        return IconButton(
+            icon: Icon(Icons.add_comment_outlined,
+                color: theme.appBarTheme.iconTheme.color),
+            onPressed: () => footerPressed(PType.text));
+      default:
+        return IconButton(
+            icon: Icon(Icons.headset_sharp,
+                color: theme.appBarTheme.iconTheme.color),
+            onPressed: () => footerPressed(PType.sound));
+    }
   }
 }

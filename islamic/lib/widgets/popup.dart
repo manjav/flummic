@@ -32,21 +32,18 @@ class AyaDetailsState extends State<AyaDetails> {
               Positioned(
                 top: 20,
                 child: Text(
-                  "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].name} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
+                  "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
                   style: theme.textTheme.headline5,
                 ),
               ),
               Positioned(
                   right: 4,
                   bottom: 4,
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        getButton(Icons.play_circle_fill, "play", theme),
-                        getButton(getBookmarkIcon(), "bookmark", theme),
-                        getButton(Icons.share, "share", theme)
-                      ]))
+                  child: Row(textDirection: TextDirection.ltr, children: [
+                    getButton(Icons.share, "share", theme),
+                    getButton(getBookmarkIcon(), "bookmark", theme),
+                    getButton(Icons.play_circle_fill, "play", theme)
+                  ]))
             ]));
   }
 
@@ -213,9 +210,9 @@ class SettingsState extends State<Settings> {
 class Generics {
   static Widget draggable(ThemeData theme) {
     return Positioned(
-        top: 12,
-        width: 32,
-        height: 4,
+        top: 10,
+        width: 24,
+        height: 5,
         child: Container(
           decoration: BoxDecoration(
               color: theme.appBarTheme.iconTheme.color,

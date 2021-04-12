@@ -48,11 +48,19 @@ class PersonPageState extends State<PersonPage>
                 centerTitle: true,
                 title: Text(title),
                 actions: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_forward),
-                    onPressed: () => Navigator.pop(context),
-                  )
+                  Localization.isRTL
+                      ? IconButton(
+                          icon: Icon(Icons.arrow_forward),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      : SizedBox()
                 ],
+                leading: Localization.isRTL
+                    ? SizedBox()
+                    : IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                 automaticallyImplyLeading: false,
               ),
               body: ReorderableListView(
