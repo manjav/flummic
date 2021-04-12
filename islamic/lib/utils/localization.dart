@@ -85,11 +85,15 @@ extension Localization on String {
   }
 
   String n([String languageString]) {
-    if (Bidi.isRtlLanguage(languageString)) return this.toArabic();
+    if (languageString != null) {
+      if (Bidi.isRtlLanguage(languageString)) return this.toPersian();
+    } else if (isRTL) {
+      return this.toPersian();
+    }
     return this;
   }
 
- /*  static String getSimpleString(String str, [String loc = "ar"]) {
+  /*  static String getSimpleString(String str, [String loc = "ar"]) {
     if (loc == "ar") {
       var signs = "َُِّْٰۭٓۢۚۖۗۦًٌٍۙۘۜۥ".split("");
       for (var i = 0; i < signs.length; i++) str = str.replaceAll(signs[i], "");
