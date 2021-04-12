@@ -185,17 +185,6 @@ class HomePageState extends State<HomePage> {
 
   List<Widget> textsProvider(int sura, int aya) {
     var rows = <Widget>[];
-
-    // rows.add(Row(
-    //   children: [
-    //     CircleButton(icon: Icons.bookmark),
-    //     SizedBox(width: 8),
-    //     CircleButton(icon: Icons.share),
-    //     Spacer(),
-    //     CircleButton(text: (aya + 1).toString()),
-    //   ],
-    // ));
-    // rows.add(SizedBox(height: 20));
     if (aya == 0 && sura != 0 && sura != 8) {
       rows.add(SizedBox(height: 50));
       rows.add(Text(
@@ -207,12 +196,14 @@ class HomePageState extends State<HomePage> {
     }
 
     rows.add(SizedBox(height: 16));
-    if (hasQuranText)
+    if (hasQuranText) {
+      var hizbFlag = getHizbFlag(sura + 1, aya + 1);
       rows.add(Text(
-          "${Configs.instance.quran[sura][aya]} ﴿${(aya + 1).toArabic()}﴾",
+          "$hizbFlag ${Configs.instance.quran[sura][aya]} ﴿${(aya + 1).toArabic()}﴾",
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
           style: uthmaniStyle));
+    }
 
     for (var path in Prefs.persons[PType.text]) {
       if (path == "ar.uthmanimin") continue;
@@ -232,18 +223,19 @@ class HomePageState extends State<HomePage> {
               style: theme.textTheme.caption),
           Avatar(path, 15)
         ],
-      )
-
-          //   ListTile(
-          //   leading: isRTL ? null : icon,
-          //   trailing: isRTL ? icon : null,
-          //   title: ,
-          // )
-          );
-      // rows.add(SizedBox(height: 6));
+      ));
     }
-    // rows.add(Divider(color: Colors.black45));
     return rows;
+  }
+
+  String getHizbFlag(int sura, int aya) {
+    var hizbs = Configs.instance.metadata.hizbs;
+    var len = hizbs.length;
+    for (var i = 0; i < len; i++) {
+      if (hizbs[i].sura > sura) return "";
+      if (hizbs[i].sura == sura && hizbs[i].aya == aya) return "۞";
+    }
+    return "";
   }
 
   Widget footer() {
