@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 import '../utils/localization.dart';
+import 'home.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -88,7 +89,8 @@ class SearchPageState extends State<SearchPage> {
             onTap: () {
               Prefs.selectedSura = s.sura;
               Prefs.selectedAya = s.aya;
-              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
             },
             child: Padding(
                 padding:

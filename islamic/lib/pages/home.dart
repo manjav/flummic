@@ -33,11 +33,12 @@ class HomePageState extends State<HomePage> {
   ThemeData theme;
   AppState app;
 
-  void initState() {
+  void initHome() {
     selectedSura = Prefs.selectedSura;
     selectedAya = Prefs.selectedAya;
-    super.initState();
     hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
+    if (suraPageController != null) return;
+
     toolbarHeight = _toolbarHeight;
     suraPageController =
         PageController(keepPage: true, initialPage: selectedSura);
@@ -45,8 +46,8 @@ class HomePageState extends State<HomePage> {
       var page = suraPageController.page.round();
       if (page != selectedSura) {
         setState(() {
+          Prefs.selectedSura = page;
           toolbarHeight = _toolbarHeight;
-          selectedSura = page;
         });
       }
     });
@@ -54,10 +55,15 @@ class HomePageState extends State<HomePage> {
     app = MyApp.of(context);
     if (app.player == null) app.player = Player();
     app.player.onStateChange = playerOnStateChange;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (selectedAya > 0) gotoAya(selectedAya, 1200);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    initHome();
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
@@ -132,6 +138,7 @@ class HomePageState extends State<HomePage> {
   }
 
   void onPageScroll(ScrollPosition position) {
+    if (position.pixels < 122) return;
     var changes = startScrollBarIndicator - position.pixels;
     startScrollBarIndicator = position.pixels;
     var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
@@ -298,15 +305,6 @@ class HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(builder: (context) => PersonPage(type)),
     );
-    setState(() =>
-        hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1);
-  }
-
-  Future<void> searchPressed() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SearchPage()),
-    );
     setState(() {});
   }
 
@@ -381,7 +379,12 @@ class HomePageState extends State<HomePage> {
           ),
         );
       case "search":
-        return IconButton(icon: Icon(Icons.search), onPressed: searchPressed);
+        return IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                ));
       case "forward":
       case "back":
         return IconButton(
