@@ -22,6 +22,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TextStyle uthmaniStyle;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 28);
 
+  bool reversed = false;
   String lastSort = "suras";
   List<Sura> suras;
   double toolbarHeight = 0;
@@ -166,8 +167,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return GestureDetector(
         onTap: () {
           if (lastSort == value) {
+            reversed = !reversed;
             suras = suras.reversed.toList();
           } else {
+            reversed = false;
             lastSort = value;
             suras.sort((Sura l, Sura r) {
               if (value == "ayas")
@@ -186,9 +189,20 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             child: Stack(alignment: Alignment.topCenter,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("${value}_l".l()),
+                  Text(
+                    "${value}_l".l(),
+                    style: lastSort == value
+                        ? theme.textTheme.bodyText1
+                        : theme.textTheme.subtitle2,
+                  ),
                   Positioned(
-                    child: Icon(Icons.arrow_drop_down),
+                    child: Icon(
+                        reversed && lastSort == value
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        color: lastSort == value
+                            ? theme.textTheme.bodyText1.color
+                            : theme.textTheme.subtitle2.color),
                     top: 24,
                   )
                 ])));
