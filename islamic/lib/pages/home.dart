@@ -20,9 +20,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
+  ScrollablePositionedList ayaList;
   PageController suraPageController;
-  ItemScrollController itemScrollController;
-  ItemPositionsListener itemPositionsListener;
   TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
   TextStyle uthmaniStyle;
   TextStyle uthmaniStyleLight;
@@ -121,10 +120,10 @@ class HomePageState extends State<HomePage> {
   Widget suraPageBuilder(BuildContext context, int p) {
     var len = Configs.instance.metadata.suras[p].ayas;
     selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
-    return ScrollablePositionedList.builder(
-      itemScrollController: itemScrollController = ItemScrollController(),
-      itemPositionsListener: itemPositionsListener =
-          ItemPositionsListener.create(),
+    return ayaList = ScrollablePositionedList.builder(
+      initialAlignment: 0.15,
+      itemScrollController: ItemScrollController(),
+      itemPositionsListener: ItemPositionsListener.create(),
       padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
       itemCount: len,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
@@ -342,9 +341,9 @@ class HomePageState extends State<HomePage> {
   void gotoAya(int aya, int duration) {
     print("aya $aya, duration $duration");
     if (duration == 0) {
-      itemScrollController.jumpTo(index: aya);
+      ayaList.itemScrollController.jumpTo(index: aya);
     } else {
-      itemScrollController.scrollTo(
+      ayaList.itemScrollController.scrollTo(
           index: aya,
           duration: Duration(milliseconds: duration),
           curve: Curves.easeInOut);
