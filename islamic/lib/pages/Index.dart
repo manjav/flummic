@@ -25,6 +25,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   bool reversed = false;
   String lastSort = "suras";
   List<Sura> suras;
+  List<String> notes;
   double toolbarHeight = 0;
   final _toolbarHeight = 56.0;
   double startScrollBarIndicator = 0;
@@ -33,7 +34,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
     suraListController = ScrollController();
     suraListController.addListener(() {
@@ -51,7 +52,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _tabController = TabController(length: 2, vsync: this);
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
         fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
@@ -65,13 +65,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           tabs: [
             Tab(text: "sura_l".l()),
             Tab(text: "juze_l".l()),
-            // Tab(text: "page_bookmarks".l())
+            Tab(text: "notes_l".l())
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [getSuras(), getJuzes()],
+        children: [getSuras(), getJuzes(), getNotes()],
       ),
     );
   }
@@ -254,8 +254,46 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     );
   }
 
+// ____________________________________________________________
+
   Widget getNotes() {
-    return SizedBox();
+    notes = Prefs.notes.keys.toList();
+    return ListView.builder(
+        itemBuilder: noteItemBuilder, itemCount: notes.length);
+  }
+
+  Widget noteItemBuilder(BuildContext context, int index) {
+    var sura = int.parse(notes[index].substring(0, 3));
+    var aya = int.parse(notes[index].substring(3));
+    return GestureDetector(
+        onTap: () => goto(sura, aya),
+        child: Container(
+            height: 72,
+            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+            child: Padding(
+                padding: EdgeInsets.only(right: 16, left: 6),
+                child: Row(children: [
+                  Expanded(
+                      child: Text(
+                    "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
+                  )),
+                  IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              editNote(context, sura, aya)))
+                ]))));
+  }
+
+  Widget editNote(BuildContext context, int sura, int aya) {
+    final textController =
+    return Dialog(
+        shape: RoundedRectangleBorder(
+            );
   }
 
   void goto(int sura, int aya) {
