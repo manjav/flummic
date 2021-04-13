@@ -22,9 +22,11 @@ class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   ScrollablePositionedList ayaList;
   PageController suraPageController;
-  TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 32);
+  TextStyle suraStyle = TextStyle(
+    fontFamily: 'SuraNames',
+    fontSize: 32,
+  );
   TextStyle uthmaniStyle;
-  TextStyle uthmaniStyleLight;
   int selectedSura = 0;
   int selectedAya = 0;
   double toolbarHeight;
@@ -66,13 +68,11 @@ class HomePageState extends State<HomePage> {
     initHome();
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
-        fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
-    uthmaniStyleLight = TextStyle(
         fontFamily: 'Uthmani',
-        fontSize: 22,
+        fontSize: 20,
         height: 2,
-        letterSpacing: 2,
-        color: theme.backgroundColor);
+        wordSpacing: 2,
+        color: theme.textTheme.bodyText1.color);
 
     var queryData = MediaQuery.of(context);
     return MediaQuery(
@@ -279,7 +279,7 @@ class HomePageState extends State<HomePage> {
                     right: 132 - coef * 0.65,
                     child: Text(
                       app.player.sound.name,
-                      style: theme.textTheme.subtitle2,
+                      style: theme.textTheme.bodyText2,
                       textAlign: TextAlign.right,
                     )),
                 Positioned(

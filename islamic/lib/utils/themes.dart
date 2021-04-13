@@ -23,7 +23,7 @@ class Themes {
         bodyText1: TextStyle(color: primaries[920]),
         bodyText2: TextStyle(color: primaries[920]),
         subtitle1: TextStyle(color: primaries[920]),
-        subtitle2: TextStyle(color: primaries[100]),
+        subtitle2: TextStyle(color: primaries[910]),
         headline1: hl,
         headline2: hl,
         headline3: hl,
@@ -50,6 +50,18 @@ class Themes {
             activeTrackColor: primaries[300],
             inactiveTrackColor: primaries[300],
             overlayColor: primaries[200]),
+        textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(primaries[700]),
+                textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
+                  fontFamily: "CubicSans",
+                  fontSize: 18,
+                )))),
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: primaries[600],
+            selectionHandleColor: primaries[600],
+            selectionColor: primaries[300]),
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
         cardColor: primaries[100],
@@ -75,7 +87,7 @@ class Themes {
     var hl = TextStyle(color: primaries[100], fontWeight: FontWeight.bold);
     var textTheme = TextTheme(
         bodyText1: TextStyle(color: primaries[100]),
-        bodyText2: TextStyle(color: primaries[100]),
+        bodyText2: TextStyle(color: primaries[200]),
         subtitle1: TextStyle(color: primaries[100]),
         subtitle2: TextStyle(color: primaries[200]),
         headline1: hl,
@@ -104,6 +116,17 @@ class Themes {
           activeTrackColor: primaries[700],
           inactiveTrackColor: primaries[700],
           overlayColor: primaries[700]),
+      textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(primaries[50]),
+              textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
+                fontFamily: "CubicSans",
+                fontSize: 18,
+              )))),
+      textSelectionTheme: TextSelectionThemeData(
+          cursorColor: primaries[500],
+          selectionHandleColor: primaries[200],
+          selectionColor: primaries[600]),
       fontFamily: "CubicSans",
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],
