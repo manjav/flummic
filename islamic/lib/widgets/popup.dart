@@ -21,7 +21,7 @@ class AyaDetailsState extends State<AyaDetails> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    bookmark = Prefs.getBookmark(widget.sura, widget.aya);
+    bookmark = Prefs.getNote(widget.sura, widget.aya);
     return Container(
         height: 160,
         child: Stack(alignment: Alignment.topCenter,
@@ -74,9 +74,7 @@ class AyaDetailsState extends State<AyaDetails> {
 
       case "bookmark":
         setState(() {
-          bookmark == null
-              ? Prefs.addBookmark(s, a, "")
-              : Prefs.removeBookmark(s, a);
+          bookmark == null ? Prefs.addNote(s, a, "") : Prefs.removeNote(s, a);
         });
         widget.updater();
         break;

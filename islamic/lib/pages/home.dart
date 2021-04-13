@@ -177,7 +177,7 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: textsProvider(position, index))))),
-      Prefs.getBookmark(position, index) == null
+      Prefs.getNote(position, index) == null
           ? SizedBox()
           : Positioned(
               top: -2,
