@@ -165,7 +165,8 @@ class HomePageState extends State<HomePage> {
                   ),
                   backgroundColor: theme.dialogBackgroundColor,
                   context: context,
-                  builder: (context) => AyaDetails(position, index),
+                  builder: (context) =>
+                      AyaDetails(position, index, () => setState(() {})),
                 ).then((value) {
                   setState(() {});
                 });

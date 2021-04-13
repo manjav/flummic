@@ -9,8 +9,8 @@ import '../main.dart';
 
 class AyaDetails extends StatefulWidget {
   final int sura, aya;
-
-  AyaDetails(this.sura, this.aya);
+  final Function updater;
+  AyaDetails(this.sura, this.aya, this.updater);
 
   @override
   State<StatefulWidget> createState() => AyaDetailsState();
@@ -78,6 +78,7 @@ class AyaDetailsState extends State<AyaDetails> {
               ? Prefs.addBookmark(s, a, "")
               : Prefs.removeBookmark(s, a);
         });
+        widget.updater();
         break;
 
       default:
