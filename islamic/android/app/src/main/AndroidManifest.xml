@@ -2,7 +2,7 @@
     package="com.gerantech.islamic">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="Islamic"
+        android:label="Hidaya"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher">
         <activity
