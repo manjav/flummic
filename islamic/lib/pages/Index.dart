@@ -291,9 +291,58 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Widget editNote(BuildContext context, int sura, int aya) {
     final textController =
+        TextEditingController(text: Prefs.getNote(sura, aya));
     return Dialog(
         shape: RoundedRectangleBorder(
-            );
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+            width: 360,
+            height: 360,
+            clipBehavior: Clip.none,
+            padding: EdgeInsets.only(top: 44, right: 16, left: 16),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                    top: -72,
+                    width: 64,
+                    height: 64,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.bottomAppBarColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.bookmark,
+                          size: 32,
+                          color: theme.primaryColor,
+                        ))),
+                Positioned(
+                    child: TextFormField(
+                  autofocus: true,
+                  controller: textController,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    hintText: 'note_hint'.l(),
+                  ),
+                  minLines: 1, //Normal textInputField will be displayed
+                  maxLines: 6, //Normal textInputField will be displayed
+                )),
+                Positioned(
+                  bottom: 14,
+                  child: TextButton(
+                    child: Text("save_l".l()),
+                    onPressed: () {
+                      Prefs.addNote(sura, aya, textController.text);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )
+              ],
+            )));
   }
 
   void goto(int sura, int aya) {
