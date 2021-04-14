@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:647415877470:android:ae5617fb21dec5648409cf",
+        "mobilesdk_app_id": "1:647415877470:android:c755c71ea418ce248409cf",
         "android_client_info": {
-          "package_name": "com.gerantech.islamic"
+          "package_name": "com.gerantech.muslim.holy.quran"
         }
       },
       "oauth_client": [
