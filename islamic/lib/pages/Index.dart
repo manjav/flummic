@@ -258,7 +258,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Widget getNotes() {
     notes = Prefs.notes.keys.toList();
-    return ListView.builder(
+    return notes.length == 0
+        ? Center(
+            child: Text(
+            "note_empty".l(),
+            style: theme.textTheme.caption,
+            textAlign: TextAlign.center
+          ))
+        : ListView.builder(
         itemBuilder: noteItemBuilder, itemCount: notes.length);
   }
 
