@@ -40,21 +40,21 @@ class AyaDetailsState extends State<AyaDetails> {
                   right: 4,
                   bottom: 4,
                   child: Row(textDirection: TextDirection.ltr, children: [
-                    getButton(Icons.share, "share", theme),
-                    getButton(getBookmarkIcon(), "bookmark", theme),
-                    getButton(Icons.play_circle_fill, "play", theme)
+                    getButton(theme, Icons.share, "share"),
+                    getButton(theme, getNoteIcon(), "note"),
+                    getButton(theme, Icons.play_circle_fill, "play")
                   ]))
             ]));
   }
 
-  IconButton getButton(IconData icon, String type, theme) {
+  IconButton getButton(ThemeData theme, IconData icon, String type) {
     return IconButton(
         padding: EdgeInsets.all(28),
-        icon: Icon(icon, color: theme.appBarTheme.iconTheme.color),
-        onPressed: () => onPressed(type));
+        icon: Icon(icon, color: theme.textTheme.bodyText1.color),
+        onPressed: () => onPressed(theme, type));
   }
 
-  void onPressed(String type) {
+  void onPressed(ThemeData theme, String type) {
     var s = widget.sura;
     var a = widget.aya;
     switch (type) {
@@ -72,7 +72,12 @@ class AyaDetailsState extends State<AyaDetails> {
         Navigator.of(context).pop();
         break;
 
-      case "bookmark":
+      case "note":
+        if (bookmark == null)
+          showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  Generics.editNote(context, theme, s, a));
         setState(() {
           bookmark == null ? Prefs.addNote(s, a, "") : Prefs.removeNote(s, a);
         });
@@ -86,7 +91,7 @@ class AyaDetailsState extends State<AyaDetails> {
     }
   }
 
-  IconData getBookmarkIcon() {
+  IconData getNoteIcon() {
     if (bookmark == null)
       return Icons.bookmark_border;
     else if (bookmark == "")
@@ -214,7 +219,7 @@ class Generics {
         height: 5,
         child: Container(
           decoration: BoxDecoration(
-              color: theme.appBarTheme.iconTheme.color,
+              color: theme.textTheme.bodyText1.color,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(4))),
         ));
@@ -231,5 +236,62 @@ class Generics {
         style: theme.textTheme.subtitle1,
       ),
     );
+  }
+
+  static Widget editNote(
+      BuildContext context, ThemeData theme, int sura, int aya) {
+    final textController =
+        TextEditingController(text: Prefs.getNote(sura, aya));
+    return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+            width: 360,
+            height: 360,
+            clipBehavior: Clip.none,
+            padding: EdgeInsets.only(top: 44, right: 16, left: 16),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                    top: -72,
+                    width: 64,
+                    height: 64,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.bottomAppBarColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.bookmark,
+                          size: 32,
+                          color: theme.primaryColor,
+                        ))),
+                Positioned(
+                    child: TextFormField(
+                  autofocus: true,
+                  controller: textController,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    hintText: 'note_hint'.l(),
+                  ),
+                  minLines: 1, //Normal textInputField will be displayed
+                  maxLines: 6, //Normal textInputField will be displayed
+                )),
+                Positioned(
+                  bottom: 14,
+                  child: TextButton(
+                    child: Text("save_l".l()),
+                    onPressed: () {
+                      Prefs.addNote(sura, aya, textController.text);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )
+              ],
+            )));
   }
 }
