@@ -158,22 +158,10 @@ class HomePageState extends State<HomePage> {
                     // var tween = Tween<double>(begin: -200, end: 0);
                     toolbarHeight = _toolbarHeight;
                   }),
-              onLongPress: () {
-                showModalBottomSheet(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  backgroundColor: theme.dialogBackgroundColor,
-                  context: context,
-                  builder: (context) =>
-                      AyaDetails(position, index, () => setState(() {})),
-                ).then((value) {
-                  setState(() {});
-                });
-              },
+              onLongPress: () => showAyaDetails(position, index),
               child: Padding(
                   padding:
-                      EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
+                      EdgeInsets.only(top: 16, right: 16, bottom: 5, left: 16),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: textsProvider(position, index))))),
@@ -186,8 +174,29 @@ class HomePageState extends State<HomePage> {
                 Icons.bookmark_sharp,
                 size: 14,
                 color: theme.textTheme.caption.color,
-              ))
+              )),
+      Positioned(
+          top: -8,
+          right: -14,
+          child: IconButton(
+            icon: Icon(Icons.more_vert,
+                size: 16, color: theme.textTheme.caption.color),
+            onPressed: () => showAyaDetails(position, index),
+          )),
     ]);
+  }
+
+  void showAyaDetails(int position, int index) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      backgroundColor: theme.dialogBackgroundColor,
+      context: context,
+      builder: (context) => AyaDetails(position, index, () => setState(() {})),
+    ).then((value) {
+      setState(() {});
+    });
   }
 
   List<Widget> textsProvider(int sura, int aya) {
