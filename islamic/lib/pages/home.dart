@@ -104,20 +104,19 @@ class HomePageState extends State<HomePage> {
                     Transform.translate(
                         offset: Offset(0, -_toolbarHeight + toolbarHeight),
                         child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: theme.cardColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                blurRadius: 6.0, // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Text(String.fromCharCode(selectedSura + 13),
-                              style: suraStyle),
-                          height: _toolbarHeight,
-                        )),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: theme.cardColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 6.0, // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Text(String.fromCharCode(selectedSura + 13),
+                                style: suraStyle),
+                            height: _toolbarHeight)),
                     footer()
                   ],
                 ))));
@@ -127,14 +126,13 @@ class HomePageState extends State<HomePage> {
     var len = Configs.instance.metadata.suras[p].ayas;
     selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
     return ayaList = ScrollablePositionedList.builder(
-      initialAlignment: 0.15,
-      itemScrollController: ItemScrollController(),
-      itemPositionsListener: ItemPositionsListener.create(),
-      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
-      itemCount: len,
-      itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-      onScroll: onPageScroll,
-    );
+        initialAlignment: 0.15,
+        itemScrollController: ItemScrollController(),
+        itemPositionsListener: ItemPositionsListener.create(),
+        padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
+        itemCount: len,
+        itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+        onScroll: onPageScroll);
   }
 
   void onPageScroll(ScrollPosition position) {

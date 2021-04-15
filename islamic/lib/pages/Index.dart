@@ -20,8 +20,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
 
   ThemeData theme;
+  TextStyle suraStyle;
   TextStyle uthmaniStyle;
-  TextStyle suraStyle = TextStyle(fontFamily: 'SuraNames', fontSize: 28);
 
   bool reversed = false;
   String lastSort = "suras";
@@ -35,6 +35,27 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      value: 0,
+      vsync: this,
+    );
+    controller.addListener(() {
+      setState(() {});
+    });
+    tween = Tween<double>(begin: 0.0, end: 2.800);
+
+    suraStyle = TextStyle(
+        fontFamily: 'SuraNames',
+        fontSize: 28,
+        height: Localization.isRTL ? 1.1 : 0.1);
+    uthmaniStyle = Localization.isRTL
+        ? TextStyle(fontFamily: 'Uthmani', fontSize: 20)
+        : TextStyle(
+            fontFamily: 'CubicSans-regular',
+            fontSize: 15,
+            fontWeight: FontWeight.bold);
+
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
     suraListController = ScrollController();
@@ -54,8 +75,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
-    uthmaniStyle = TextStyle(
-        fontFamily: 'Uthmani', fontSize: 20, height: 2, wordSpacing: 2);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: _toolbarHeight - 8,
@@ -64,8 +83,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: "sura_l".l()),
-            Tab(text: "juze_l".l()),
+            Tab(text: "suras_l".l()),
+            Tab(text: "juzes_l".l()),
             Tab(text: "notes_l".l())
           ],
         ),
@@ -116,7 +135,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return GestureDetector(
         onTap: () => goto(sura.index, 0),
         child: Container(
-            height: 56,
+            height: Localization.isRTL ? 56 : 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -126,29 +145,34 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       SvgPicture.asset(
                         "images/${sura.type == 0 ? 'meccan' : 'median'}.svg",
                         color: theme.primaryColor,
-                        width: 50,
-                        height: 50,
+                        width: 48,
+                        height: 48,
                       ),
                       Positioned(
-                          top: 10,
-                          bottom: 10,
+                          top: 14,
+                          bottom: 14,
                           right: 4,
                           left: 4,
-                          child: Text(
-                            "${sura.index + 1}",
-                            style: uthmaniStyle,
-                            textAlign: TextAlign.center,
-                          ))
+                          child: Text("${sura.index + 1}",
+                              style: uthmaniStyle, textAlign: TextAlign.center))
                     ]),
                     SizedBox(width: 8, height: 48),
                     Expanded(
-                      child: Text(
+                        child: Container(
+                            padding: EdgeInsets.only(
+                                top: Localization.isRTL ? 5 : 28),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
                         "${String.fromCharCode(sura.index + 13)}",
                         style: suraStyle,
-                        textAlign: TextAlign.right,
-                        textDirection: TextDirection.ltr,
                       ),
-                    ),
+                                  Localization.isRTL
+                                      ? SizedBox(height: 0)
+                                      : Text("    ${sura.title}")
+                                ]))),
                     getText(sura.order),
                     getText(sura.ayas),
                     getText(sura.page)
@@ -159,7 +183,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Container getText(int value) {
     return Container(
         width: 64,
-        height: 24,
+        height: 16,
         alignment: Alignment.center,
         child: Text("$value", style: uthmaniStyle));
   }
@@ -224,8 +248,11 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             height: 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
-                padding: EdgeInsets.only(right: 16, left: 6),
+                padding: EdgeInsets.only(
+                    left: Localization.isRTL ? 4 : 16,
+                    right: Localization.isRTL ? 16 : 4),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Text(
@@ -261,11 +288,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     notes = Prefs.notes.keys.toList();
     return notes.length == 0
         ? Center(
-            child: Text(
-            "note_empty".l(),
-            style: theme.textTheme.caption,
-            textAlign: TextAlign.center
-          ))
+            child: Text("note_empty".l(),
+                style: theme.textTheme.caption, textAlign: TextAlign.center))
         : ListView.builder(
             itemBuilder: noteItemBuilder, itemCount: notes.length);
   }
@@ -279,10 +303,16 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             height: 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
-                padding: EdgeInsets.only(right: 16, left: 6),
+                padding: EdgeInsets.only(
+                    left: Localization.isRTL ? 4 : 16,
+                    right: Localization.isRTL ? 16 : 4),
                 child: Row(children: [
                   Expanded(
-                      child: Text(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                     "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
                   )),
                   IconButton(
