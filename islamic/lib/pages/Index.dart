@@ -215,6 +215,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         child: Container(
             width: 64,
             height: _toolbarHeight,
+            color: Colors.transparent,
             child: Stack(alignment: Alignment.topCenter,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -292,16 +293,18 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     var hizb = Configs.instance.metadata.hizbs[hIndex];
     return Opacity(
         opacity: (controller.value - (hizbIndex * 0.05)).clamp(0.0, 1.0),
-        child: Container(
-            clipBehavior: Clip.none,
-            width: 56,
-            child: Column(children: [
-              IconButton(
-                  iconSize: 30,
-                  icon: SvgPicture.asset("images/quarter_$hizbIndex.svg"),
-                  onPressed: () => goto(hizb.sura - 1, hizb.aya - 1)),
-              Text("hizb_l".l() + " " + (hizbIndex + 1).n())
-            ])));
+        child: GestureDetector(
+            onTap: () => goto(hizb.sura - 1, hizb.aya - 1),
+            child: Container(
+                width: 56,
+                padding: EdgeInsets.only(top: 10),
+                child: Column(children: [
+                  SvgPicture.asset(
+                    "images/quarter_$hizbIndex.svg",
+                    height: 38,
+                  ),
+                  Text("hizb_l".l() + " " + (hizbIndex + 1).n())
+                ]))));
   }
 
 // ____________________________________________________________
