@@ -22,7 +22,8 @@ class Themes {
     var textTheme = TextTheme(
         bodyText1: TextStyle(color: primaries[920]),
         bodyText2: TextStyle(color: primaries[920]),
-        subtitle1: TextStyle(color: primaries[920]),
+        subtitle1: TextStyle(
+            color: primaries[920], fontSize: 15, fontWeight: FontWeight.bold),
         subtitle2: TextStyle(color: primaries[910]),
         headline1: hl,
         headline2: hl,
@@ -88,7 +89,8 @@ class Themes {
     var textTheme = TextTheme(
         bodyText1: TextStyle(color: primaries[100]),
         bodyText2: TextStyle(color: primaries[200]),
-        subtitle1: TextStyle(color: primaries[100]),
+        subtitle1: TextStyle(
+            color: primaries[100], fontSize: 15, fontWeight: FontWeight.bold),
         subtitle2: TextStyle(color: primaries[200]),
         headline1: hl,
         headline2: hl,

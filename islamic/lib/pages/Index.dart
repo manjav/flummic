@@ -28,9 +28,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   List<Sura> suras;
   List<String> notes;
   double toolbarHeight = 0;
+  int selectedJuzIndex = -1;
   final _toolbarHeight = 56.0;
   double startScrollBarIndicator = 0;
   ScrollController suraListController;
+
+  Tween<double> tween;
+  AnimationController controller;
 
   @override
   void initState() {
@@ -243,9 +247,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Widget juzeItemBuilder(context, int index) {
     var juz = Configs.instance.metadata.juzes[index];
     return GestureDetector(
-        onTap: () => goto(juz.sura - 1, juz.aya - 1),
+        onTap: () {
+          selectedJuzIndex = index;
+          controller.value = 0;
+          controller.animateTo(1);
+        },
         child: Container(
-            height: 72,
+            height: 80,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.only(
@@ -255,31 +263,45 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Text(
-                        "juze_l".l() + " " + "j_${index + 1}".l(),
-                        textAlign: TextAlign.right,
-                        textDirection: TextDirection.ltr,
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Localization.isRTL
+                              ? "juze_l".l() + " " + "j_${index + 1}".l()
+                              : "j_${index + 1}".l() + " " + "juze_l".l(),
+                          style: theme.textTheme.subtitle1,
                       ),
-                    ),
-                    getHizb(index * 8),
-                    getHizb(index * 8 + 1),
-                    getHizb(index * 8 + 2),
-                    getHizb(index * 8 + 3)
+                        Text(
+                            "${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}")
+                      ],
+                    )),
+                    getHizb(index, 0),
+                    getHizb(index, 1),
+                    getHizb(index, 2),
+                    getHizb(index, 3)
                   ],
                 ))));
   }
 
-  Widget getHizb(int index) {
-    var hizb = Configs.instance.metadata.hizbs[index];
-    return IconButton(
-      iconSize: 40,
-      icon: SvgPicture.asset(
-        "images/quarter_${index % 8}.svg",
-        width: 40,
-        height: 40,
-      ),
-      onPressed: () => goto(hizb.sura - 1, hizb.aya - 1),
-    );
+  Widget getHizb(int juzIndex, int hizbIndex) {
+    var hidden = juzIndex != selectedJuzIndex;
+    if (hidden) return SizedBox();
+    var hIndex = juzIndex * 8 + hizbIndex;
+    var hizb = Configs.instance.metadata.hizbs[hIndex];
+    return Opacity(
+        opacity: (controller.value - (hizbIndex * 0.05)).clamp(0.0, 1.0),
+        child: Container(
+            clipBehavior: Clip.none,
+            width: 56,
+            child: Column(children: [
+              IconButton(
+                  iconSize: 30,
+                  icon: SvgPicture.asset("images/quarter_$hizbIndex.svg"),
+                  onPressed: () => goto(hizb.sura - 1, hizb.aya - 1)),
+              Text("hizb_l".l() + " " + (hizbIndex + 1).n())
+            ])));
   }
 
 // ____________________________________________________________
