@@ -42,7 +42,7 @@ class Prefs {
       switch (_locale) {
         case "en":
           persons[PType.text].add("en.sahih");
-          persons[PType.sound].add("abu_bakr_ash_shaatree");
+          persons[PType.sound].add("mishary_rashid_alafasy");
           persons[PType.sound].add("ibrahim_walk");
           break;
         case "fa":
@@ -107,14 +107,15 @@ class Configs {
 
   static void create(Function onCreate) async {
     instance = Configs();
+    if (Prefs.instance.getString("locale") != "fa")
+      baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
     instance.loadConfigs();
     instance.loadMetadata();
   }
 
   Future<void> loadConfigs() async {
-    await Loader().load("configs.json", baseURL + "configs.ijson",
-        (String data) {
+    await Loader().load("config.json", baseURL + "config.ijson", (String data) {
       var map = json.decode(data);
       for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
       for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
@@ -253,10 +254,10 @@ class Person {
 
   Person(this.type, p) {
     state = type == PType.text ? PState.waiting : PState.ready;
-    url = p["url"];
-    path = p["path"];
     name = p["name"];
-    ename = p["ename"];
+    ename = p["ename"] ?? p["name"];
+    url = p["url"] ?? '${Configs.baseURL}contents/${p["path"]}.json.zip';
+    path = p["path"];
     flag = p["flag"];
     mode = p["mode"];
     size = p["size"];
@@ -288,7 +289,6 @@ class Person {
     loader = Loader();
     loader.load(path, url, (String _data) {
       var list = json.decode(_data);
-      print(path);
       data = <List<String>>[];
       for (var s in list) {
         var sura = <String>[];
@@ -317,5 +317,5 @@ class Person {
     return "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3";
   }
 
-  String get title => Localization.isRTL || type == PType.text ? name : ename;
+  String get title => Localization.isRTL ? name : ename;
 }
