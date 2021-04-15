@@ -98,7 +98,7 @@ class HomePageState extends State<HomePage> {
                   children: [
                     PageView.builder(
                         reverse: true,
-                        itemCount: Configs.instance.metadata.suras.length,
+                        itemCount: Configs.instance.getNavigation().length,
                         itemBuilder: suraPageBuilder,
                         controller: suraPageController),
                     Transform.translate(
@@ -123,14 +123,13 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
-    var len = Configs.instance.metadata.suras[p].ayas;
     selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
     return ayaList = ScrollablePositionedList.builder(
         initialAlignment: 0.15,
         itemScrollController: ItemScrollController(),
         itemPositionsListener: ItemPositionsListener.create(),
         padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
-        itemCount: len,
+        itemCount: Configs.instance.getNavigation()[p].length,
         itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
         onScroll: onPageScroll);
   }
@@ -148,6 +147,7 @@ class HomePageState extends State<HomePage> {
 
   Widget ayaItemBuilder(int position, int index) {
     var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
+    var part = Configs.instance.getNavigation()[position][index];
     return Stack(children: [
       Container(
           color: index == selectedAya ? theme.focusColor : color,
@@ -156,14 +156,14 @@ class HomePageState extends State<HomePage> {
                     // var tween = Tween<double>(begin: -200, end: 0);
                     toolbarHeight = _toolbarHeight;
                   }),
-              onLongPress: () => showAyaDetails(position, index),
+              onLongPress: () => showAyaDetails(part.sura, part.aya),
               child: Padding(
                   padding:
                       EdgeInsets.only(top: 16, right: 16, bottom: 5, left: 16),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: textsProvider(position, index))))),
-      Prefs.getNote(position, index) == null
+                      children: textsProvider(part.sura, part.aya))))),
+      Prefs.getNote(part.sura, part.aya) == null
           ? SizedBox()
           : Positioned(
               top: -2,
@@ -184,14 +184,14 @@ class HomePageState extends State<HomePage> {
     ]);
   }
 
-  void showAyaDetails(int position, int index) {
+  void showAyaDetails(int sura, int aya) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       backgroundColor: theme.dialogBackgroundColor,
       context: context,
-      builder: (context) => AyaDetails(position, index, () => setState(() {})),
+      builder: (context) => AyaDetails(sura, aya, () => setState(() {})),
     ).then((value) {
       setState(() {});
     });

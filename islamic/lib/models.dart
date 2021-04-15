@@ -55,6 +55,7 @@ class Prefs {
           break;
       }
       instance.setInt("themeMode", 0);
+      instance.setString("naviMode", "sura");
       instance.setString("locale", _locale);
       instance.setString("bookmarks", "{}");
       instance.setStringList(PType.text.toString(), persons[PType.text]);
@@ -98,6 +99,7 @@ class Configs {
 
   List<Word> words;
   List<List<String>> simpleQuran;
+  Map<String, List<List<Part>>> navigations = Map();
 
   var sounds = Map<String, Person>();
   var texts = Map<String, Person>();
@@ -137,11 +139,15 @@ class Configs {
         if (k == "suras")
           for (var c in map[k]) instance.metadata.suras.add(Sura(c));
         else if (k == "juzes")
-          for (var c in map[k]) instance.metadata.juzes.add(Juz(c));
+          for (var c in map[k])
+            instance.metadata.juzes
+                .add(Juz(c['sura'], c['aya'], c['page'], c['name']));
         else if (k == "hizbs")
-          for (var c in map[k]) instance.metadata.hizbs.add(Part(c));
+          for (var c in map[k])
+            instance.metadata.hizbs.add(Part(c['sura'], c['aya']));
         else if (k == "pages")
-          for (var c in map[k]) instance.metadata.pages.add(Part(c));
+          for (var c in map[k])
+            instance.metadata.pages.add(Part(c['sura'], c['aya']));
       }
       for (var i = 0; i < instance.metadata.suras.length; i++)
         instance.metadata.suras[i].index = i;
@@ -180,6 +186,39 @@ class Configs {
       }, null, print);
     }, null, print);
   }
+
+  List<List<Part>> getNavigation() {
+    var navi = Prefs.instance.getString("naviMode");
+    if (navigations[navi] != null) return navigations[navi];
+    navigations[navi] = <List<Part>>[];
+    if (navi == "sura") {
+      for (var i = 0; i < 114; i++) {
+        navigations[navi].add(<Part>[]);
+        for (var j = 0; j < metadata.suras[i].ayas; j++)
+          navigations[navi][i].add(Part(i, j));
+      }
+      return navigations[navi];
+    }
+    if (navi == "juze") return fillParts(navi, metadata.juzes);
+    return fillParts(navi, metadata.pages);
+  }
+
+  List<List<Part>> fillParts(String navi, List<Part> source) {
+    for (var i = 0; i < source.length; i++) {
+      navigations[navi].add(<Part>[]);
+      var p = source[i];
+      var np = i > source.length - 2 ? Part(115, 1) : source[i + 1];
+      var a = p.aya - 1;
+      for (var s = p.sura - 1; s < np.sura; s++, a = 0) {
+        var len = s == np.sura - 1 ? np.aya - 1 : metadata.suras[s].ayas;
+        for (; a < len; a++) {
+          navigations[navi][i].add(Part(s, a));
+          // if (i < 3) print("$i $s $a");
+        }
+      }
+    }
+    return navigations[navi];
+  }
 }
 
 class QuranMeta {
@@ -210,18 +249,12 @@ class Sura {
 class Juz extends Part {
   int page;
   String name;
-  Juz(j) : super(j) {
-    page = j["page"];
-    name = j["name"];
-  }
+  Juz(int sura, int aya, this.page, this.name) : super(sura, aya);
 }
 
 class Part {
   int sura, aya;
-  Part(p) {
-    sura = p["sura"];
-    aya = p["aya"];
-  }
+  Part(this.sura, this.aya);
 }
 
 class Word {
