@@ -301,7 +301,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                 child: Column(children: [
                   SvgPicture.asset(
                     "images/quarter_$hizbIndex.svg",
-                    height: 38,
+                    height: 36,
                   ),
                   Text("hizb_l".l() + " " + (hizbIndex + 1).n())
                 ]))));

@@ -111,6 +111,7 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
   int themeMode = Prefs.instance.getInt("themeMode");
+  String naviMode = Prefs.instance.getString("naviMode") ?? "sura";
   @override
   Widget build(BuildContext context) {
     var app = MyApp.of(context);
@@ -120,94 +121,116 @@ class SettingsState extends State<Settings> {
     var queryData = MediaQuery.of(context);
 
     return Container(
-        height: 440,
+        // height: 440,
         child: MediaQuery(
-          data: queryData.copyWith(
-              textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
-          child: Directionality(
-              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-              child: Stack(alignment: Alignment.topCenter, children: [
-                Generics.draggable(theme),
-                Generics.text(theme, "theme_mode".l(), 48, isRtl ? p : null,
-                    isRtl ? null : p),
-                Positioned(
-                    top: 40,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
-                    child: DropdownButton<int>(
-                      value: themeMode,
-                      style: theme.textTheme.caption,
-                      onChanged: (int newValue) {
-                        themeMode = newValue;
-                        app.setTheme(ThemeMode.values[themeMode]);
-                        Navigator.pop(context);
-                      },
-                      items: <int>[0, 1, 2]
-                          .map<DropdownMenuItem<int>>(
-                              (int value) => DropdownMenuItem<int>(
-                                    value: value,
-                                    child: Text("theme_$value".l()),
-                                  ))
-                          .toList(),
-                    )),
-                Generics.text(theme, "select_loc".l(), 118, isRtl ? p : null,
-                    isRtl ? null : p),
-                Positioned(
-                    top: 110,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
-                    child: DropdownButton<Locale>(
-                      value: app.locale,
-                      style: theme.textTheme.caption,
-                      onChanged: (Locale newValue) {
-                        Localization.change(context, newValue.languageCode);
-                        setState(() {});
-                      },
-                      items: app.supportedLocales
-                          .map<DropdownMenuItem<Locale>>(
-                              (Locale value) => DropdownMenuItem<Locale>(
-                                    value: value,
-                                    child: Text("${value.languageCode}_fl".l()),
-                                  ))
-                          .toList(),
-                    )),
-                Generics.text(theme, "text_size".l(), 188, isRtl ? p : null,
-                    isRtl ? null : p),
-                Positioned(
-                    top: 220,
-                    right: p,
-                    left: p,
-                    child: Slider(
-                        autofocus: true,
-                        min: 0.85,
-                        max: 1.3,
-                        value: Prefs.textScale,
-                        divisions: 3,
-                        onChanged: (double value) {
-                          setState(() {
-                            Prefs.textScale = value;
-                          });
-                          widget.updater();
-                        })),
-                Positioned(
-                    top: 260,
-                    right: -p * 2,
-                    left: -p * 2,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          for (var i = 0; i < 4; i++)
-                            Text("text_$i".l(), style: theme.textTheme.caption)
-                        ])),
-                Positioned(
-                    bottom: p,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
-                    child: Text(
-                        "${'app_title'.l()}  ${'app_ver'.l()} ${'1.0.1'.n()}",
-                        style: theme.textTheme.caption))
-              ])),
-        ));
+      data: queryData.copyWith(
+          textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
+      child: Directionality(
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+          child: Stack(alignment: Alignment.topCenter, children: [
+            Generics.draggable(theme),
+            Generics.text(theme, "theme_mode".l(), 48, isRtl ? p : null,
+                isRtl ? null : p),
+            Positioned(
+                top: 40,
+                left: isRtl ? p : null,
+                right: isRtl ? null : p,
+                child: DropdownButton<int>(
+                  value: themeMode,
+                  style: theme.textTheme.caption,
+                  onChanged: (int newValue) {
+                    themeMode = newValue;
+                    app.setTheme(ThemeMode.values[themeMode]);
+                    Navigator.pop(context);
+                  },
+                  items: <int>[0, 1, 2]
+                      .map<DropdownMenuItem<int>>(
+                          (int value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text("theme_$value".l()),
+                              ))
+                      .toList(),
+                )),
+            Generics.text(theme, "select_loc".l(), 118, isRtl ? p : null,
+                isRtl ? null : p),
+            Positioned(
+                top: 110,
+                left: isRtl ? p : null,
+                right: isRtl ? null : p,
+                child: DropdownButton<Locale>(
+                  value: app.locale,
+                  style: theme.textTheme.caption,
+                  onChanged: (Locale newValue) {
+                    Localization.change(context, newValue.languageCode);
+                    setState(() {});
+                  },
+                  items: app.supportedLocales
+                      .map<DropdownMenuItem<Locale>>(
+                          (Locale value) => DropdownMenuItem<Locale>(
+                                value: value,
+                                child: Text("${value.languageCode}_fl".l()),
+                              ))
+                      .toList(),
+                )),
+            Generics.text(theme, "text_size".l(), 188, isRtl ? p : null,
+                isRtl ? null : p),
+            Positioned(
+                top: 220,
+                right: p,
+                left: p,
+                child: Slider(
+                    autofocus: true,
+                    min: 0.85,
+                    max: 1.3,
+                    value: Prefs.textScale,
+                    divisions: 3,
+                    onChanged: (double value) {
+                      setState(() {
+                        Prefs.textScale = value;
+                      });
+                      widget.updater();
+                    })),
+            Positioned(
+                top: 260,
+                right: -p * 2,
+                left: -p * 2,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      for (var i = 0; i < 4; i++)
+                        Text("text_$i".l(), style: theme.textTheme.caption)
+                    ])),
+            Generics.text(theme, "navi_mode".l(), 320, isRtl ? p : null,
+                isRtl ? null : p),
+            Positioned(
+                top: 310,
+                left: isRtl ? p : null,
+                right: isRtl ? null : p,
+                child: DropdownButton<String>(
+                  value: naviMode,
+                  style: theme.textTheme.caption,
+                  onChanged: (String newValue) {
+                    Prefs.instance.setString("naviMode", naviMode = newValue);
+                    setState(() {});
+                    widget.updater();
+                  },
+                  items: <String>["sura", "juze", "page"]
+                      .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                                value: value,
+                                child: Text("navi_$value".l()),
+                              ))
+                      .toList(),
+                )),
+            Positioned(
+                bottom: p,
+                left: isRtl ? p : null,
+                right: isRtl ? null : p,
+                child: Text(
+                    "${'app_title'.l()}  ${'app_ver'.l()} ${'1.0.1'.n()}",
+                    style: theme.textTheme.caption))
+          ])),
+    ));
   }
 }
 
