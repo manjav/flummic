@@ -60,7 +60,7 @@ class AyaDetailsState extends State<AyaDetails> {
     switch (type) {
       case "share":
         var subject =
-            "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].name} ${'verse_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
+            "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'verse_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
         var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
             Configs.instance.quran[s][a];
         if (Prefs.persons[PType.text].length > 1) {
@@ -77,7 +77,7 @@ class AyaDetailsState extends State<AyaDetails> {
           showDialog(
               context: context,
               builder: (BuildContext context) =>
-                  Generics.editNote(context, theme, s, a));
+                  Generics.editNote(context, theme, s, a, widget.updater));
         setState(() {
           bookmark == null ? Prefs.addNote(s, a, "") : Prefs.removeNote(s, a);
         });
@@ -238,8 +238,8 @@ class Generics {
     );
   }
 
-  static Widget editNote(
-      BuildContext context, ThemeData theme, int sura, int aya) {
+  static Widget editNote(BuildContext context, ThemeData theme, int sura,
+      int aya, Function updater) {
     final textController =
         TextEditingController(text: Prefs.getNote(sura, aya));
     return Dialog(
@@ -286,6 +286,7 @@ class Generics {
                   child: TextButton(
                     child: Text("save_l".l()),
                     onPressed: () {
+                      updater();
                       Prefs.addNote(sura, aya, textController.text);
                       Navigator.of(context).pop();
                     },

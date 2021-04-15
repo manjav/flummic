@@ -170,9 +170,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                        "${String.fromCharCode(sura.index + 13)}",
-                        style: suraStyle,
-                      ),
+                                    "${String.fromCharCode(sura.index + 13)}",
+                                    style: suraStyle,
+                                  ),
                                   Localization.isRTL
                                       ? SizedBox(height: 0)
                                       : Text("    ${sura.title}")
@@ -272,7 +272,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                               ? "juze_l".l() + " " + "j_${index + 1}".l()
                               : "j_${index + 1}".l() + " " + "juze_l".l(),
                           style: theme.textTheme.subtitle1,
-                      ),
+                        ),
                         Text(
                             "${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}")
                       ],
@@ -319,6 +319,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Widget noteItemBuilder(BuildContext context, int index) {
     var sura = int.parse(notes[index].substring(0, 3));
     var aya = int.parse(notes[index].substring(3));
+    var text = Prefs.getNote(sura, aya);
     return GestureDetector(
         onTap: () => goto(sura, aya),
         child: Container(
@@ -335,7 +336,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                    "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
+                        "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
+                        style: theme.textTheme.subtitle1,
+                      ),
+                      text.length > 0
+                          ? Text(text, overflow: TextOverflow.ellipsis)
+                          : SizedBox()
+                    ],
                   )),
                   IconButton(
                       icon: Icon(
@@ -344,8 +351,21 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       ),
                       onPressed: () => showDialog(
                           context: context,
-                          builder: (BuildContext context) =>
-                              Generics.editNote(context, theme, sura, aya)))
+                          builder: (BuildContext context) => Generics.editNote(
+                              context,
+                              theme,
+                              sura,
+                              aya,
+                              () => setState(() {})))),
+                  IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Prefs.removeNote(sura, aya);
+                        setState(() {});
+                      })
                 ]))));
   }
 
