@@ -301,13 +301,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             onTap: () => goto(hizb.sura - 1, hizb.aya - 1),
             child: Container(
                 width: 56,
-                padding: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(top: 6),
                 child: Column(children: [
                   SvgPicture.asset(
                     "images/quarter_$hizbIndex.svg",
                     height: 36,
                   ),
-                  Text("hizb_l".l() + " " + (hizbIndex + 1).n())
+                  Text("hizb_l".l() + " " + (hizbIndex + 1).n(),
+                      style: theme.textTheme.caption)
                 ]))));
   }
 
