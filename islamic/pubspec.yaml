@@ -49,7 +49,7 @@ flutter:
         - asset: fonts/me_quran.ttf
     - family: CubicSans
       fonts:
-        - asset: fonts/CubicSans-regular.ttf
-    - family: SuraNames
+        - asset: fonts/cubicsans-regular.ttf
+    - family: Titles
       fonts:
-        - asset: fonts/suranames.ttf
+        - asset: fonts/titles.ttf

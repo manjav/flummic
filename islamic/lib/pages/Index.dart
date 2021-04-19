@@ -20,7 +20,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
 
   ThemeData theme;
-  TextStyle suraStyle;
+  TextStyle titlesStyle;
   TextStyle uthmaniStyle;
 
   bool reversed = false;
@@ -49,17 +49,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     });
     tween = Tween<double>(begin: 0.0, end: 2.800);
 
-    suraStyle = TextStyle(
-        fontFamily: 'SuraNames',
-        fontSize: 28,
-        height: Localization.isRTL ? 1.1 : 0.1);
-    uthmaniStyle = Localization.isRTL
-        ? TextStyle(fontFamily: 'Uthmani', fontSize: 20)
-        : TextStyle(
-            fontFamily: 'CubicSans-regular',
-            fontSize: 15,
-            fontWeight: FontWeight.bold);
-
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
     suraListController = ScrollController();
@@ -79,6 +68,17 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
+    titlesStyle = TextStyle(
+        fontFamily: 'titles',
+        fontSize: 28,
+        letterSpacing: -4,
+        height: Localization.isRTL ? 1.1 : 0.1);
+    uthmaniStyle = Localization.isRTL
+        ? TextStyle(fontFamily: 'Uthmani', fontSize: 20)
+        : TextStyle(
+            fontFamily: 'cubicsans-regular',
+            fontSize: 15,
+            fontWeight: FontWeight.bold);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: _toolbarHeight - 8,
@@ -164,15 +164,15 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                     Expanded(
                         child: Container(
                             padding: EdgeInsets.only(
-                                top: Localization.isRTL ? 5 : 28),
+                                top: Localization.isRTL ? 0 : 28),
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "${String.fromCharCode(sura.index + 13)}",
-                                    style: suraStyle,
-                                  ),
+                                      "${String.fromCharCode(sura.index + 204)}${String.fromCharCode(192)}",
+                                      style: titlesStyle,
+                                      textDirection: TextDirection.ltr),
                                   Localization.isRTL
                                       ? SizedBox(height: 0)
                                       : Text("    ${sura.title}")
@@ -269,11 +269,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          Localization.isRTL
-                              ? "juze_l".l() + " " + "j_${index + 1}".l()
-                              : "j_${index + 1}".l() + " " + "juze_l".l(),
-                          style: theme.textTheme.subtitle1,
-                        ),
+                            Localization.isRTL
+                                ? "${index + 1}. ${String.fromCharCode(index + 327)}${String.fromCharCode(193)}"
+                                : "j_${index + 1}".l() + " " + "juze_l".l(),
+                            style: Localization.isRTL
+                                ? titlesStyle
+                                : theme.textTheme.subtitle1),
                         Text(
                             "${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}")
                       ],

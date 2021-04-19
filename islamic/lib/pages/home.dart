@@ -24,10 +24,9 @@ class HomePageState extends State<HomePage> {
   final _toolbarHeight = 56.0;
   ScrollablePositionedList ayaList;
   PageController suraPageController;
-  TextStyle suraStyle = TextStyle(
-    fontFamily: 'SuraNames',
-    fontSize: 32,
-  );
+  TextStyle headerStyle;
+  TextStyle titlesStyle =
+      TextStyle(fontFamily: 'titles', fontSize: 28, letterSpacing: -4);
   TextStyle uthmaniStyle;
   int selectedSura = 0;
   int selectedAya = 0;
@@ -38,9 +37,19 @@ class HomePageState extends State<HomePage> {
   AppState app;
 
   void initHome() {
-    selectedSura = Prefs.selectedSura;
-    selectedAya = Prefs.selectedAya;
     hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
+
+    theme = Theme.of(context);
+    uthmaniStyle = TextStyle(
+        fontFamily: 'Uthmani',
+        fontSize: 20,
+        height: 2,
+        wordSpacing: 2,
+        color: theme.textTheme.bodyText1.color);
+    headerStyle = TextStyle(
+      fontFamily: Prefs.naviMode == "sura" ? 'SuraNames' : null,
+      fontSize: Prefs.naviMode == "sura" ? 32 : 18,
+    );
     if (suraPageController != null) return;
 
     toolbarHeight = _toolbarHeight;
@@ -71,14 +80,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     initHome();
-    theme = Theme.of(context);
-    uthmaniStyle = TextStyle(
-        fontFamily: 'Uthmani',
-        fontSize: 20,
-        height: 2,
-        wordSpacing: 2,
-        color: theme.textTheme.bodyText1.color);
-
     var queryData = MediaQuery.of(context);
     return MediaQuery(
         data: queryData.copyWith(
@@ -119,12 +120,23 @@ class HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            child: Text(String.fromCharCode(selectedSura + 13),
-                                style: suraStyle),
+                            child: Text(headerTextProvider(),
+                                style: !Localization.isRTL &&
+                                        Prefs.naviMode == "page"
+                                    ? theme.textTheme.subtitle1
+                                    : titlesStyle),
                             height: _toolbarHeight)),
                     footer()
                   ],
                 ))));
+  }
+
+  String headerTextProvider() {
+    if (Prefs.naviMode == "sura")
+      return "${String.fromCharCode(selectedPage + 204)}${String.fromCharCode(192)}";
+    if (Prefs.naviMode == "juze")
+      return "${String.fromCharCode(selectedPage + 327)}${String.fromCharCode(193)}";
+    return (selectedPage + 1).n();
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
@@ -204,13 +216,19 @@ class HomePageState extends State<HomePage> {
 
   List<Widget> textsProvider(int sura, int aya) {
     var rows = <Widget>[];
-    if (aya == 0 && sura != 0 && sura != 8) {
-      rows.add(SizedBox(height: 50));
-      rows.add(Text(
-        "",
-        style: suraStyle,
-        textAlign: TextAlign.center,
-      ));
+    if (aya == 0) {
+      if (Prefs.naviMode != "sura")
+        rows.add(Text(
+          "${String.fromCharCode(sura + 204)}${String.fromCharCode(192)}",
+          style: titlesStyle,
+          textAlign: TextAlign.center,
+        ));
+      if (sura != 0 && sura != 8)
+        rows.add(Text(
+          "\n\n${String.fromCharCode(194)}",
+          style: titlesStyle,
+          textAlign: TextAlign.center,
+        ));
       rows.add(SizedBox(height: 40));
     }
 
