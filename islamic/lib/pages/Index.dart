@@ -293,7 +293,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Widget getHizb(int juzIndex, int hizbIndex) {
     var hidden = juzIndex != selectedJuzIndex;
     if (hidden) return SizedBox();
-    var hIndex = juzIndex * 8 + hizbIndex;
+    var hIndex = juzIndex * 8 + hizbIndex * 2;
     var hizb = Configs.instance.metadata.hizbs[hIndex];
     return Opacity(
         opacity: (controller.value - (hizbIndex * 0.05)).clamp(0.0, 1.0),
