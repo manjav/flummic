@@ -26,10 +26,10 @@ class HomePageState extends State<HomePage> {
   PageController suraPageController;
   TextStyle headerStyle;
   TextStyle titlesStyle =
-      TextStyle(fontFamily: 'titles', fontSize: 28, letterSpacing: -4);
+      TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
   TextStyle uthmaniStyle;
-  int selectedSura = 0;
-  int selectedAya = 0;
+  // int selectedSura = 0;
+  // int selectedAya = 0;
   double toolbarHeight;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
@@ -47,7 +47,7 @@ class HomePageState extends State<HomePage> {
         wordSpacing: 2,
         color: theme.textTheme.bodyText1.color);
     headerStyle = TextStyle(
-      fontFamily: Prefs.naviMode == "sura" ? 'SuraNames' : null,
+      fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
       fontSize: Prefs.naviMode == "sura" ? 32 : 18,
     );
     if (suraPageController != null) return;
@@ -73,7 +73,7 @@ class HomePageState extends State<HomePage> {
     app.player.onStateChange = playerOnStateChange;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (selectedIndex > 0) gotoAya(selectedIndex, 1200);
+      if (selectedIndex > 0) gotoIndex(selectedIndex, 1200);
     });
   }
 
@@ -346,34 +346,38 @@ class HomePageState extends State<HomePage> {
   }
 
   void goto(int sura, int aya) {
-    if (sura != selectedSura) {
-      var dis = (sura - selectedSura).abs();
-      gotoSura(sura, dis > 3 ? 0 : 400);
+    var part = Configs.instance.getPart(sura, aya);
+    var page = part[0];
+    var index = part[1];
+    if (page != selectedPage) {
+      var dis = (page - selectedPage).abs();
+      gotoPage(page, dis > 3 ? 0 : 400);
       // gotoAya(aya, 0);
     } else {
-      gotoAya(aya, 800);
+      gotoIndex(index, 800);
     }
-    Prefs.selectedSura = selectedSura = sura;
-    Prefs.selectedAya = selectedAya = aya;
+    // Prefs.selectedSura = selectedSura = sura;
+    // Prefs.selectedAya = selectedAya = aya;
+    selectedIndex = index;
     setState(() {});
     // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
   }
 
-  void gotoSura(int sura, int duration) {
+  void gotoPage(int page, int duration) {
     if (duration == 0)
-      suraPageController.jumpToPage(sura);
+      suraPageController.jumpToPage(page);
     else
-      suraPageController.animateToPage(sura,
+      suraPageController.animateToPage(page,
           duration: Duration(milliseconds: duration), curve: Curves.easeInOut);
   }
 
-  void gotoAya(int aya, int duration) {
-    print("aya $aya, duration $duration");
+  void gotoIndex(int index, int duration) {
+    print("index $index, duration $duration");
     if (duration == 0) {
-      ayaList.itemScrollController.jumpTo(index: aya);
+      ayaList.itemScrollController.jumpTo(index: index);
     } else {
       ayaList.itemScrollController.scrollTo(
-          index: aya,
+          index: index,
           duration: Duration(milliseconds: duration),
           curve: Curves.easeInOut);
     }
@@ -389,10 +393,10 @@ class HomePageState extends State<HomePage> {
   }
 
   void onTogglePressed() {
-    if (app.player.sura == null)
-      app.player.select(selectedSura, selectedAya, 0, true);
-    else
-      app.player.toggle();
+    // if (app.player.sura == null)
+    //   app.player.select(selectedSura, selectedAya, 0, true);
+    // else
+    app.player.toggle();
   }
 
   IconButton getButton(String type) {
