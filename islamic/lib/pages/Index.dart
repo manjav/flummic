@@ -70,7 +70,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     theme = Theme.of(context);
     titlesStyle = TextStyle(
         fontFamily: 'titles',
-        fontSize: 28,
+        fontSize: 26,
         letterSpacing: -4,
         height: Localization.isRTL ? 1.1 : 0.1);
     uthmaniStyle = Localization.isRTL
@@ -139,7 +139,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return GestureDetector(
         onTap: () => goto(sura.index, 0),
         child: Container(
-            height: Localization.isRTL ? 56 : 72,
+            height: Localization.isRTL ? 64 : 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -247,6 +247,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Widget juzeItemBuilder(context, int index) {
     var juz = Configs.instance.metadata.juzes[index];
+    var j = index + 1;
     return GestureDetector(
         onTap: () {
           selectedJuzIndex = index;
@@ -258,6 +259,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.only(
+                    top: 6,
                     left: Localization.isRTL ? 4 : 16,
                     right: Localization.isRTL ? 16 : 4),
                 child: Row(
@@ -270,13 +272,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       children: [
                         Text(
                             Localization.isRTL
-                                ? "${index + 1}. ${String.fromCharCode(index + 327)}${String.fromCharCode(193)}"
-                                : "j_${index + 1}".l() + " " + "juze_l".l(),
+                                ? "$j. ${String.fromCharCode(index + 327)}${String.fromCharCode(193)}"
+                                : "$j. " + "j_$j".l() + " " + "juze_l".l(),
                             style: Localization.isRTL
                                 ? titlesStyle
                                 : theme.textTheme.subtitle1),
                         Text(
-                            "${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}")
+                            "${'sura_l'.l()} ${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}",
+                            style: theme.textTheme.caption)
                       ],
                     )),
                     getHizb(index, 0),

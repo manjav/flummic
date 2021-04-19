@@ -91,7 +91,7 @@ class AppState extends State<MyApp> {
       case 2:
         return IndexPage();
       default:
-        return Container(color: Colors.red);
+        return SizedBox();
     }
   }
 
