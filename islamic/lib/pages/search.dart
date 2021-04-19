@@ -87,8 +87,11 @@ class SearchPageState extends State<SearchPage> {
         color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
         child: GestureDetector(
             onTap: () {
-              Prefs.selectedSura = s.sura;
-              Prefs.selectedAya = s.aya;
+              var p = Configs.instance.getPart(s.sura, s.aya);
+              HomePageState.selectedPage = p[0];
+              HomePageState.selectedIndex = p[1];
+              // Prefs.selectedSura = s.sura;
+              // Prefs.selectedAya = s.aya;
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },

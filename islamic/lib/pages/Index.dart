@@ -375,6 +375,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   void goto(int sura, int aya) {
     Prefs.selectedSura = sura;
     Prefs.selectedAya = aya;
+    var res = Configs.instance.getPart(sura, aya);
+    HomePageState.selectedPage = res[0];
+    HomePageState.selectedIndex = res[1];
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => HomePage()));
   }

@@ -99,7 +99,7 @@ class Configs {
 
   List<Word> words;
   List<List<String>> simpleQuran;
-  Map<String, List<List<Part>>> navigations = Map();
+  Map<String, List<List<Aya>>> navigations = Map();
 
   var sounds = Map<String, Person>();
   var texts = Map<String, Person>();
@@ -151,6 +151,7 @@ class Configs {
       }
       for (var i = 0; i < instance.metadata.suras.length; i++)
         instance.metadata.suras[i].index = i;
+      createAyas();
       finalize();
     }, null, (String e) => print("error: $e"));
   }
@@ -187,37 +188,52 @@ class Configs {
     }, null, print);
   }
 
-  List<List<Part>> getNavigation() {
-    var navi = Prefs.instance.getString("naviMode");
-    if (navigations[navi] != null) return navigations[navi];
-    navigations[navi] = <List<Part>>[];
-    if (navi == "sura") {
+  List<List<Aya>> get pageItems => navigations[Prefs.naviMode];
+  void createAyas() {
+    var t = DateTime.now().millisecondsSinceEpoch;
+    navigations["sura"] = <List<Aya>>[];
       for (var i = 0; i < 114; i++) {
-        navigations[navi].add(<Part>[]);
+      navigations["sura"].add(<Aya>[]);
         for (var j = 0; j < metadata.suras[i].ayas; j++)
-          navigations[navi][i].add(Part(i, j));
+        navigations["sura"][i].add(Aya(i, j));
       }
-      return navigations[navi];
-    }
-    if (navi == "juze") return fillParts(navi, metadata.juzes);
-    return fillParts(navi, metadata.pages);
+    fillParts("juze", metadata.juzes);
+    fillParts("page", metadata.pages);
+    print(DateTime.now().millisecondsSinceEpoch - t);
   }
 
-  List<List<Part>> fillParts(String navi, List<Part> source) {
+  void fillParts(String mode, List<Part> source) {
+    navigations[mode] = <List<Aya>>[];
+
     for (var i = 0; i < source.length; i++) {
-      navigations[navi].add(<Part>[]);
+      navigations[mode].add(<Aya>[]);
       var p = source[i];
       var np = i > source.length - 2 ? Part(115, 1) : source[i + 1];
       var a = p.aya - 1;
+      var index = 0;
       for (var s = p.sura - 1; s < np.sura; s++, a = 0) {
         var len = s == np.sura - 1 ? np.aya - 1 : metadata.suras[s].ayas;
         for (; a < len; a++) {
-          navigations[navi][i].add(Part(s, a));
-          // if (i < 3) print("$i $s $a");
+          var aya = navigations["sura"][s][a];
+          if (mode == "juze") {
+            aya.juze = i;
+            aya.juzeIndex = index;
+          } else {
+            aya.page = i;
+            aya.pageIndex = index;
+          }
+          navigations[mode][i].add(aya);
+          index++;
+        }
         }
       }
     }
-    return navigations[navi];
+
+  List<int> getPart(int sura, int aya) {
+    if (Prefs.naviMode == "sura") return [sura, aya];
+    var a = navigations["sura"][sura][aya];
+    if (Prefs.naviMode == "juze") return [a.juze, a.juzeIndex];
+    return [a.page, a.pageIndex];
   }
 }
 
@@ -250,6 +266,11 @@ class Juz extends Part {
   int page;
   String name;
   Juz(int sura, int aya, this.page, this.name) : super(sura, aya);
+}
+
+class Aya extends Part {
+  int page, juze, pageIndex, juzeIndex;
+  Aya(int sura, int aya) : super(sura, aya);
 }
 
 class Part {

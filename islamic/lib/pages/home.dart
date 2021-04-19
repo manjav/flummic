@@ -19,6 +19,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  static int selectedPage = 0;
+  static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
   ScrollablePositionedList ayaList;
   PageController suraPageController;
@@ -43,12 +45,15 @@ class HomePageState extends State<HomePage> {
 
     toolbarHeight = _toolbarHeight;
     suraPageController =
-        PageController(keepPage: true, initialPage: selectedSura);
+        PageController(keepPage: true, initialPage: selectedPage);
     suraPageController.addListener(() {
       var page = suraPageController.page.round();
-      if (page != selectedSura) {
+      if (selectedPage != page) {
         setState(() {
-          Prefs.selectedSura = page;
+          selectedPage = page;
+          // var res = Configs.instance.pageItems[page][0];
+          // Prefs.selectedSura = res.sura;
+          // Prefs.selectedAya = res.aya;
           toolbarHeight = _toolbarHeight;
         });
       }
@@ -59,7 +64,7 @@ class HomePageState extends State<HomePage> {
     app.player.onStateChange = playerOnStateChange;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (selectedAya > 0) gotoAya(selectedAya, 1200);
+      if (selectedIndex > 0) gotoAya(selectedIndex, 1200);
     });
   }
 
@@ -98,7 +103,7 @@ class HomePageState extends State<HomePage> {
                   children: [
                     PageView.builder(
                         reverse: true,
-                        itemCount: Configs.instance.getNavigation().length,
+                        itemCount: Configs.instance.pageItems.length,
                         itemBuilder: suraPageBuilder,
                         controller: suraPageController),
                     Transform.translate(
@@ -123,13 +128,13 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
-    selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
+    // selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
     return ayaList = ScrollablePositionedList.builder(
         initialAlignment: 0.15,
         itemScrollController: ItemScrollController(),
         itemPositionsListener: ItemPositionsListener.create(),
         padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
-        itemCount: Configs.instance.getNavigation()[p].length,
+        itemCount: Configs.instance.pageItems[p].length,
         itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
         onScroll: onPageScroll);
   }
@@ -147,10 +152,10 @@ class HomePageState extends State<HomePage> {
 
   Widget ayaItemBuilder(int position, int index) {
     var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
-    var part = Configs.instance.getNavigation()[position][index];
+    var part = Configs.instance.pageItems[position][index];
     return Stack(children: [
       Container(
-          color: index == selectedAya ? theme.focusColor : color,
+          color: index == selectedIndex ? theme.focusColor : color,
           child: GestureDetector(
               onTap: () => setState(() {
                     // var tween = Tween<double>(begin: -200, end: 0);
