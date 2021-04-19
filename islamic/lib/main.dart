@@ -1,3 +1,4 @@
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,6 +49,18 @@ class AppState extends State<MyApp> {
 
   @override
   void initState() {
+    Map appsFlyerOptions = {
+      "afDevKey": "YBThmUqaiHZYpiSwZ3GQz4",
+      "afAppId": "com.gerantech.muslim.holy.quran",
+      "isDebug": true
+    };
+
+    AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+    appsflyerSdk.initSdk(
+        registerConversionDataCallback: true,
+        registerOnAppOpenAttributionCallback: true,
+        registerOnDeepLinkingCallback: true);
+
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
     super.initState();
     waitingPage = WaitingPage();
@@ -76,7 +89,6 @@ class AppState extends State<MyApp> {
       ],
       supportedLocales: supportedLocales,
       locale: locale,
-      // debugShowCheckedModeBanner: false,
       theme: Themes.data,
       darkTheme: Themes.darkData,
       themeMode: themeMode,
