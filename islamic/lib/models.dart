@@ -11,9 +11,8 @@ class Prefs {
   static SharedPreferences instance;
   static Map<PType, List<String>> persons = Map();
   static Map<String, String> notes = Map();
-
+  static String get naviMode => instance.getString("naviMode") ?? "sura";
   static double get textScale => instance.getDouble("textScale") ?? 1;
-  static set textScale(double s) => instance.setDouble("textScale", s);
 
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
@@ -192,11 +191,11 @@ class Configs {
   void createAyas() {
     var t = DateTime.now().millisecondsSinceEpoch;
     navigations["sura"] = <List<Aya>>[];
-      for (var i = 0; i < 114; i++) {
+    for (var i = 0; i < 114; i++) {
       navigations["sura"].add(<Aya>[]);
-        for (var j = 0; j < metadata.suras[i].ayas; j++)
+      for (var j = 0; j < metadata.suras[i].ayas; j++)
         navigations["sura"][i].add(Aya(i, j));
-      }
+    }
     fillParts("juze", metadata.juzes);
     fillParts("page", metadata.pages);
     print(DateTime.now().millisecondsSinceEpoch - t);
@@ -225,9 +224,9 @@ class Configs {
           navigations[mode][i].add(aya);
           index++;
         }
-        }
       }
     }
+  }
 
   List<int> getPart(int sura, int aya) {
     if (Prefs.naviMode == "sura") return [sura, aya];

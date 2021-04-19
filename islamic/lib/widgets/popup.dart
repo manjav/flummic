@@ -111,7 +111,6 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
   int themeMode = Prefs.instance.getInt("themeMode");
-  String naviMode = Prefs.instance.getString("naviMode") ?? "sura";
   @override
   Widget build(BuildContext context) {
     var app = MyApp.of(context);
@@ -186,7 +185,7 @@ class SettingsState extends State<Settings> {
                     divisions: 3,
                     onChanged: (double value) {
                       setState(() {
-                        Prefs.textScale = value;
+                        Prefs.instance.setDouble("textScale", value);
                       });
                       widget.updater();
                     })),
@@ -207,10 +206,10 @@ class SettingsState extends State<Settings> {
                 left: isRtl ? p : null,
                 right: isRtl ? null : p,
                 child: DropdownButton<String>(
-                  value: naviMode,
+                  value: Prefs.naviMode,
                   style: theme.textTheme.caption,
                   onChanged: (String newValue) {
-                    Prefs.instance.setString("naviMode", naviMode = newValue);
+                    Prefs.instance.setString("naviMode", newValue);
                     setState(() {});
                     widget.updater();
                   },
