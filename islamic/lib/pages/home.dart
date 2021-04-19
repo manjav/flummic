@@ -196,7 +196,7 @@ class HomePageState extends State<HomePage> {
           child: IconButton(
             icon: Icon(Icons.more_vert,
                 size: 16, color: theme.textTheme.caption.color),
-            onPressed: () => showAyaDetails(position, index),
+            onPressed: () => showAyaDetails(part.sura, part.aya),
           )),
     ]);
   }
