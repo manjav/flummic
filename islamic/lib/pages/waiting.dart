@@ -26,10 +26,9 @@ class WaitingPageState extends State<WaitingPage> {
   }
 
   animLoaded(ByteData data) async {
-    await Localization.change(context, Prefs.instance.getString("locale"));
-    final file = RiveFile();
-    if (file.import(data)) {
-      artboard = file.mainArtboard;
+    await Localization.change(context, Prefs.locale);
+    final riveData = RiveFile.import(data);
+    artboard = riveData.mainArtboard;
       artboard.addController(SimpleAnimation('start'));
       artboard.addController(SimpleAnimation('idle'));
       Future.delayed(const Duration(milliseconds: 500), () => state = 2);

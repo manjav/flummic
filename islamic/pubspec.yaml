@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  rive: ^0.6.8
+  rive: ^0.7.3
   intl: ^0.17.0
   share: ^2.0.1
   archive: ^3.1.2
