@@ -19,11 +19,11 @@ dependencies:
   timezone: ^0.6.1
   audioplayers: ^0.18.3
   path_provider: ^2.0.1
-  firebase_core: ^1.0.3
+  firebase_core: ^1.0.4
   cupertino_icons: ^1.0.2
   flutter_speed_dial: ^3.0.5
-  firebase_analytics: ^7.1.1
-  firebase_messaging: ^9.1.1
+  firebase_analytics: ^8.0.1
+  firebase_messaging: ^9.1.2
   shared_preferences: ^2.0.5
   cached_network_image: ^3.0.0
   autocomplete_textfield: ^1.7.3
