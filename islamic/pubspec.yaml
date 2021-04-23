@@ -26,7 +26,7 @@ dependencies:
   firebase_messaging: ^9.1.2
   shared_preferences: ^2.0.5
   cached_network_image: ^3.0.0
-  autocomplete_textfield: ^1.7.3
+  autocomplete_textfield_ns: ^2.0.0
   flutter_svg: ^0.20.0-nullsafety.1
   appsflyer_sdk: ^6.2.4+4-nullsafety
   scrollable_positioned_list: ^0.1.10

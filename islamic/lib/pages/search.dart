@@ -1,4 +1,4 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
-  GlobalKey<AutoCompleteTextFieldState<Word>> key = new GlobalKey();
+  GlobalKey<AutoCompleteTextFieldState<Word>> key = GlobalKey();
   String pattern = "";
   bool assetsLoaded = false;
   List<Search> results;
@@ -36,10 +36,7 @@ class SearchPageState extends State<SearchPage> {
           focusNode: focusNode,
           textInputAction: TextInputAction.none,
           decoration: InputDecoration(
-              errorText: "!",
-              hintText: "search_in".l(),
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 36)),
+              hintText: "search_in".l(), suffixIcon: Icon(Icons.search)),
           controller: TextEditingController(),
           suggestionsAmount: 12,
           suggestions: Configs.instance.words,
