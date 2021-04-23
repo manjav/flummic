@@ -2,10 +2,10 @@ name: islamic
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+2
+version: 0.0.0+2
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -16,8 +16,7 @@ dependencies:
   intl: ^0.17.0
   share: ^2.0.1
   archive: ^3.1.2
-  timezone: ^0.6.1
-  audioplayers: ^0.18.3
+  timezone: ^0.7.0
   path_provider: ^2.0.1
   firebase_core: ^1.0.4
   cupertino_icons: ^1.0.2
@@ -29,7 +28,7 @@ dependencies:
   autocomplete_textfield_ns: ^2.0.0
   flutter_svg: ^0.20.0-nullsafety.1
   appsflyer_sdk: ^6.2.4+4-nullsafety
-  scrollable_positioned_list: ^0.1.10
+  scrollable_positioned_list: ^0.2.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:

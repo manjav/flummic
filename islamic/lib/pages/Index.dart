@@ -8,33 +8,33 @@ import 'package:islamic/widgets/popup.dart';
 import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
-  const IndexPage({Key key}) : super(key: key);
+  const IndexPage({Key? key}) : super(key: key);
   @override
   IndexPageState createState() => IndexPageState();
 }
 
 class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
 
   Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
-  ThemeData theme;
-  TextStyle titlesStyle;
-  TextStyle uthmaniStyle;
+  late ThemeData theme;
+  late TextStyle titlesStyle;
+  late TextStyle uthmaniStyle;
 
   bool reversed = false;
   String lastSort = "suras";
-  List<Sura> suras;
-  List<String> notes;
+  late List<Sura> suras;
+  late List<String> notes;
   double toolbarHeight = 0;
   int selectedJuzIndex = -1;
   final _toolbarHeight = 56.0;
   double startScrollBarIndicator = 0;
-  ScrollController suraListController;
+  late ScrollController suraListController;
 
-  Tween<double> tween;
-  AnimationController controller;
+  late Tween<double> tween;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -231,8 +231,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
                         color: lastSort == value
-                            ? theme.textTheme.bodyText1.color
-                            : theme.textTheme.subtitle2.color),
+                            ? theme.textTheme.bodyText1!.color
+                            : theme.textTheme.subtitle2!.color),
                     top: 24,
                   )
                 ])));
@@ -327,7 +327,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Widget noteItemBuilder(BuildContext context, int index) {
     var sura = int.parse(notes[index].substring(0, 3));
     var aya = int.parse(notes[index].substring(3));
-    var text = Prefs.getNote(sura, aya);
+    String ? text = Prefs.getNote(sura, aya);
     return GestureDetector(
         onTap: () => goto(sura, aya),
         child: Container(
@@ -347,7 +347,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
                         style: theme.textTheme.subtitle1,
                       ),
-                      text.length > 0
+                      text!.length > 0
                           ? Text(text, overflow: TextOverflow.ellipsis)
                           : SizedBox()
                     ],

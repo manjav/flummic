@@ -6,7 +6,7 @@ import '../utils/localization.dart';
 import '../models.dart';
 
 class WaitingPage extends StatefulWidget {
-  WaitingPageState page;
+  late WaitingPageState page;
 
   @override
   WaitingPageState createState() {
@@ -16,8 +16,8 @@ class WaitingPage extends StatefulWidget {
 
 class WaitingPageState extends State<WaitingPage> {
   int state = 0;
-  Artboard artboard;
-  RiveAnimationController controller;
+  late Artboard artboard;
+  late RiveAnimationController controller;
 
   @override
   void initState() {
@@ -29,12 +29,11 @@ class WaitingPageState extends State<WaitingPage> {
     await Localization.change(context, Prefs.locale);
     final riveData = RiveFile.import(data);
     artboard = riveData.mainArtboard;
-      artboard.addController(SimpleAnimation('start'));
-      artboard.addController(SimpleAnimation('idle'));
-      Future.delayed(const Duration(milliseconds: 500), () => state = 2);
-      state = 1;
-      setState(() {});
-    }
+    artboard.addController(SimpleAnimation('start'));
+    artboard.addController(SimpleAnimation('idle'));
+    Future.delayed(const Duration(milliseconds: 500), () => state = 2);
+    state = 1;
+    setState(() {});
   }
 
   @override

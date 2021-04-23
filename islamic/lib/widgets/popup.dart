@@ -17,11 +17,11 @@ class AyaDetails extends StatefulWidget {
 }
 
 class AyaDetailsState extends State<AyaDetails> {
-  String bookmark;
+  String? bookmark;
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    bookmark = Prefs.getNote(widget.sura, widget.aya);
+    bookmark = Prefs.getNote(widget.sura, widget.aya)!;
     return Container(
         height: 160,
         child: Stack(alignment: Alignment.topCenter,
@@ -50,7 +50,7 @@ class AyaDetailsState extends State<AyaDetails> {
   IconButton getButton(ThemeData theme, IconData icon, String type) {
     return IconButton(
         padding: EdgeInsets.all(28),
-        icon: Icon(icon, color: theme.textTheme.bodyText1.color),
+        icon: Icon(icon, color: theme.textTheme.bodyText1!.color),
         onPressed: () => onPressed(theme, type));
   }
 
@@ -63,9 +63,9 @@ class AyaDetailsState extends State<AyaDetails> {
             "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'verse_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
         var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
             Configs.instance.quran[s][a];
-        if (Prefs.persons[PType.text].length > 1) {
-          var p = Configs.instance.texts[Prefs.persons[PType.text][1]];
-          text += "\n\n${p.data[s][a]}\n\n${'trans_t'.l()} ${p.name}";
+        if (Prefs.persons[PType.text]!.length > 1) {
+          var p = Configs.instance.texts[Prefs.persons[PType.text]![1]];
+          text += "\n\n${p!.data[s][a]}\n\n${'trans_t'.l()} ${p.name}";
         }
         text += "\n\n$subject";
         Share.share(text, subject: subject);
@@ -85,7 +85,7 @@ class AyaDetailsState extends State<AyaDetails> {
         break;
 
       default:
-        MyApp.of(context).player.select(widget.sura, widget.aya, 0, true);
+        // MyApp.of(context)!.player.select(widget.sura, widget.aya, 0, true);
         Navigator.of(context).pop();
         break;
     }
@@ -110,13 +110,13 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-  int themeMode = Prefs.instance.getInt("themeMode");
+  int themeMode = Prefs.themeMode;
   @override
   Widget build(BuildContext context) {
-    var app = MyApp.of(context);
+    var app = MyApp.of(context)!;
     var theme = Theme.of(context);
     var p = 24.0;
-    var isRtl = Bidi.isRtlLanguage(app.locale.languageCode);
+    var isRtl = Bidi.isRtlLanguage(app.locale!.languageCode);
     var queryData = MediaQuery.of(context);
 
     return Container(
@@ -137,8 +137,8 @@ class SettingsState extends State<Settings> {
                 child: DropdownButton<int>(
                   value: themeMode,
                   style: theme.textTheme.caption,
-                  onChanged: (int newValue) {
-                    themeMode = newValue;
+                  onChanged: (int? newValue) {
+                    themeMode = newValue!;
                     app.setTheme(ThemeMode.values[themeMode]);
                     Navigator.pop(context);
                   },
@@ -159,8 +159,8 @@ class SettingsState extends State<Settings> {
                 child: DropdownButton<Locale>(
                   value: app.locale,
                   style: theme.textTheme.caption,
-                  onChanged: (Locale newValue) {
-                    Localization.change(context, newValue.languageCode);
+                  onChanged: (Locale? newValue) {
+                    Localization.change(context, newValue!.languageCode);
                     setState(() {});
                   },
                   items: app.supportedLocales
@@ -208,8 +208,8 @@ class SettingsState extends State<Settings> {
                 child: DropdownButton<String>(
                   value: Prefs.naviMode,
                   style: theme.textTheme.caption,
-                  onChanged: (String newValue) {
-                    Prefs.instance.setString("naviMode", newValue);
+                  onChanged: (String? newValue) {
+                    Prefs.instance.setString("naviMode", newValue!);
                     setState(() {});
                     widget.updater();
                   },
@@ -241,14 +241,14 @@ class Generics {
         height: 5,
         child: Container(
           decoration: BoxDecoration(
-              color: theme.textTheme.bodyText1.color,
+              color: theme.textTheme.bodyText1!.color,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(4))),
         ));
   }
 
   static Widget text(
-      ThemeData theme, String text, double top, double right, double left) {
+      ThemeData theme, String text, double? top, double? right, double? left) {
     return Positioned(
       top: top,
       left: left,

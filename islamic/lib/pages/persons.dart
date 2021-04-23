@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_speed_dial/simple_speed_dial.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../buttons.dart';
 import '../models.dart';
@@ -17,11 +17,10 @@ class PersonPage extends StatefulWidget {
 
 class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
-  AnimationController fabController;
 
   String title = "";
-  List<String> modes;
-  Map<String, Person> configPersons;
+  late List<String> modes;
+  late Map<String, Person> configPersons;
 
   @override
   void initState() {
@@ -29,8 +28,6 @@ class PersonPageState extends State<PersonPage>
     var t = widget.type == PType.text;
     title = (t ? "page_texts" : "page_sounds").l();
     configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
-    fabController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     modes = t ? PersonPage.textModes : PersonPage.soundModes;
   }
 
@@ -44,38 +41,38 @@ class PersonPageState extends State<PersonPage>
         child: Directionality(
             textDirection: TextDirection.ltr,
             child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text(title),
-                actions: [
-                  Localization.isRTL
-                      ? IconButton(
-                          icon: Icon(Icons.arrow_forward),
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Text(title),
+                  actions: [
+                    Localization.isRTL
+                        ? IconButton(
+                            icon: Icon(Icons.arrow_forward),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        : SizedBox()
+                  ],
+                  leading: Localization.isRTL
+                      ? SizedBox()
+                      : IconButton(
+                          icon: Icon(Icons.arrow_back),
                           onPressed: () => Navigator.pop(context),
-                        )
-                      : SizedBox()
-                ],
-                leading: Localization.isRTL
-                    ? SizedBox()
-                    : IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                automaticallyImplyLeading: false,
-              ),
-              body: ReorderableListView(
-                  children: personItems(),
-                  onReorder: (int oldIndex, int newIndex) {
-                    setState(() {
-                      if (oldIndex < newIndex) newIndex -= 1;
-                      final item =
-                          Prefs.persons[widget.type].removeAt(oldIndex);
-                      Prefs.persons[widget.type].insert(newIndex, item);
-                      Prefs.instance.setStringList(
-                          widget.type.toString(), Prefs.persons[widget.type]);
-                    });
-                  }),
-              floatingActionButton: SpeedDial(
+                        ),
+                  automaticallyImplyLeading: false,
+                ),
+                body: ReorderableListView(
+                    children: personItems(),
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) newIndex -= 1;
+                        final item =
+                            Prefs.persons[widget.type]!.removeAt(oldIndex);
+                        Prefs.persons[widget.type]!.insert(newIndex, item);
+                        Prefs.instance.setStringList(widget.type.toString(),
+                            Prefs.persons[widget.type]!);
+                      });
+                    }),
+                floatingActionButton: SpeedDial(
                   icon: Icons.add,
                   curve: Curves.easeOutExpo,
                   overlayColor: theme.backgroundColor,
@@ -85,8 +82,8 @@ class PersonPageState extends State<PersonPage>
                   backgroundColor:
                       theme.floatingActionButtonTheme.backgroundColor,
                   children: [
-                  for (int i = 0; i < modes.length; i++)
-                    SpeedDialChild(
+                    for (int i = 0; i < modes.length; i++)
+                      SpeedDialChild(
                           labelWidget: Text(modes[i].l(),
                               textAlign: TextAlign.right,
                               style: theme.textTheme.bodyText1),
@@ -94,7 +91,7 @@ class PersonPageState extends State<PersonPage>
                           backgroundColor:
                               theme.floatingActionButtonTheme.backgroundColor,
                           onTap: () => onSpeedChildTap(modes[i])),
-                ],
+                  ],
                 ))));
   }
 
@@ -113,14 +110,14 @@ class PersonPageState extends State<PersonPage>
 
   List<Widget> personItems() {
     var items = <Widget>[];
-    for (var t in Prefs.persons[widget.type]) {
+    for (var t in Prefs.persons[widget.type]!) {
       var p = configPersons[t];
       items.add(Directionality(
           key: Key(t),
           textDirection: Localization.dir,
           child: ListTile(
             leading: Avatar(t, 24),
-            title: Text(p.title),
+            title: Text(p!.title),
             subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
             trailing: IconButton(
                 icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
@@ -144,10 +141,10 @@ class PersonListPage extends StatefulWidget {
 }
 
 class PersonListPageState extends State<PersonListPage> {
-  List<Person> defaultPersons;
+  List<Person>? defaultPersons;
   List<Person> persons = <Person>[];
 
-  Widget appBarTitle;
+  Widget? appBarTitle;
   Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
@@ -206,9 +203,9 @@ class PersonListPageState extends State<PersonListPage> {
   }
 
   List<Person> search(String pattern) {
-    if (pattern.isEmpty) return defaultPersons;
+    if (pattern.isEmpty) return defaultPersons!;
     pattern = pattern.toLowerCase();
-    return defaultPersons
+    return defaultPersons!
         .where((p) => p.name.toLowerCase().indexOf(pattern) > -1)
         .toList();
   }
@@ -218,10 +215,10 @@ class PersonListPageState extends State<PersonListPage> {
     var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
     if (widget.type == PType.text) {
       String size;
-      if (p.size > 5048576)
-        size = (p.size / 5048576).floor().n() + " " + "mbyte_t".l();
+      if (p.size! > 5048576)
+        size = (p.size! / 5048576).floor().n() + " " + "mbyte_t".l();
       else
-        size = (p.size / 5024).floor().n() + " " + "kbyte_t".l();
+        size = (p.size! / 5024).floor().n() + " " + "kbyte_t".l();
       subtitle += " , $size";
     }
     return GestureDetector(

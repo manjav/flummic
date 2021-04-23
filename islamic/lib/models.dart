@@ -8,11 +8,14 @@ import 'utils/loader.dart';
 import 'utils/utils.dart';
 
 class Prefs {
-  static SharedPreferences instance;
+  static late SharedPreferences instance;
   static Map<PType, List<String>> persons = Map();
-  static Map<String, String> notes = Map();
+  static late Map<String, String> notes = Map();
+
+  static String get locale => instance.getString("locale") ?? "en";
   static String get naviMode => instance.getString("naviMode") ?? "sura";
   static double get textScale => instance.getDouble("textScale") ?? 1;
+  static int get themeMode => instance.getInt("themeMode") ?? 0;
 
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
@@ -23,57 +26,60 @@ class Prefs {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       instance = prefs;
 
-      var initialized = instance.containsKey("locale");
+      bool initialized = instance.containsKey("locale");
       if (initialized) {
         persons[PType.text] =
-            instance.getStringList(PType.text.toString()) ?? null;
+            instance.getStringList(PType.text.toString()) ?? [];
         persons[PType.sound] =
-            instance.getStringList(PType.sound.toString()) ?? null;
-        Map<String, dynamic> map = jsonDecode(instance.getString("bookmarks"));
+            instance.getStringList(PType.sound.toString()) ?? [];
+        Map<String, dynamic> map =
+            jsonDecode(instance.getString("bookmarks") ?? "}{}");
         notes = map.cast();
         onInit();
         return;
       }
 
       var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
-      persons[PType.text] = ["ar.uthmanimin"];
-      persons[PType.sound] = <String>[];
+      List<String> texts = ["ar.uthmanimin"];
+      List<String> sounds = <String>[];
       switch (_locale) {
         case "en":
-          persons[PType.text].add("en.sahih");
-          persons[PType.sound].add("mishary_rashid_alafasy");
-          persons[PType.sound].add("ibrahim_walk");
+          texts.add("en.sahih");
+          sounds.add("mishary_rashid_alafasy");
+          sounds.add("ibrahim_walk");
           break;
         case "fa":
-          persons[PType.text].add("fa.fooladvand");
-          persons[PType.sound].add("shahriar_parhizgar");
-          persons[PType.sound].add("mahdi_fooladvand");
+          texts.add("fa.fooladvand");
+          sounds.add("shahriar_parhizgar");
+          sounds.add("mahdi_fooladvand");
           break;
         default:
-          persons[PType.sound].add("abu_bakr_ash_shaatree");
+          sounds.add("abu_bakr_ash_shaatree");
           break;
       }
       instance.setInt("themeMode", 0);
       instance.setString("naviMode", "sura");
       instance.setString("locale", _locale);
       instance.setString("bookmarks", "{}");
-      instance.setStringList(PType.text.toString(), persons[PType.text]);
-      instance.setStringList(PType.sound.toString(), persons[PType.sound]);
+      instance.setStringList(
+          PType.text.toString(), persons[PType.text] = texts);
+      instance.setStringList(
+          PType.sound.toString(), persons[PType.sound] = sounds);
 
       onInit();
     });
   }
 
   static void addPerson(PType type, String path) {
-    if (persons[type].indexOf(path) > -1) return;
-    persons[type].add(path);
-    instance.setStringList(type.toString(), persons[type]);
+    if (persons[type]!.indexOf(path) > -1) return;
+    persons[type]!.add(path);
+    instance.setStringList(type.toString(), persons[type]!);
   }
 
   static void removePerson(PType type, String path) {
-    if (persons[type].indexOf(path) < 0) return;
-    persons[type].remove(path);
-    instance.setStringList(type.toString(), persons[type]);
+    if (persons[type]!.indexOf(path) < 0) return;
+    persons[type]!.remove(path);
+    instance.setStringList(type.toString(), persons[type]!);
   }
 
   static void addNote(int sura, int aya, String note) {
@@ -86,18 +92,19 @@ class Prefs {
     instance.setString("bookmarks", jsonEncode(notes));
   }
 
-  static String getNote(int sura, int aya) {
+  static String? getNote(int sura, int aya) {
     return notes["${Utils.fillZero(sura)}${Utils.fillZero(aya)}"];
   }
 }
 
 class Configs {
-  static Configs instance;
-  Function onCreate;
-  QuranMeta metadata;
+  static late Configs instance;
+  late Function onCreate;
+  QuranMeta? _metadata;
+  QuranMeta get metadata => _metadata ?? QuranMeta();
 
-  List<Word> words;
-  List<List<String>> simpleQuran;
+  late List<Word> words;
+  List<List<String>>? simpleQuran;
   Map<String, List<List<Aya>>> navigations = Map();
 
   var sounds = Map<String, Person>();
@@ -108,7 +115,7 @@ class Configs {
 
   static void create(Function onCreate) async {
     instance = Configs();
-    if (Prefs.instance.getString("locale") != "fa")
+    if (Prefs.locale != "fa")
       baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
     instance.loadConfigs();
@@ -121,9 +128,9 @@ class Configs {
       for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
       for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
 
-      for (var t in Prefs.persons[PType.text])
+      for (var t in Prefs.persons[PType.text]!)
         texts[t]?.select(finalize, null, print);
-      for (var s in Prefs.persons[PType.sound])
+      for (var s in Prefs.persons[PType.sound]!)
         sounds[s]?.select(finalize, null, print);
     }, null, print);
   }
@@ -132,34 +139,31 @@ class Configs {
     await Loader().load("uthmani-meta.json", baseURL + "uthmani-meta.ijson",
         (String data) {
       var map = json.decode(data);
-      instance.metadata = QuranMeta();
+      var _m = QuranMeta();
       var keys = map.keys;
       for (var k in keys) {
         if (k == "suras")
-          for (var c in map[k]) instance.metadata.suras.add(Sura(c));
+          for (var c in map[k]) _m.suras.add(Sura(c));
         else if (k == "juzes")
           for (var c in map[k])
-            instance.metadata.juzes
-                .add(Juz(c['sura'], c['aya'], c['page'], c['name']));
+            _m.juzes.add(Juz(c['sura'], c['aya'], c['page'], c['name']));
         else if (k == "hizbs")
-          for (var c in map[k])
-            instance.metadata.hizbs.add(Part(c['sura'], c['aya']));
+          for (var c in map[k]) _m.hizbs.add(Part(c['sura'], c['aya']));
         else if (k == "pages")
-          for (var c in map[k])
-            instance.metadata.pages.add(Part(c['sura'], c['aya']));
+          for (var c in map[k]) _m.pages.add(Part(c['sura'], c['aya']));
       }
-      for (var i = 0; i < instance.metadata.suras.length; i++)
-        instance.metadata.suras[i].index = i;
+      for (var i = 0; i < _m.suras.length; i++) _m.suras[i].index = i;
+      _metadata = _m;
       createAyas();
       finalize();
     }, null, (String e) => print("error: $e"));
   }
 
   void finalize() {
-    if (metadata == null) return;
-    for (var t in Prefs.persons[PType.text])
+    if (_metadata == null) return;
+    for (var t in Prefs.persons[PType.text]!)
       if (texts[t]?.state != PState.selected) return;
-    for (var r in Prefs.persons[PType.sound])
+    for (var r in Prefs.persons[PType.sound]!)
       if (sounds[r]?.state != PState.selected) return;
     onCreate();
   }
@@ -180,40 +184,45 @@ class Configs {
         for (var s in list) {
           var sura = <String>[];
           for (var a in s) sura.add(a);
-          simpleQuran.add(sura);
+          simpleQuran!.add(sura);
         }
         onDone();
       }, null, print);
     }, null, print);
   }
 
-  List<List<Aya>> get pageItems => navigations[Prefs.naviMode];
+  List<List<Aya>> get pageItems => navigations[Prefs.naviMode]!;
   void createAyas() {
     var t = DateTime.now().millisecondsSinceEpoch;
+    Aya aya;
+    navigations["all"] = <List<Aya>>[];
+    navigations["all"]!.add(<Aya>[]);
     navigations["sura"] = <List<Aya>>[];
-    for (var i = 0; i < 114; i++) {
-      navigations["sura"].add(<Aya>[]);
-      for (var j = 0; j < metadata.suras[i].ayas; j++)
-        navigations["sura"][i].add(Aya(i, j));
+    for (var i = 0, n = 0; i < 114; i++) {
+      navigations["sura"]!.add(<Aya>[]);
+      for (var j = 0; j < _metadata!.suras[i].ayas; j++, n++) {
+        aya = Aya(i, j, n);
+        navigations["all"]![0].add(aya);
+        navigations["sura"]![i].add(aya);
+      }
     }
-    fillParts("juze", metadata.juzes);
-    fillParts("page", metadata.pages);
+    fillParts("juze", _metadata!.juzes);
+    fillParts("page", _metadata!.pages);
     print(DateTime.now().millisecondsSinceEpoch - t);
   }
 
   void fillParts(String mode, List<Part> source) {
-    navigations[mode] = <List<Aya>>[];
-
+    var part = <List<Aya>>[];
     for (var i = 0; i < source.length; i++) {
-      navigations[mode].add(<Aya>[]);
+      part.add(<Aya>[]);
       var p = source[i];
       var np = i > source.length - 2 ? Part(115, 1) : source[i + 1];
       var a = p.aya - 1;
       var index = 0;
       for (var s = p.sura - 1; s < np.sura; s++, a = 0) {
-        var len = s == np.sura - 1 ? np.aya - 1 : metadata.suras[s].ayas;
+        var len = s == np.sura - 1 ? np.aya - 1 : _metadata!.suras[s].ayas;
         for (; a < len; a++) {
-          var aya = navigations["sura"][s][a];
+          var aya = navigations["sura"]![s][a];
           if (mode == "juze") {
             aya.juze = i;
             aya.juzeIndex = index;
@@ -221,16 +230,17 @@ class Configs {
             aya.page = i;
             aya.pageIndex = index;
           }
-          navigations[mode][i].add(aya);
+          part[i].add(aya);
           index++;
         }
       }
     }
+    navigations[mode] = part;
   }
 
   List<int> getPart(int sura, int aya) {
     if (Prefs.naviMode == "sura") return [sura, aya];
-    var a = navigations["sura"][sura][aya];
+    var a = navigations["sura"]![sura][aya];
     if (Prefs.naviMode == "juze") return [a.juze, a.juzeIndex];
     return [a.page, a.pageIndex];
   }
@@ -244,8 +254,8 @@ class QuranMeta {
 }
 
 class Sura {
-  int index, ayas, start, order, rukus, page, type;
-  String name, tname, ename;
+  late int index, ayas, start, order, rukus, page, type;
+  late String name, tname, ename;
   Sura(s) {
     ayas = s["ayas"];
     start = s["start"];
@@ -267,9 +277,9 @@ class Juz extends Part {
   Juz(int sura, int aya, this.page, this.name) : super(sura, aya);
 }
 
-class Aya extends Part {
-  int page, juze, pageIndex, juzeIndex;
-  Aya(int sura, int aya) : super(sura, aya);
+class Aya extends Search {
+  late int page, juze, pageIndex, juzeIndex;
+  Aya(int sura, int aya, int index) : super(sura, aya, index);
 }
 
 class Part {
@@ -278,12 +288,12 @@ class Part {
 }
 
 class Word {
+  late int c;
+  late String t;
   Word(w) {
     t = w["t"];
     c = w["c"];
   }
-  String t;
-  int c;
 }
 
 class Search {
@@ -297,13 +307,13 @@ enum PState { waiting, downloading, ready, selected }
 enum PType { text, sound, athan }
 
 class Person {
-  int size;
+  int? size;
   PType type;
-  PState state;
-  List<List<String>> data;
+  late PState state;
+  late Loader loader;
   double progress = 0;
-  String url, path, name, ename, flag, mode;
-  Loader loader;
+  late List<List<String>> data;
+  late String url, path, name, ename, flag, mode;
 
   Person(this.type, p) {
     state = type == PType.text ? PState.waiting : PState.ready;
@@ -317,7 +327,7 @@ class Person {
   }
 
   void select(
-      Function onDone, Function(double) onProgress, Function(String) onError) {
+      Function onDone, Function(double)? onProgress, Function(String) onError) {
     print("select $path");
     if (state == PState.waiting)
       load(() => onSelecFinish(onDone), onProgress, onError);
@@ -337,7 +347,7 @@ class Person {
   }
 
   void load(
-      Function onDone, Function(double) onProgress, Function(String) onError) {
+      Function onDone, Function(double)? onProgress, Function(String) onError) {
     state = PState.downloading;
     loader = Loader();
     loader.load(path, url, (String _data) {
@@ -348,13 +358,13 @@ class Person {
         for (var a in s) sura.add(a);
         data.add(sura);
       }
-      if (onDone != null) onDone();
+      onDone();
     }, (double p) {
       progress = p;
       if (onProgress != null) onProgress(p);
     }, (String e) {
       state = PState.waiting;
-      if (onError != null) onError(e);
+      onError(e);
     });
   }
 

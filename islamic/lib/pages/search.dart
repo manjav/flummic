@@ -15,20 +15,18 @@ class SearchPageState extends State<SearchPage> {
   GlobalKey<AutoCompleteTextFieldState<Word>> key = GlobalKey();
   String pattern = "";
   bool assetsLoaded = false;
-  List<Search> results;
-  ThemeData theme;
-  AutoCompleteTextField<Word> textField;
-
-  List<List<String>> quran;
-
-  FocusNode focusNode;
+  late List<Search> results;
+  late ThemeData theme;
+  late List<List<String>> quran;
+  late FocusNode focusNode;
+  AutoCompleteTextField<Word>? textField;
 
   @override
   void initState() {
     super.initState();
     Configs.instance.loadSearchAssets(() {
       assetsLoaded = true;
-      quran = Configs.instance.simpleQuran;
+      quran = Configs.instance.simpleQuran!;
       focusNode = FocusNode();
       textField = AutoCompleteTextField<Word>(
           key: key,

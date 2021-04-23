@@ -54,7 +54,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
                 foregroundColor:
-                    MaterialStateProperty.all<Color>(primaries[700]),
+                    MaterialStateProperty.all<Color>(primaries[700]!),
                 textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                   fontFamily: "CubicSans",
                   fontSize: 18,
@@ -120,7 +120,7 @@ class Themes {
           overlayColor: primaries[700]),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(primaries[50]),
+              foregroundColor: MaterialStateProperty.all<Color>(primaries[50]!),
               textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                 fontFamily: "CubicSans",
                 fontSize: 18,
@@ -152,7 +152,7 @@ class Themes {
   }
 
   static MaterialColor get material =>
-      MaterialColor(primaries[500].value, primaries);
+      MaterialColor(primaries[500]!.value, primaries);
   static MaterialColor get darkMaterial =>
-      MaterialColor(primaries[900].value, primaries);
+      MaterialColor(primaries[900]!.value, primaries);
 }

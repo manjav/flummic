@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:islamic/models.dart';
 
-class CircleButton extends GestureDetector {
+/* class CircleButton extends GestureDetector {
   static TextStyle style =
       TextStyle(fontFamily: 'CubicSans', fontSize: 24, height: 1);
   // final textStyle = TextStyle(fontFamily: 'Uthmani', fontSize: 30);
@@ -42,7 +41,7 @@ class CircleButton extends GestureDetector {
             // padding: EdgeInsets.all(15.0),
             // shape: CircleBorder(),
             );
-}
+} */
 
 class Avatar extends CachedNetworkImage {
   final String path;

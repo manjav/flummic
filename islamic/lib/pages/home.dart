@@ -1,17 +1,14 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
-import 'package:islamic/widgets/player.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../models.dart';
 import '../pages/persons.dart';
 import '../utils/localization.dart';
 import '../buttons.dart';
-import '../main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,22 +19,22 @@ class HomePageState extends State<HomePage> {
   static int selectedPage = 0;
   static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
-  ScrollablePositionedList ayaList;
-  PageController suraPageController;
-  TextStyle headerStyle;
+  late ScrollablePositionedList ayaList;
+  PageController? suraPageController;
+  late TextStyle headerStyle;
   TextStyle titlesStyle =
       TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
-  TextStyle uthmaniStyle;
+  late TextStyle uthmaniStyle;
   // int selectedSura = 0;
   // int selectedAya = 0;
-  double toolbarHeight;
+  late double toolbarHeight;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
-  ThemeData theme;
-  AppState app;
+  late ThemeData theme;
+  // late AppState app;
 
   void initHome() {
-    hasQuranText = Prefs.persons[PType.text].indexOf("ar.uthmanimin") > -1;
+    hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
 
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
@@ -45,7 +42,7 @@ class HomePageState extends State<HomePage> {
         fontSize: 20,
         height: 2,
         wordSpacing: 2,
-        color: theme.textTheme.bodyText1.color);
+        color: theme.textTheme.bodyText1!.color);
     headerStyle = TextStyle(
       fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
       fontSize: Prefs.naviMode == "sura" ? 32 : 18,
@@ -55,8 +52,8 @@ class HomePageState extends State<HomePage> {
     toolbarHeight = _toolbarHeight;
     suraPageController =
         PageController(keepPage: true, initialPage: selectedPage);
-    suraPageController.addListener(() {
-      var page = suraPageController.page.round();
+    suraPageController!.addListener(() {
+      var page = suraPageController!.page!.round();
       if (selectedPage != page) {
         setState(() {
           selectedPage = page;
@@ -68,11 +65,19 @@ class HomePageState extends State<HomePage> {
       }
     });
 
-    app = MyApp.of(context);
-    if (app.player == null) app.player = Player();
-    app.player.onStateChange = playerOnStateChange;
+    // app = MyApp.of(context)!;
+    // if (app.player == null) app.player = Player();
+    // app.player.onStateChange = playerOnStateChange;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Future.delayed(Duration(milliseconds: 2000), () {
+        var controller =
+            ayaList.itemScrollController?.of(context)?.primary.scrollController;
+        controller?.addListener(() {
+          onPageScroll(controller.position);
+        });
+      });
+
       if (selectedIndex > 0) gotoIndex(selectedIndex, 1200);
     });
   }
@@ -142,13 +147,13 @@ class HomePageState extends State<HomePage> {
   Widget suraPageBuilder(BuildContext context, int p) {
     // selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
     return ayaList = ScrollablePositionedList.builder(
-        initialAlignment: 0.15,
-        itemScrollController: ItemScrollController(),
-        itemPositionsListener: ItemPositionsListener.create(),
-        padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
-        itemCount: Configs.instance.pageItems[p].length,
-        itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-        onScroll: onPageScroll);
+      initialAlignment: 0.15,
+      itemScrollController: ItemScrollController(),
+      itemPositionsListener: ItemPositionsListener.create(),
+      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
+      itemCount: Configs.instance.pageItems[p].length,
+      itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+    );
   }
 
   void onPageScroll(ScrollPosition position) {
@@ -188,14 +193,14 @@ class HomePageState extends State<HomePage> {
               child: Icon(
                 Icons.bookmark_sharp,
                 size: 14,
-                color: theme.textTheme.caption.color,
+                color: theme.textTheme.caption!.color,
               )),
       Positioned(
           top: -8,
           right: -14,
           child: IconButton(
             icon: Icon(Icons.more_vert,
-                size: 16, color: theme.textTheme.caption.color),
+                size: 16, color: theme.textTheme.caption!.color),
             onPressed: () => showAyaDetails(part.sura, part.aya),
           )),
     ]);
@@ -242,10 +247,10 @@ class HomePageState extends State<HomePage> {
           style: uthmaniStyle));
     }
 
-    for (var path in Prefs.persons[PType.text]) {
+    for (var path in Prefs.persons[PType.text]!) {
       if (path == "ar.uthmanimin") continue;
       var texts = Configs.instance.texts[path];
-      var dir = Bidi.isRtlLanguage(texts.flag)
+      var dir = Bidi.isRtlLanguage(texts!.flag)
           ? TextDirection.rtl
           : TextDirection.ltr;
       rows.add(Stack(
@@ -276,7 +281,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget footer() {
-    if (app.player == null) return Container();
+    // if (app.player == null) return Container();
     var coef = (_toolbarHeight - toolbarHeight);
     return Align(
         alignment: Alignment.bottomCenter,
@@ -303,12 +308,12 @@ class HomePageState extends State<HomePage> {
                 Positioned(
                     top: 10 - coef * 0.11,
                     right: 86 - coef * 0.4,
-                    child: Avatar(app.player.sound.path, 20 - coef * 0.12)),
+                    child: Avatar("app.player.sound.path", 20 - coef * 0.12)),
                 Positioned(
                     top: 10 - coef * 0.2,
                     right: 132 - coef * 0.65,
                     child: Text(
-                      app.player.sound.name,
+                      "app.player.sound.name",
                       style: theme.textTheme.bodyText2,
                       textAlign: TextAlign.right,
                     )),
@@ -319,6 +324,7 @@ class HomePageState extends State<HomePage> {
                         height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
                         width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
                         child: FloatingActionButton(
+                            heroTag: "fab",
                             child: Icon(getIcon()),
                             onPressed: onTogglePressed)))
               ],
@@ -339,11 +345,11 @@ class HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  Future<void> playerOnStateChange(AudioPlayerState state) async {
+  /* Future<void> playerOnStateChange(AudioPlayerState state) async {
     setState(() {});
     if (state != AudioPlayerState.PLAYING) return;
     goto(app.player.sura, app.player.aya);
-  }
+  } */
 
   void goto(int sura, int aya) {
     var part = Configs.instance.getPart(sura, aya);
@@ -365,18 +371,18 @@ class HomePageState extends State<HomePage> {
 
   void gotoPage(int page, int duration) {
     if (duration == 0)
-      suraPageController.jumpToPage(page);
+      suraPageController!.jumpToPage(page);
     else
-      suraPageController.animateToPage(page,
+      suraPageController!.animateToPage(page,
           duration: Duration(milliseconds: duration), curve: Curves.easeInOut);
   }
 
   void gotoIndex(int index, int duration) {
     print("index $index, duration $duration");
     if (duration == 0) {
-      ayaList.itemScrollController.jumpTo(index: index);
+      ayaList.itemScrollController!.jumpTo(index: index);
     } else {
-      ayaList.itemScrollController.scrollTo(
+      ayaList.itemScrollController!.scrollTo(
           index: index,
           duration: Duration(milliseconds: duration),
           curve: Curves.easeInOut);
@@ -384,19 +390,16 @@ class HomePageState extends State<HomePage> {
   }
 
   IconData getIcon() {
-    switch (app.player.playerState) {
-      case AudioPlayerState.PLAYING:
-        return Icons.pause;
-      default:
-        return Icons.play_arrow;
-    }
+    // switch (app.player.playerState) {
+    //   case AudioPlayerState.PLAYING:
+    //     return Icons.pause;
+    //   default:
+    return Icons.play_arrow;
+    // }
   }
 
   void onTogglePressed() {
-    // if (app.player.sura == null)
-    //   app.player.select(selectedSura, selectedAya, 0, true);
-    // else
-    app.player.toggle();
+    // app.player.toggle();
   }
 
   IconButton getButton(String type) {
@@ -429,12 +432,12 @@ class HomePageState extends State<HomePage> {
       case "texts":
         return IconButton(
             icon: Icon(Icons.add_comment_outlined,
-                color: theme.appBarTheme.iconTheme.color),
+                color: theme.appBarTheme.iconTheme!.color),
             onPressed: () => footerPressed(PType.text));
       default:
         return IconButton(
             icon: Icon(Icons.headset_sharp,
-                color: theme.appBarTheme.iconTheme.color),
+                color: theme.appBarTheme.iconTheme!.color),
             onPressed: () => footerPressed(PType.sound));
     }
   }

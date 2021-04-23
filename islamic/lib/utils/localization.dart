@@ -10,9 +10,9 @@ import '../main.dart';
 
 extension Localization on String {
   static bool isRTL = true;
-  static String languageCode;
-  static Map<String, String> sentences;
-  static TextDirection dir;
+  static late String languageCode;
+  static Map<String, dynamic>? sentences;
+  static late TextDirection dir;
 
   static Future<void> change(BuildContext context, String _languageCode) async {
     String data;
@@ -25,36 +25,36 @@ extension Localization on String {
     languageCode = _languageCode;
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-    MyApp.of(context).setLocale(languageCode);
+    MyApp.of(context)!.setLocale(languageCode);
 
     var _result = json.decode(data);
     sentences = Map();
     _result.forEach((String key, dynamic value) {
-      sentences[key] = value.toString();
+      sentences![key] = value.toString();
     });
   }
 
-  String l([List<String> args]) {
+  String l([List<String>? args]) {
     final key = this;
     if (sentences == null) {
       throw "[Localization System] sentences = null";
     }
-    String res = sentences[key];
+    String? res = sentences![key];
     if (res == null) {
       res = key;
     } else {
       if (args != null) {
         args.forEach((arg) {
-          res = res.replaceFirst(RegExp(r'%s'), arg.toString());
+          res = res!.replaceFirst(RegExp(r'%s'), arg.toString());
         });
       }
     }
-    return res;
+    return res!;
   }
 
-  static void fromJson(Map<String, dynamic> json) => sentences = json;
+  // static void fromJson(Map<String, dynamic> json) => sentences = json;
 
-  Map<String, String> toJson() => sentences;
+  // Map<String, String> toJson() => sentences!;
 
   String toArabic() {
     return this
@@ -84,7 +84,7 @@ extension Localization on String {
         .replaceAll('9', '٩');
   }
 
-  String n([String languageString]) {
+  String n([String? languageString]) {
     if (languageString != null) {
       if (Bidi.isRtlLanguage(languageString)) return this.toPersian();
     } else if (isRTL) {
@@ -137,7 +137,7 @@ extension LocalizeInt on int {
     return this.toString().toPersian();
   }
 
-  String n([String languageString]) {
+  String n([String? languageString]) {
     return this.toString().n(languageString);
   }
 }
@@ -151,7 +151,7 @@ extension LocalizeDouble on double {
     return this.toString().toPersian();
   }
 
-  String n([String languageString]) {
+  String n([String? languageString]) {
     return this.toString().n(languageString);
   }
 }

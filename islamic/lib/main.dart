@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
-import 'package:islamic/widgets/player.dart';
 
 import 'models.dart';
 import 'pages/waiting.dart';
@@ -18,20 +17,19 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  static int t;
+  static late int t;
 
   @override
   AppState createState() => AppState();
-  static AppState of(BuildContext context) =>
+  static AppState? of(BuildContext context) =>
       context.findAncestorStateOfType<AppState>();
 }
 
 class AppState extends State<MyApp> {
-  Locale locale;
-  Player player;
-  ThemeMode themeMode;
+  Locale? locale;
+  ThemeMode? themeMode;
   int loadingState = 0;
-  WaitingPage waitingPage;
+  late WaitingPage waitingPage;
   var supportedLocales = [
     const Locale("ar", ""),
     const Locale("en", ""),
@@ -43,6 +41,7 @@ class AppState extends State<MyApp> {
     const Locale("tr", ""),
     const Locale("ur", "")
   ];
+
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
@@ -66,7 +65,7 @@ class AppState extends State<MyApp> {
     waitingPage = WaitingPage();
     Prefs.init(() {
       setState(() => loadingState = 1);
-      setTheme(ThemeMode.values[Prefs.instance.getInt("themeMode")]);
+      setTheme(ThemeMode.values[Prefs.themeMode]);
       Configs.create(() {
         if (waitingPage.page.state > 1)
           waitingPage.page.end(() {
@@ -115,8 +114,8 @@ class AppState extends State<MyApp> {
   }
 
   void setLocale(String lang) {
-    var _loc = supportedLocales.firstWhere((l) => l.languageCode == lang);
-    if (_loc == null) return;
+    var _loc = supportedLocales.firstWhere((l) => l.languageCode == lang,
+        orElse: () => supportedLocales[0]);
     setState(() {
       locale = _loc;
       Prefs.instance.setString("locale", lang);

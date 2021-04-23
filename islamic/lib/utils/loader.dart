@@ -6,9 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 class Loader {
-  HttpClient httpClient;
+  late HttpClient httpClient;
   Future<Loader> load(String path, String url, Function(String) onDone,
-      Function(double) onProgress, Function(String) onError) async {
+      Function(double)? onProgress, Function(String) onError) async {
     var baseURL = (await getApplicationSupportDirectory()).path;
     var ext = p.extension(url);
     var file = File('$baseURL/$path');
@@ -36,12 +36,12 @@ class Loader {
         onDone(utf8.decode(bytes));
       },
       onError: (e) {
-        if (onError != null) onError(e);
+        onError(e);
       },
       cancelOnError: true,
     );
     return this;
   }
 
-  void abort() => httpClient?.close(force: true);
+  void abort() => httpClient.close(force: true);
 }
