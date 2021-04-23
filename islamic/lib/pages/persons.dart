@@ -76,30 +76,26 @@ class PersonPageState extends State<PersonPage>
                     });
                   }),
               floatingActionButton: SpeedDial(
-                child: AnimatedIcon(
-                  icon: AnimatedIcons.add_event,
-                  progress: fabController,
-                ),
-                openBackgroundColor: theme.primaryColor,
-                closedBackgroundColor: theme.primaryColor,
-                openForegroundColor: theme.backgroundColor,
-                labelsStyle: theme.textTheme.caption,
-                // controller: /* Your custom animation controller goes here */,
-                onPressed: handleOnPressed,
-                speedDialChildren: <SpeedDialChild>[
+                  icon: Icons.add,
+                  curve: Curves.easeOutExpo,
+                  overlayColor: theme.backgroundColor,
+                  overlayOpacity: 0.5,
+                  tooltip: title,
+                  heroTag: 'fab',
+                  backgroundColor:
+                      theme.floatingActionButtonTheme.backgroundColor,
+                  children: [
                   for (int i = 0; i < modes.length; i++)
                     SpeedDialChild(
-                      child: Icon(
-                        Icons.arrow_back,
-                      ),
-                      foregroundColor: theme.textTheme.button.color,
-                      label: modes[i].l(),
-                      onPressed: () => speedChildPressed(modes[i]),
-                    ),
-                  //  Your other SpeeDialChildren go here.
+                          labelWidget: Text(modes[i].l(),
+                              textAlign: TextAlign.right,
+                              style: theme.textTheme.bodyText1),
+                          child: Icon(Icons.arrow_back),
+                          backgroundColor:
+                              theme.floatingActionButtonTheme.backgroundColor,
+                          onTap: () => onSpeedChildTap(modes[i])),
                 ],
-              ),
-            )));
+                ))));
   }
 
   void removePerson(Person p) {
@@ -107,13 +103,7 @@ class PersonPageState extends State<PersonPage>
     setState(() => p.deselect());
   }
 
-  void handleOnPressed(bool isOpen) {
-    setState(() {
-      isOpen ? fabController.forward() : fabController.reverse();
-    });
-  }
-
-  void speedChildPressed(String mode) {
+  void onSpeedChildTap(String mode) {
     Navigator.push(
         context,
         MaterialPageRoute(
