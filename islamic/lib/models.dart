@@ -95,6 +95,9 @@ class Prefs {
   static String? getNote(int sura, int aya) {
     return notes["${Utils.fillZero(sura)}${Utils.fillZero(aya)}"];
   }
+  static bool? hasNote(int sura, int aya) {
+    return notes.containsKey("${Utils.fillZero(sura)}${Utils.fillZero(aya)}");
+  }
 }
 
 class Configs {
@@ -115,8 +118,7 @@ class Configs {
 
   static void create(Function onCreate) async {
     instance = Configs();
-    if (Prefs.locale != "fa")
-      baseURL = "https://hidaya.sarand.net/";
+    if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
     instance.loadConfigs();
     instance.loadMetadata();

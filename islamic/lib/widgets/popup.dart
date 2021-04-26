@@ -17,11 +17,11 @@ class AyaDetails extends StatefulWidget {
 }
 
 class AyaDetailsState extends State<AyaDetails> {
-  String? bookmark;
+  bool hasNote = false;
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    bookmark = Prefs.getNote(widget.sura, widget.aya)!;
+    hasNote = Prefs.hasNote(widget.sura, widget.aya)!;
     return Container(
         height: 160,
         child: Stack(alignment: Alignment.topCenter,
@@ -73,13 +73,13 @@ class AyaDetailsState extends State<AyaDetails> {
         break;
 
       case "note":
-        if (bookmark == null)
+        if (!hasNote)
           showDialog(
               context: context,
               builder: (BuildContext context) =>
                   Generics.editNote(context, theme, s, a, widget.updater));
         setState(() {
-          bookmark == null ? Prefs.addNote(s, a, "") : Prefs.removeNote(s, a);
+          hasNote ? Prefs.removeNote(s, a) : Prefs.addNote(s, a, "");
         });
         widget.updater();
         break;
@@ -92,12 +92,8 @@ class AyaDetailsState extends State<AyaDetails> {
   }
 
   IconData getNoteIcon() {
-    if (bookmark == null)
+    if (hasNote) return Icons.bookmark;
       return Icons.bookmark_border;
-    else if (bookmark == "")
-      return Icons.bookmark;
-    else
-      return Icons.bookmark;
   }
 }
 
