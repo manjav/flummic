@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
+import 'package:islamic/utils/player.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+import '../buttons.dart';
 import '../models.dart';
 import '../pages/persons.dart';
 import '../utils/localization.dart';
-import '../buttons.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,7 +34,6 @@ class HomePageState extends State<HomePage> {
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
   late ThemeData theme;
-  // late AppState app;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
@@ -47,6 +49,7 @@ class HomePageState extends State<HomePage> {
       fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
       fontSize: Prefs.naviMode == "sura" ? 32 : 18,
     );
+    initAudio();
     if (suraPageController != null) return;
 
     toolbarHeight = _toolbarHeight;
@@ -65,10 +68,6 @@ class HomePageState extends State<HomePage> {
       }
     });
 
-    // app = MyApp.of(context)!;
-    // if (app.player == null) app.player = Player();
-    // app.player.onStateChange = playerOnStateChange;
-
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 2000), () {
         var controller =
@@ -76,6 +75,8 @@ class HomePageState extends State<HomePage> {
         controller?.addListener(() {
           onPageScroll(controller.position);
         });
+
+        updatePlayer();
       });
 
       if (selectedIndex > 0) gotoIndex(selectedIndex, 1200);
@@ -441,4 +442,31 @@ class HomePageState extends State<HomePage> {
             onPressed: () => footerPressed(PType.sound));
     }
   }
+
+  void updatePlayer() {
+    var suras = <String>[];
+    for (var s in Configs.instance.metadata.suras) suras.add(s.title);
+    var sounds = <Person>[];
+    for (var p in Prefs.persons[PType.sound]!)
+      sounds.add(Configs.instance.sounds[p]!);
+    AudioService.customAction(
+        "update", {"sounds": jsonEncode(sounds), "suras": suras});
+  }
+
+  void initAudio() {
+    if (AudioService.connected) return;
+    AudioService.start(
+        backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint,
+        androidNotificationChannelName: 'قرآن هدایت',
+        // Enable this if you want the Android service to exit the foreground state on pause.
+        //androidStopForegroundOnPause: true,
+        androidNotificationColor: Colors.amber.value,
+        androidNotificationIcon: 'mipmap/ic_launcher',
+        androidEnableQueue: true,
+        params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
+  }
+}
+
+void _audioPlayerTaskEntrypoint() async {
+  AudioServiceBackground.run(() => AudioPlayerTask());
 }

@@ -280,6 +280,7 @@ class Juz extends Part {
 class Aya extends Search {
   late int page, juze, pageIndex, juzeIndex;
   Aya(int sura, int aya, int index) : super(sura, aya, index);
+  Map<String, dynamic> toJson() => {'sura': sura, 'aya': aya};
 }
 
 class Part {
@@ -381,4 +382,14 @@ class Person {
   }
 
   String get title => Localization.isRTL ? name : ename;
+
+  Map<String, dynamic> toJson() {
+    return {
+      "path": path,
+      "ename": ename,
+      "name": name,
+      "url": url,
+      "mode": mode
+    };
+  }
 }

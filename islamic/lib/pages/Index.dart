@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -327,7 +328,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   Widget noteItemBuilder(BuildContext context, int index) {
     var sura = int.parse(notes[index].substring(0, 3));
     var aya = int.parse(notes[index].substring(3));
-    String ? text = Prefs.getNote(sura, aya);
+    String? text = Prefs.getNote(sura, aya);
     return GestureDetector(
         onTap: () => goto(sura, aya),
         child: Container(
@@ -384,6 +385,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     HomePageState.selectedPage = res[0];
     HomePageState.selectedIndex = res[1];
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => AudioServiceWidget(child: HomePage())));
   }
 }
