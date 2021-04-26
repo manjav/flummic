@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
@@ -85,6 +86,10 @@ class AyaDetailsState extends State<AyaDetails> {
         break;
 
       default:
+        AudioService.customAction("select", {
+          "index": Configs
+              .instance.navigations["sura"]![widget.sura][widget.aya].index
+        });
         // MyApp.of(context)!.player.select(widget.sura, widget.aya, 0, true);
         Navigator.of(context).pop();
         break;
@@ -93,7 +98,7 @@ class AyaDetailsState extends State<AyaDetails> {
 
   IconData getNoteIcon() {
     if (hasNote) return Icons.bookmark;
-      return Icons.bookmark_border;
+    return Icons.bookmark_border;
   }
 }
 

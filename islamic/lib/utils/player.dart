@@ -108,6 +108,29 @@ class AudioPlayerTask extends BackgroundAudioTask {
         _player.setVolume(args);
         break;
 
+      case 'select':
+        index = args!["index"];
+        select(index, 0);
+        break;
+    }
+  }
+
+  Future<void> select(int index, int soundIndex) async {
+    var aya = ayas![index];
+    var sound = sounds![soundIndex];
+    var url = sound.getURL(aya.sura, aya.aya);
+    var duration = await _player.setUrl(url);
+    mediaItem = MediaItem(
+        artUri: Uri.parse("https://hidaya.sarand.net/images/${sound.path}.png"),
+        title: "${suras![aya.sura]} (${aya.aya + 1})",
+        artist: sound.name,
+        album: sound.ename,
+        id: url,
+        duration: duration);
+    AudioServiceBackground.setMediaItem(mediaItem!);
+    onPlay();
+  }
+
   @override
   Future<void> onSkipToQueueItem(String mediaId) async {
     print("------------------------------ onSkipToQueueItem");
