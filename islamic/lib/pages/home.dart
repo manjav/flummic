@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class HomePageState extends State<HomePage> {
   late double toolbarHeight;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
+  Person? playingSound;
   late ThemeData theme;
 
   void initHome() {
@@ -309,12 +311,12 @@ class HomePageState extends State<HomePage> {
                 Positioned(
                     top: 10 - coef * 0.11,
                     right: 86 - coef * 0.4,
-                    child: Avatar("app.player.sound.path", 20 - coef * 0.12)),
+                    child: Avatar(playingSound!.path, 20 - coef * 0.12)),
                 Positioned(
                     top: 10 - coef * 0.2,
                     right: 132 - coef * 0.65,
                     child: Text(
-                      "app.player.sound.name",
+                      playingSound!.title,
                       style: theme.textTheme.bodyText2,
                       textAlign: TextAlign.right,
                     )),
@@ -347,10 +349,10 @@ class HomePageState extends State<HomePage> {
   }
 
   /* Future<void> playerOnStateChange(AudioPlayerState state) async {
-    setState(() {});
-    if (state != AudioPlayerState.PLAYING) return;
-    goto(app.player.sura, app.player.aya);
-  } */
+            setState(() {});
+            if (state != AudioPlayerState.PLAYING) return;
+            goto(app.player.sura, app.player.aya);
+          } */
 
   void goto(int sura, int aya) {
     var part = Configs.instance.getPart(sura, aya);
@@ -400,6 +402,7 @@ class HomePageState extends State<HomePage> {
   }
 
   void onTogglePressed() {
+    // AudioService.customAction("select", {"index": 0});
     // app.player.toggle();
   }
 
@@ -464,6 +467,17 @@ class HomePageState extends State<HomePage> {
         androidNotificationIcon: 'mipmap/ic_launcher',
         androidEnableQueue: true,
         params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
+
+    List<String>? sounds = Prefs.persons[PType.sound];
+    playingSound = Configs.instance.sounds[sounds![0]];
+    AudioService.customEventStream.listen((state) {
+      var event = json.decode(state as String);
+      if (event["type"] == "select") {
+        var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
+        playingSound = Configs.instance.sounds[sounds[event["data"][1]]];
+        goto(aya.sura, aya.aya);
+      }
+    });
   }
 }
 

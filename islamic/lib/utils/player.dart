@@ -128,6 +128,8 @@ class AudioPlayerTask extends BackgroundAudioTask {
         id: url,
         duration: duration);
     AudioServiceBackground.setMediaItem(mediaItem!);
+    AudioServiceBackground.sendCustomEvent(
+        '{"type":"select", "data":[$index, $soundIndex]}');
     onPlay();
   }
 
