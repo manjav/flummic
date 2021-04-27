@@ -37,7 +37,7 @@ class HomePageState extends State<HomePage> {
   Person? playingSound;
   late ThemeData theme;
   bool isPlaying = false;
-  bool playerStarted = false;
+  int soundState = 0;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
@@ -53,8 +53,8 @@ class HomePageState extends State<HomePage> {
       fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
       fontSize: Prefs.naviMode == "sura" ? 32 : 18,
     );
-    initAudio();
     if (suraPageController != null) return;
+    initAudio();
 
     toolbarHeight = _toolbarHeight;
     suraPageController =
@@ -79,8 +79,6 @@ class HomePageState extends State<HomePage> {
         controller?.addListener(() {
           onPageScroll(controller.position);
         });
-
-        updatePlayer();
       });
 
       if (selectedIndex > 0) gotoIndex(selectedIndex, 1200);
@@ -404,16 +402,8 @@ class HomePageState extends State<HomePage> {
   }
 
   IconData getIcon() {
+    if (soundState == 2) return Icons.access_alarm;
     return isPlaying ? Icons.pause : Icons.play_arrow;
-  }
-
-  void onTogglePressed() {
-    if (playerStarted) {
-      isPlaying ? AudioService.pause() : AudioService.play();
-      return;
-    }
-    AudioService.customAction(
-        "select", {"index": Configs.instance.pageItems[selectedPage][0].index});
   }
 
   IconButton getButton(String type) {
@@ -456,19 +446,15 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void updatePlayer() {
-    var suras = <String>[];
-    for (var s in Configs.instance.metadata.suras) suras.add(s.title);
-    var sounds = <Person>[];
-    for (var p in Prefs.persons[PType.sound]!)
-      sounds.add(Configs.instance.sounds[p]!);
-    AudioService.customAction(
-        "update", {"sounds": jsonEncode(sounds), "suras": suras});
-  }
+  Future<void> initAudio() async {
+    print("initAudio c ${AudioService.connected} r ${AudioService.running}");
+    if (AudioService.connected && AudioService.running) return;
 
-  void initAudio() {
-    if (AudioService.connected) return;
-    AudioService.start(
+    List<String>? sounds = Prefs.persons[PType.sound];
+    playingSound = Configs.instance.sounds[sounds![0]];
+    setState(() {});
+    soundState = 2;
+    await AudioService.start(
         backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint,
         androidNotificationChannelName: 'قرآن هدایت',
         // Enable this if you want the Android service to exit the foreground state on pause.
@@ -477,18 +463,46 @@ class HomePageState extends State<HomePage> {
         androidNotificationIcon: 'mipmap/ic_launcher',
         androidEnableQueue: true,
         params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
+    updatePlayer();
+    soundState = 0;
+    setState(() {});
 
-    List<String>? sounds = Prefs.persons[PType.sound];
-    playingSound = Configs.instance.sounds[sounds![0]];
     AudioService.customEventStream.listen((state) {
       var event = json.decode(state as String);
       if (event["type"] == "select") {
         var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
         playingSound = Configs.instance.sounds[sounds[event["data"][1]]];
+        soundState = 1;
         goto(aya.sura, aya.aya);
-        playerStarted = true;
+      } else if (event["type"] == "stop") {
+        soundState = 0;
+        setState(() {});
       }
     });
+  }
+
+  void onTogglePressed() async {
+    await initAudio();
+    if (soundState == 1) {
+      isPlaying ? AudioService.pause() : AudioService.play();
+      return;
+    }
+    play(Configs.instance.pageItems[selectedPage][0].index);
+  }
+
+  void play(int index) async {
+    await initAudio();
+    AudioService.customAction("select", {"index": index});
+  }
+
+  void updatePlayer() {
+    var suras = <String>[];
+    for (var s in Configs.instance.metadata.suras) suras.add(s.title);
+    var sounds = <Person>[];
+    for (var p in Prefs.persons[PType.sound]!)
+      sounds.add(Configs.instance.sounds[p]!);
+    AudioService.customAction(
+        "update", {"sounds": jsonEncode(sounds), "suras": suras});
   }
 }
 
