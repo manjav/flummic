@@ -267,7 +267,7 @@ class PersonListPageState extends State<PersonListPage> {
           setState(() {});
         }, (double p) {
           setState(() {});
-        }, (String e) {
+        }, (dynamic e) {
           print(e);
           setState(() {});
         });

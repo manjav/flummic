@@ -95,6 +95,7 @@ class Prefs {
   static String? getNote(int sura, int aya) {
     return notes["${Utils.fillZero(sura)}${Utils.fillZero(aya)}"];
   }
+
   static bool? hasNote(int sura, int aya) {
     return notes.containsKey("${Utils.fillZero(sura)}${Utils.fillZero(aya)}");
   }
@@ -130,11 +131,9 @@ class Configs {
       for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
       for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
 
-      for (var t in Prefs.persons[PType.text]!)
-        texts[t]?.select(finalize, null, print);
-      for (var s in Prefs.persons[PType.sound]!)
-        sounds[s]?.select(finalize, null, print);
-    }, null, print);
+      for (var t in Prefs.persons[PType.text]!) texts[t]?.select(finalize);
+      for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(finalize);
+    });
   }
 
   void loadMetadata() async {
@@ -329,8 +328,8 @@ class Person {
     size = p["size"];
   }
 
-  void select(
-      Function onDone, Function(double)? onProgress, Function(String) onError) {
+  void select(Function onDone,
+      [Function(double)? onProgress, Function(dynamic)? onError]) {
     print("select $path");
     if (state == PState.waiting)
       load(() => onSelecFinish(onDone), onProgress, onError);
@@ -349,8 +348,8 @@ class Person {
     onDone();
   }
 
-  void load(
-      Function onDone, Function(double)? onProgress, Function(String) onError) {
+  void load(Function onDone, Function(double)? onProgress,
+      Function(dynamic)? onError) {
     state = PState.downloading;
     loader = Loader();
     loader.load(path, url, (String _data) {
@@ -365,9 +364,9 @@ class Person {
     }, (double p) {
       progress = p;
       if (onProgress != null) onProgress(p);
-    }, (String e) {
+    }, (e) {
       state = PState.waiting;
-      onError(e);
+      onError?.call(e);
     });
   }
 
