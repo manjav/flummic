@@ -218,7 +218,11 @@ class HomePageState extends State<HomePage> {
       ),
       backgroundColor: theme.dialogBackgroundColor,
       context: context,
-      builder: (context) => AyaDetails(sura, aya, () => setState(() {})),
+      builder: (context) => AyaDetails(sura, aya, (type, data) {
+        if (type == "note")
+          setState(() {});
+        else if (type == "play") play(data);
+      }),
     ).then((value) {
       setState(() {});
     });

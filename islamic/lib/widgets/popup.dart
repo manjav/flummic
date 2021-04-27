@@ -1,4 +1,3 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
@@ -10,7 +9,7 @@ import '../main.dart';
 
 class AyaDetails extends StatefulWidget {
   final int sura, aya;
-  final Function updater;
+  final Function(String, int) updater;
   AyaDetails(this.sura, this.aya, this.updater);
 
   @override
@@ -82,14 +81,14 @@ class AyaDetailsState extends State<AyaDetails> {
         setState(() {
           hasNote ? Prefs.removeNote(s, a) : Prefs.addNote(s, a, "");
         });
-        widget.updater();
+        widget.updater("note", 0);
         break;
 
       default:
-        AudioService.customAction("select", {
-          "index": Configs
-              .instance.navigations["sura"]![widget.sura][widget.aya].index
-        });
+        widget.updater(
+            "play",
+            Configs
+                .instance.navigations["sura"]![widget.sura][widget.aya].index);
         // MyApp.of(context)!.player.select(widget.sura, widget.aya, 0, true);
         Navigator.of(context).pop();
         break;
