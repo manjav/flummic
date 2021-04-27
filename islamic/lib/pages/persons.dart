@@ -17,7 +17,6 @@ class PersonPage extends StatefulWidget {
 
 class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
-
   String title = "";
   late List<String> modes;
   late Map<String, Person> configPersons;
@@ -100,12 +99,13 @@ class PersonPageState extends State<PersonPage>
     setState(() => p.deselect());
   }
 
-  void onSpeedChildTap(String mode) {
-    Navigator.push(
+  void onSpeedChildTap(String mode) async {
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 PersonListPage(widget.type, mode, configPersons)));
+    setState(() {});
   }
 
   List<Widget> personItems() {
