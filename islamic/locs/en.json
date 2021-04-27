@@ -271,6 +271,8 @@
     "month_g_9": "October",
     "month_g_10": "November",
     "month_g_11": "December",
-    "undo_t": "Item Deleted.",
-    "undo_b": "Undo"
+    "undo_t": "Item deleted.",
+    "undo_b": "Undo",
+    "net_alert": "No internet connection!",
+    "reload_l": "Try Again"
 }

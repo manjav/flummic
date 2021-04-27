@@ -51,7 +51,7 @@ class AppState extends State<MyApp> {
     Map appsFlyerOptions = {
       "afDevKey": "YBThmUqaiHZYpiSwZ3GQz4",
       "afAppId": "com.gerantech.muslim.holy.quran",
-      "isDebug": true
+      "isDebug": false
     };
 
     AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
@@ -61,20 +61,13 @@ class AppState extends State<MyApp> {
         registerOnDeepLinkingCallback: true);
 
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
-    super.initState();
     waitingPage = WaitingPage();
     Prefs.init(() {
       setState(() => loadingState = 1);
       setTheme(ThemeMode.values[Prefs.themeMode]);
-      Configs.create(() {
-        if (waitingPage.page.state > 1)
-          waitingPage.page.end(() {
-            setState(() => loadingState = 2);
-          });
-        else
-          setState(() => loadingState = 2);
-      });
+      loadConfig();
     });
+    super.initState();
   }
 
   @override
@@ -120,5 +113,16 @@ class AppState extends State<MyApp> {
       locale = _loc;
       Prefs.instance.setString("locale", lang);
     });
+  }
+
+  void loadConfig() {
+    Configs.create(() {
+      if (waitingPage.page.state > 1)
+        waitingPage.page.end(() {
+          setState(() => loadingState = 2);
+        });
+      else
+        setState(() => loadingState = 2);
+    }, (e) => waitingPage.page.error(loadConfig));
   }
 }

@@ -267,5 +267,7 @@
     "month_g_10": "نوفمبر",
     "month_g_11": "ديسمبر",
     "undo_t": "Item Deleted.",
-    "undo_b": "Undo"
+    "undo_b": "Undo",
+    "net_alert": "ارتباط بین شما و هدایت برقرار نشد!",
+    "reload_l": "تلاش دوباره"
 }

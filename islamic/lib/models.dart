@@ -104,6 +104,7 @@ class Prefs {
 class Configs {
   static late Configs instance;
   late Function onCreate;
+  late Function(dynamic) onError;
   QuranMeta? _metadata;
   QuranMeta get metadata => _metadata ?? QuranMeta();
 
@@ -117,10 +118,11 @@ class Configs {
   static String baseURL = "https://grantech.ir/islam/";
   get quran => instance.texts["ar.uthmanimin"]?.data;
 
-  static void create(Function onCreate) async {
+  static void create(Function onCreate, Function(dynamic) onError) async {
     instance = Configs();
     if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
+    instance.onError = onError;
     instance.loadConfigs();
     instance.loadMetadata();
   }
@@ -157,7 +159,7 @@ class Configs {
       _metadata = _m;
       createAyas();
       finalize();
-    }, null, (String e) => print("error: $e"));
+    }, null, onError);
   }
 
   void finalize() {
@@ -188,8 +190,8 @@ class Configs {
           simpleQuran!.add(sura);
         }
         onDone();
-      }, null, print);
-    }, null, print);
+      });
+    });
   }
 
   List<List<Aya>> get pageItems => navigations[Prefs.naviMode]!;

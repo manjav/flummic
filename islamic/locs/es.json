@@ -222,6 +222,8 @@
     "downloader_message_item": "descargada desde",
     "downloader_message_all": "descargada.",
     "downloader_message_any": "No elemento descargado.",
-    "undo_t": "Item Deleted.",
-    "undo_b": "Undo"
+    "undo_t": "Item deleted.",
+    "undo_b": "Undo",
+    "net_alert": "No internet connection!",
+    "reload_l": "Try Again"
 }

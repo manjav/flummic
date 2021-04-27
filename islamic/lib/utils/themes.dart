@@ -56,9 +56,9 @@ class Themes {
                 foregroundColor:
                     MaterialStateProperty.all<Color>(primaries[500]!),
                 textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-                  fontFamily: "CubicSans",
-                  fontSize: 18,
-                )))),
+                    fontFamily: "CubicSans",
+                    fontSize: 18,
+                    color: primaries[500])))),
         textSelectionTheme: TextSelectionThemeData(
             cursorColor: primaries[600],
             selectionHandleColor: primaries[600],
@@ -125,6 +125,8 @@ class Themes {
           overlayColor: primaries[700]),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateProperty.all<Color>(primaries[400]!),
               textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                   fontFamily: "CubicSans",
                   fontSize: 18,

@@ -9,15 +9,15 @@ class WaitingPage extends StatefulWidget {
   late WaitingPageState page;
 
   @override
-  WaitingPageState createState() {
-    return page = WaitingPageState();
-  }
+  WaitingPageState createState() => page = WaitingPageState();
 }
 
 class WaitingPageState extends State<WaitingPage> {
   int state = 0;
   late Artboard artboard;
   late RiveAnimationController controller;
+  bool errorMode = false;
+  Function? onRreload;
 
   @override
   void initState() {
@@ -39,15 +39,30 @@ class WaitingPageState extends State<WaitingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: state < 1
-            ? const SizedBox()
-            : Rive(
-                artboard: artboard,
-                fit: BoxFit.none,
-              ),
-      ),
-    );
+        body: Stack(alignment: Alignment.center, children: [
+      state < 1
+          ? const SizedBox()
+          : Rive(
+              artboard: artboard,
+              fit: BoxFit.none,
+            ),
+      errorMode
+          ? Positioned(
+              bottom: 64,
+              child: Column(children: [
+                Text("net_alert".l()),
+                TextButton(
+                    child: Row(
+                      children: [
+                        Icon(Icons.sync_outlined),
+                        SizedBox(width: 10),
+                        Text("reload_l".l())
+                      ],
+                    ),
+                    onPressed: onPressed)
+              ]))
+          : SizedBox()
+    ]));
   }
 
   void end(Function onFinish) {
@@ -56,6 +71,16 @@ class WaitingPageState extends State<WaitingPage> {
       state = 3;
       onFinish();
     });
+  }
+
+  void error(Function onRreload) {
+    this.onRreload = onRreload;
+    setState(() => errorMode = true);
+  }
+
+  void onPressed() {
+    setState(() => errorMode = false);
+    onRreload?.call();
   }
 }
 

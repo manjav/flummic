@@ -222,6 +222,8 @@
     "downloader_message_item": "download dari",
     "downloader_message_all": "download.",
     "downloader_message_any": "Tidak ada item yang di-download.",
-    "undo_t": "Item Deleted.",
-    "undo_b": "Undo"
+    "undo_t": "Item deleted.",
+    "undo_b": "Undo",
+    "net_alert": "No internet connection!",
+    "reload_l": "Try Again"
 }
