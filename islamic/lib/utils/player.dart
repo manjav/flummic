@@ -89,6 +89,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
           break;
       }
     });
+    AudioServiceBackground.sendCustomEvent('{"type":"start"}');
   }
 
   @override
@@ -135,7 +136,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSkipToQueueItem(String mediaId) async {
-    print("------------------------------ onSkipToQueueItem");
+    // print("------------------------------ onSkipToQueueItem");
 
     // Then default implementations of onSkipToNext and onSkipToPrevious will
     // delegate to this method.
@@ -169,7 +170,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSeekTo(Duration position) {
-    print("onSeekTo ====> $position");
+    // print("onSeekTo ====> $position");
     return _player.seek(position);
   }
 
@@ -181,7 +182,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSeekForward(bool begin) async {
-    print("onSeekForward ====> $begin");
+    // print("onSeekForward ====> $begin");
     _seekContinuously(begin, 1);
   }
 
@@ -190,7 +191,8 @@ class AudioPlayerTask extends BackgroundAudioTask {
 
   @override
   Future<void> onStop() async {
-    print("------------------------------ onStop");
+    AudioServiceBackground.sendCustomEvent('{"type":"stop"}');
+    // print("------------------------------ onStop");
 
     await _player.dispose();
     _eventSubscription.cancel();
@@ -204,7 +206,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
 
   /// Jumps away from the current position by [offset].
   Future<void> _seekRelative(Duration offset) async {
-    print(" _seekRelative $offset");
+    // print("_seekRelative $offset");
 
     var newPosition = _player.position + offset;
     // Make sure we don't jump out of bounds.
