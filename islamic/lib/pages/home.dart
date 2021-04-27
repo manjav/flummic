@@ -346,6 +346,7 @@ class HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(builder: (context) => PersonPage(type)),
     );
+    updatePlayer();
     setState(() {});
   }
 
