@@ -36,6 +36,8 @@ class HomePageState extends State<HomePage> {
   bool hasQuranText = false;
   Person? playingSound;
   late ThemeData theme;
+  bool isPlaying = false;
+  bool playerStarted = false;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
@@ -326,10 +328,7 @@ class HomePageState extends State<HomePage> {
                     child: SizedBox(
                         height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
                         width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
-                        child: FloatingActionButton(
-                            heroTag: "fab",
-                            child: Icon(getIcon()),
-                            onPressed: onTogglePressed)))
+                        child: getToggleButton(context)))
               ],
             ),
             decoration: BoxDecoration(
@@ -347,12 +346,6 @@ class HomePageState extends State<HomePage> {
     );
     setState(() {});
   }
-
-  /* Future<void> playerOnStateChange(AudioPlayerState state) async {
-            setState(() {});
-            if (state != AudioPlayerState.PLAYING) return;
-            goto(app.player.sura, app.player.aya);
-          } */
 
   void goto(int sura, int aya) {
     var part = Configs.instance.getPart(sura, aya);
@@ -392,18 +385,31 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  Widget getToggleButton(BuildContext context) {
+    return StreamBuilder<bool>(
+        stream: AudioService.playbackStateStream
+            .map((state) => state.playing)
+            .distinct(),
+        builder: (context, snapshot) {
+          isPlaying = snapshot.data ?? false;
+          return FloatingActionButton(
+              heroTag: "fab",
+              child: Icon(getIcon()),
+              onPressed: onTogglePressed);
+        });
+  }
+
   IconData getIcon() {
-    // switch (app.player.playerState) {
-    //   case AudioPlayerState.PLAYING:
-    //     return Icons.pause;
-    //   default:
-    return Icons.play_arrow;
-    // }
+    return isPlaying ? Icons.pause : Icons.play_arrow;
   }
 
   void onTogglePressed() {
-    // AudioService.customAction("select", {"index": 0});
-    // app.player.toggle();
+    if (playerStarted) {
+      isPlaying ? AudioService.pause() : AudioService.play();
+      return;
+    }
+    AudioService.customAction(
+        "select", {"index": Configs.instance.pageItems[selectedPage][0].index});
   }
 
   IconButton getButton(String type) {
@@ -476,6 +482,7 @@ class HomePageState extends State<HomePage> {
         var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
         playingSound = Configs.instance.sounds[sounds[event["data"][1]]];
         goto(aya.sura, aya.aya);
+        playerStarted = true;
       }
     });
   }
