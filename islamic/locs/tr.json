@@ -222,5 +222,6 @@
     "downloader_message_item": "indirilen",
     "downloader_message_all": "indirildi.",
     "downloader_message_any": "indirildi hiçbir öğe.",
-    "undo_remove": "Silindi. Geri almak için tıklayın."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

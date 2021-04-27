@@ -266,5 +266,6 @@
     "month_g_9": "أكتوبر",
     "month_g_10": "نوفمبر",
     "month_g_11": "ديسمبر",
-    "undo_remove": "البند حذفها. اضغط على التراجع"
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

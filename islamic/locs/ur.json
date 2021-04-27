@@ -222,5 +222,6 @@
     "downloader_message_item": "سے ڈاؤن لوڈ",
     "downloader_message_all": "ڈاؤن لوڈ.",
     "downloader_message_any": "ڈاؤن لوڈ کوئی شے.",
-    "undo_remove": "آئٹم خارج کر دیا. کو رد کرنے کے لئے تھپتھپائیں."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

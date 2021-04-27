@@ -222,5 +222,6 @@
     "downloader_message_item": "скачать с",
     "downloader_message_all": "скачал.",
     "downloader_message_any": "Нет элемент загружается.",
-    "undo_remove": "Пункт удален. Нажмите, чтобы отменить."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

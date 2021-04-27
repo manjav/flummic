@@ -271,5 +271,6 @@
     "month_g_9": "October",
     "month_g_10": "November",
     "month_g_11": "December",
-    "undo_remove": "Item deleted. Tap to undo."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

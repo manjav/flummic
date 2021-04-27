@@ -60,7 +60,7 @@ class PersonPageState extends State<PersonPage>
                   automaticallyImplyLeading: false,
                 ),
                 body: ReorderableListView(
-                    children: personItems(),
+                    children: personItems(context),
                     onReorder: (int oldIndex, int newIndex) {
                       setState(() {
                         if (oldIndex < newIndex) newIndex -= 1;
@@ -94,11 +94,6 @@ class PersonPageState extends State<PersonPage>
                 ))));
   }
 
-  void removePerson(Person p) {
-    Prefs.removePerson(p.type, p.path);
-    setState(() => p.deselect());
-  }
-
   void onSpeedChildTap(String mode) async {
     await Navigator.push(
         context,
@@ -108,7 +103,7 @@ class PersonPageState extends State<PersonPage>
     setState(() {});
   }
 
-  List<Widget> personItems() {
+  List<Widget> personItems(BuildContext context) {
     var items = <Widget>[];
     for (var t in Prefs.persons[widget.type]!) {
       var p = configPersons[t];
@@ -120,10 +115,28 @@ class PersonPageState extends State<PersonPage>
             title: Text(p!.title),
             subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
             trailing: IconButton(
-                icon: Icon(Icons.delete), onPressed: () => removePerson(p)),
+                icon: Icon(Icons.delete),
+                onPressed: () => removePerson(context, p)),
           )));
     }
     return items;
+  }
+
+  void removePerson(BuildContext context, Person p) {
+    var index = Prefs.persons[widget.type]!.indexOf(p.path);
+    Prefs.removePerson(p.type, p.path);
+    setState(() => p.deselect());
+    final snackBar = SnackBar(
+      content: Text("undo_t".l()),
+      action: SnackBarAction(
+        label: "undo_b".l(),
+        onPressed: () {
+          Prefs.persons[widget.type]!.insert(index, p.path);
+          setState(() {});
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 

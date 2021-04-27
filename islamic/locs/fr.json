@@ -222,5 +222,6 @@
     "downloader_message_item": "téléchargé à partir de",
     "downloader_message_all": "téléchargé.",
     "downloader_message_any": "Aucun téléchargé.",
-    "undo_remove": "Point supprimé. Appuyez sur pour annuler."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

@@ -222,5 +222,6 @@
     "downloader_message_item": "download dari",
     "downloader_message_all": "download.",
     "downloader_message_any": "Tidak ada item yang di-download.",
-    "undo_remove": "Barang dihapus. Ketuk untuk membatalkan."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }

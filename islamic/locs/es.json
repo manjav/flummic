@@ -222,5 +222,6 @@
     "downloader_message_item": "descargada desde",
     "downloader_message_all": "descargada.",
     "downloader_message_any": "No elemento descargado.",
-    "undo_remove": "Artículo eliminado. Pulse para deshacer."
+    "undo_t": "Item Deleted.",
+    "undo_b": "Undo"
 }
