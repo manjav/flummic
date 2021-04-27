@@ -54,7 +54,7 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
                 foregroundColor:
-                    MaterialStateProperty.all<Color>(primaries[700]!),
+                    MaterialStateProperty.all<Color>(primaries[500]!),
                 textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                   fontFamily: "CubicSans",
                   fontSize: 18,
@@ -63,6 +63,12 @@ class Themes {
             cursorColor: primaries[600],
             selectionHandleColor: primaries[600],
             selectionColor: primaries[300]),
+        snackBarTheme: SnackBarThemeData(
+            contentTextStyle: TextStyle(
+                fontFamily: "CubicSans", fontSize: 16, color: primaries[900]),
+            backgroundColor: primaries[500],
+            actionTextColor: primaries[50]),
+        fontFamily: "CubicSans",
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
         cardColor: primaries[100],
@@ -80,8 +86,7 @@ class Themes {
             // secondary: Colors.teal[50],
             // onSecondary: Colors.red,
             // secondaryVariant: Colors.red,
-            ),
-        fontFamily: "CubicSans");
+            ));
   }
 
   static ThemeData get darkData {
@@ -120,15 +125,18 @@ class Themes {
           overlayColor: primaries[700]),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(primaries[50]!),
               textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-                fontFamily: "CubicSans",
-                fontSize: 18,
-              )))),
+                  fontFamily: "CubicSans",
+                  fontSize: 18,
+                  color: primaries[700])))),
       textSelectionTheme: TextSelectionThemeData(
           cursorColor: primaries[500],
           selectionHandleColor: primaries[200],
           selectionColor: primaries[600]),
+      snackBarTheme: SnackBarThemeData(
+          contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
+          backgroundColor: primaries[700],
+          actionTextColor: primaries[500]),
       fontFamily: "CubicSans",
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],
