@@ -38,6 +38,17 @@ class Themes {
             fontFamily: "CubicSans",
             fontSize: 21,
             fontWeight: FontWeight.bold));
+
+    Color getTextButtonColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) return primaries[300]!;
+      return primaries[states.contains(MaterialState.disabled) ? 600 : 400]!;
+    }
+
     return ThemeData(
         primarySwatch: material,
         appBarTheme: AppBarTheme(
@@ -54,11 +65,11 @@ class Themes {
         textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
                 foregroundColor:
-                    MaterialStateProperty.all<Color>(primaries[500]!),
+                    MaterialStateProperty.resolveWith(getTextButtonColor),
                 textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                     fontFamily: "CubicSans",
                     fontSize: 18,
-                    color: primaries[500])))),
+                    fontWeight: FontWeight.bold)))),
         textSelectionTheme: TextSelectionThemeData(
             cursorColor: primaries[600],
             selectionHandleColor: primaries[600],
@@ -110,6 +121,17 @@ class Themes {
             fontFamily: "CubicSans",
             fontSize: 21,
             fontWeight: FontWeight.bold));
+
+    Color getTextButtonColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) return primaries[300]!;
+      return primaries[states.contains(MaterialState.disabled) ? 600 : 400]!;
+    }
+
     return ThemeData(
       primarySwatch: darkMaterial,
       appBarTheme: AppBarTheme(
@@ -126,11 +148,11 @@ class Themes {
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               foregroundColor:
-                  MaterialStateProperty.all<Color>(primaries[400]!),
+                  MaterialStateProperty.resolveWith(getTextButtonColor),
               textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
                   fontFamily: "CubicSans",
                   fontSize: 18,
-                  color: primaries[700])))),
+                  fontWeight: FontWeight.bold)))),
       textSelectionTheme: TextSelectionThemeData(
           cursorColor: primaries[500],
           selectionHandleColor: primaries[200],
