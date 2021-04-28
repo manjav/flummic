@@ -5,6 +5,7 @@ import 'package:rive/rive.dart';
 import '../utils/localization.dart';
 import '../models.dart';
 
+// ignore: must_be_immutable
 class WaitingPage extends StatefulWidget {
   late WaitingPageState page;
 
@@ -54,7 +55,7 @@ class WaitingPageState extends State<WaitingPage> {
                 TextButton(
                     child: Row(
                       children: [
-                        Icon(Icons.sync_outlined),
+                        Icon(Icons.sync),
                         SizedBox(width: 10),
                         Text("reload_l".l())
                       ],
