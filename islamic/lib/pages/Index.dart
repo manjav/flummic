@@ -71,7 +71,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     theme = Theme.of(context);
     titlesStyle = TextStyle(
         fontFamily: 'titles',
-        fontSize: 26,
+        fontSize: 24,
         letterSpacing: -4,
         height: Localization.isRTL ? 1.1 : 0.1);
     uthmaniStyle = Localization.isRTL
@@ -121,7 +121,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             ],
           ),
           child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+              padding: EdgeInsets.only(
+                  top: 5,
+                  right: Localization.isRTL ? 8 : 0,
+                  left: Localization.isRTL ? 0 : 8),
               child: Row(
                 children: [
                   Expanded(
@@ -143,7 +146,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             height: Localization.isRTL ? 64 : 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                padding: EdgeInsets.only(
+                    right: Localization.isRTL ? 8 : 0,
+                    left: Localization.isRTL ? 0 : 8),
                 child: Row(
                   children: [
                     Stack(children: [
@@ -154,8 +159,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         height: 48,
                       ),
                       Positioned(
-                          top: 14,
-                          bottom: 14,
+                          top: 16,
+                          bottom: 16,
                           right: 4,
                           left: 4,
                           child: Text("${sura.index + 1}",
@@ -176,6 +181,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                       textDirection: TextDirection.ltr),
                                   Localization.isRTL
                                       ? SizedBox(height: 0)
+                                      : SizedBox(height: 4),
+                                  Localization.isRTL
+                                      ? SizedBox(height: 0)
                                       : Text("    ${sura.title}")
                                 ]))),
                     getText(sura.order),
@@ -187,7 +195,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Container getText(int value) {
     return Container(
-        width: 64,
+        width: 56,
         height: 16,
         alignment: Alignment.center,
         child: Text("$value", style: uthmaniStyle));
@@ -214,7 +222,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           setState(() {});
         },
         child: Container(
-            width: 64,
+            width: 56,
             height: _toolbarHeight,
             color: Colors.transparent,
             child: Stack(alignment: Alignment.topCenter,
@@ -261,8 +269,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             child: Padding(
                 padding: EdgeInsets.only(
                     top: 6,
-                    left: Localization.isRTL ? 4 : 16,
-                    right: Localization.isRTL ? 16 : 4),
+                    left: Localization.isRTL ? 4 : 12,
+                    right: Localization.isRTL ? 12 : 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -301,7 +309,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         child: GestureDetector(
             onTap: () => goto(hizb.sura - 1, hizb.aya - 1),
             child: Container(
-                width: 56,
+                width: 48,
                 padding: EdgeInsets.only(top: 6),
                 child: Column(children: [
                   SvgPicture.asset(
