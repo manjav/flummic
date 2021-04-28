@@ -308,7 +308,7 @@ class Generics {
                   child: TextButton(
                     child: Text("save_l".l()),
                     onPressed: () {
-                      updater();
+                      updater("note", 0);
                       Prefs.addNote(sura, aya, textController.text);
                       Navigator.of(context).pop();
                     },
