@@ -153,7 +153,7 @@ class HomePageState extends State<HomePage> {
       initialAlignment: 0.15,
       itemScrollController: ItemScrollController(),
       itemPositionsListener: ItemPositionsListener.create(),
-      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 48),
+      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 76),
       itemCount: Configs.instance.pageItems[p].length,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
     );
@@ -184,7 +184,7 @@ class HomePageState extends State<HomePage> {
               onLongPress: () => showAyaDetails(part.sura, part.aya),
               child: Padding(
                   padding:
-                      EdgeInsets.only(top: 16, right: 16, bottom: 5, left: 16),
+                      EdgeInsets.only(top: 14, right: 16, bottom: 5, left: 16),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: textsProvider(part.sura, part.aya))))),
@@ -245,6 +245,7 @@ class HomePageState extends State<HomePage> {
     }
 
     rows.add(SizedBox(height: 16));
+    var i = 0;
     if (hasQuranText) {
       var hizbFlag = getHizbFlag(sura + 1, aya + 1);
       rows.add(Text(
@@ -252,6 +253,7 @@ class HomePageState extends State<HomePage> {
           textAlign: TextAlign.justify,
           textDirection: TextDirection.rtl,
           style: uthmaniStyle));
+      ++i;
     }
 
     for (var path in Prefs.persons[PType.text]!) {
@@ -260,19 +262,21 @@ class HomePageState extends State<HomePage> {
       var dir = Bidi.isRtlLanguage(texts!.flag)
           ? TextDirection.rtl
           : TextDirection.ltr;
+      var no = i < 1 ? (aya + 1).n(texts.flag) : '';
+      if (dir == TextDirection.rtl) no = no.split('').reversed.join();
+      if (no.length > 0) no += '. ';
+      var pre = "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no";
       rows.add(Stack(
         textDirection: dir,
-        children: <Widget>[
-          Text(
-              rows.length < 1
-                  ? "\t\t\t\t\t\t\t\t\t${(aya + 1).n(texts.flag)}. ${texts.data[sura][aya]}"
-                  : "\t\t\t\t\t\t\t\t\t${texts.data[sura][aya]}",
+        children: [
+          Text("$pre${texts.data[sura][aya]}",
               textAlign: TextAlign.justify,
               textDirection: dir,
               style: theme.textTheme.caption),
           Avatar(path, 15)
         ],
       ));
+      ++i;
     }
     return rows;
   }
