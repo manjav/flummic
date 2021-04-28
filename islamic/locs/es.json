@@ -226,5 +226,7 @@
     "undo_b": "Undo",
     "net_alert": "No internet connection!",
     "reload_l": "Try Again",
-    "playing_l": "Recitation is playing."
-}
+    "playing_l": "Recitation is playing.",
+    "rating_l": "Rate Hidaya",
+    "rating_m": "If you injoy using Hidaya, please take a moment to rate it.\nThanks for your support!",
+    "rating_p": "Tell us your comments"}

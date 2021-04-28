@@ -20,8 +20,10 @@ dependencies:
   just_audio: ^0.7.0
   path_provider: ^2.0.1
   firebase_core: ^1.0.4
+  in_app_review: ^2.0.2
   audio_service: ^0.17.0
   cupertino_icons: ^1.0.2
+  flutter_rating_bar: ^4.0.0
   flutter_speed_dial: ^3.0.5
   firebase_analytics: ^8.0.1
   firebase_messaging: ^9.1.2

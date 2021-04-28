@@ -2,10 +2,13 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
 import 'package:islamic/widgets/popup.dart';
+import 'package:islamic/widgets/rating.dart';
 
+import '../main.dart';
 import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
@@ -64,6 +67,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       }
     });
     suras = Configs.instance.metadata.suras;
+    Future.delayed(Duration(seconds: 1))
+        .then((_) => showRating()); //this inside the initstate
   }
 
   @override
@@ -423,5 +428,35 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         MaterialPageRoute(
             builder: (context) => AudioServiceWidget(child: HomePage())));
     setState(() {});
+  }
+
+  void showRating() async {
+    print("showRating last rate ${Prefs.rate}, num runs: ${Prefs.numRuns}");
+    // Send to store
+    if (Prefs.rate == 5) {
+      final InAppReview inAppReview = InAppReview.instance;
+      if (await inAppReview.isAvailable()) inAppReview.requestReview();
+      return;
+    }
+
+    // Repeat rating request
+    if (Prefs.rate != 5 && Prefs.numRuns > Prefs.rate)
+      showDialog(
+          context: context,
+          builder: (context) => RatingDialog(
+              onCancelled: () => print('cancelled'),
+              onSubmitted: (response) {
+                Prefs.instance.setInt("rate",
+                    response.rating >= 5 ? response.rating : (Prefs.rate + 10));
+
+                AppState.analytics.logEvent(
+                  name: 'rate',
+                  parameters: <String, dynamic>{
+                    'numRuns': Prefs.numRuns,
+                    'rating': response.rating,
+                    'comment': response.comment
+                  },
+                );
+              }));
   }
 }
