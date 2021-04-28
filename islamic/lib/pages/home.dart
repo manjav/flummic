@@ -37,7 +37,7 @@ class HomePageState extends State<HomePage> {
   Person? playingSound;
   late ThemeData theme;
   bool isPlaying = false;
-  int soundState = 0;
+  static int soundState = 0;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;

@@ -98,7 +98,33 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         controller: _tabController,
         children: [getSuras(), getJuzes(), getNotes()],
       ),
-    );
+        bottomNavigationBar: getAudioLine());
+  }
+
+  Widget getAudioLine() {
+    if (HomePageState.soundState != 1) return SizedBox();
+    return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Container(
+            color: theme.appBarTheme.backgroundColor,
+            height: 36,
+            child: Row(
+              children: [
+                SizedBox(width: 4),
+                // Avatar(quran!.playingSound!.path, 12),
+                // SizedBox(width: 4),
+                Expanded(
+                    child: Text("playing_l".l(),
+                        style: theme.textTheme.bodyText2)),
+                IconButton(
+                    icon: Icon(Icons.stop, size: 16),
+                    onPressed: () {
+                      AudioService.stop();
+                      HomePageState.soundState = 0;
+                      setState(() {});
+                    })
+              ],
+            )));
   }
 
   Widget getSuras() {
@@ -386,15 +412,16 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                 ]))));
   }
 
-  void goto(int sura, int aya) {
+  void goto(int sura, int aya) async {
     Prefs.selectedSura = sura;
     Prefs.selectedAya = aya;
     var res = Configs.instance.getPart(sura, aya);
     HomePageState.selectedPage = res[0];
     HomePageState.selectedIndex = res[1];
-    Navigator.push(
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => AudioServiceWidget(child: HomePage())));
+    setState(() {});
   }
 }

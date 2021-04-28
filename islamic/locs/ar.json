@@ -269,5 +269,6 @@
     "undo_t": "Item Deleted.",
     "undo_b": "Undo",
     "net_alert": "ارتباط بین شما و هدایت برقرار نشد!",
-    "reload_l": "تلاش دوباره"
+    "reload_l": "تلاش دوباره",
+    "playing_l": "قرائت در حال پخش است"
 }
