@@ -16,6 +16,7 @@ class Prefs {
   static String get naviMode => instance.getString("naviMode") ?? "sura";
   static double get textScale => instance.getDouble("textScale") ?? 1;
   static int get themeMode => instance.getInt("themeMode") ?? 0;
+  static int get numRuns => instance.getInt("numRuns") ?? 0;
 
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
@@ -33,8 +34,9 @@ class Prefs {
         persons[PType.sound] =
             instance.getStringList(PType.sound.toString()) ?? [];
         Map<String, dynamic> map =
-            jsonDecode(instance.getString("bookmarks") ?? "}{}");
+            jsonDecode(instance.getString("bookmarks") ?? "{}");
         notes = map.cast();
+        instance.setInt("numRuns", numRuns + 1);
         onInit();
         return;
       }
@@ -57,6 +59,7 @@ class Prefs {
           sounds.add("abu_bakr_ash_shaatree");
           break;
       }
+      instance.setInt("numRuns", 0);
       instance.setInt("themeMode", 0);
       instance.setString("naviMode", "sura");
       instance.setString("locale", _locale);
