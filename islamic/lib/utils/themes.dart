@@ -34,7 +34,7 @@ class Themes {
             color: primaries[910], fontSize: 15, fontWeight: FontWeight.w100),
         button: TextStyle(color: primaries[50]),
         headline6: TextStyle(
-            color: primaries[100],
+            color: primaries[920],
             fontFamily: "CubicSans",
             fontSize: 21,
             fontWeight: FontWeight.bold));
