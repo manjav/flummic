@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
+import 'package:islamic/widgets/texts.dart';
 import 'package:share/share.dart';
 
 import '../main.dart';
@@ -239,6 +240,15 @@ class SettingsState extends State<Settings> {
                       .map<DropdownMenuItem<String>>((String value) =>
                           DropdownMenuItem<String>(
                             value: value,
+                            child: Texts.quran(
+                                "",
+                                "قُل إِنَّ هُدَى ۚ  اللَّهِ  ۖ  هُوَ الهُدىٰ ۗ ",
+                                "",
+                                TextStyle(
+                                    fontFamily: value,
+                                    fontSize: 18,
+                                    color: theme.textTheme.bodyText1!.color)),
+                          ))
                       .toList(),
                 )),
             Positioned(
@@ -246,7 +256,7 @@ class SettingsState extends State<Settings> {
                 left: isRtl ? p : null,
                 right: isRtl ? null : p,
                 child: Text(
-                    "${'app_title'.l()}  ${'app_ver'.l()} ${'1.0.1'.n()}",
+                    "${'app_title'.l()}  ${'app_ver'.l()} ${'1.1.2'.n()}",
                     style: theme.textTheme.caption))
           ])),
     ));

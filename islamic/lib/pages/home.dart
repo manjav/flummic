@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
 import 'package:islamic/utils/player.dart';
 import 'package:islamic/widgets/popup.dart';
+import 'package:islamic/widgets/texts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../buttons.dart';
@@ -45,15 +46,17 @@ class HomePageState extends State<HomePage> {
 
     theme = Theme.of(context);
     uthmaniStyle = TextStyle(
-        fontFamily: 'Uthmani',
+        fontFamily: Prefs.font,
         fontSize: 20,
         height: 2,
-        wordSpacing: 2,
+        // wordSpacing: 2,
         color: theme.textTheme.bodyText1!.color);
     headerStyle = TextStyle(
       fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
       fontSize: Prefs.naviMode == "sura" ? 32 : 18,
     );
+    Texts.teal =
+        TextStyle(color: theme.textSelectionTheme.selectionHandleColor);
     if (suraPageController != null) return;
     initAudio();
 
@@ -249,11 +252,8 @@ class HomePageState extends State<HomePage> {
     var i = 0;
     if (hasQuranText) {
       var hizbFlag = getHizbFlag(sura + 1, aya + 1);
-      rows.add(Text(
-          "$hizbFlag ${Configs.instance.quran[sura][aya]} ﴿${(aya + 1).toArabic()}﴾",
-          textAlign: TextAlign.justify,
-          textDirection: TextDirection.rtl,
-          style: uthmaniStyle));
+      rows.add(Texts.quran(hizbFlag, Configs.instance.quran[sura][aya],
+          " ﴿${(aya + 1).toArabic()}﴾", uthmaniStyle));
       ++i;
     }
 
@@ -275,9 +275,9 @@ class HomePageState extends State<HomePage> {
               ? HtmlWidget(
                   "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$text")
               : Text("$text",
-              textAlign: TextAlign.justify,
-              textDirection: dir,
-              style: theme.textTheme.caption),
+                  textAlign: TextAlign.justify,
+                  textDirection: dir,
+                  style: theme.textTheme.caption),
           Avatar(path, 15)
         ],
       ));
@@ -291,7 +291,7 @@ class HomePageState extends State<HomePage> {
     var len = hizbs.length;
     for (var i = 0; i < len; i++) {
       if (hizbs[i].sura > sura) return "";
-      if (hizbs[i].sura == sura && hizbs[i].aya == aya) return "۞";
+      if (hizbs[i].sura == sura && hizbs[i].aya == aya) return "۞ ";
     }
     return "";
   }

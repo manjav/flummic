@@ -80,7 +80,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         letterSpacing: -4,
         height: Localization.isRTL ? 1.1 : 0.1);
     uthmaniStyle = Localization.isRTL
-        ? TextStyle(fontFamily: 'Uthmani', fontSize: 20)
+        ? TextStyle(fontFamily: 'mequran', fontSize: 20)
         : TextStyle(
             fontFamily: 'cubicsans-regular',
             fontSize: 15,

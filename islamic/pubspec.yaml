@@ -49,9 +49,12 @@ flutter:
     - locs/
 
   fonts:
-    - family: Uthmani
+    - family: mequran
       fonts:
         - asset: fonts/me_quran.ttf
+    - family: scheherazade
+      fonts:
+        - asset: fonts/scheherazade.ttf
     - family: CubicSans
       fonts:
         - asset: fonts/cubicsans-regular.ttf
