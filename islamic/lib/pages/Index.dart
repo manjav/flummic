@@ -86,23 +86,23 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             fontSize: 15,
             fontWeight: FontWeight.bold);
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: _toolbarHeight - 8,
-        // toolbarOpacity: toolbarHeight / _toolbarHeight,
-        // title: const Text('TabBar Widget'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: "suras_l".l()),
-            Tab(text: "juzes_l".l()),
-            Tab(text: "notes_l".l())
-          ],
+        appBar: AppBar(
+          toolbarHeight: _toolbarHeight - 8,
+          // toolbarOpacity: toolbarHeight / _toolbarHeight,
+          // title: const Text('TabBar Widget'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: "suras_l".l()),
+              Tab(text: "juzes_l".l()),
+              Tab(text: "notes_l".l())
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [getSuras(), getJuzes(), getNotes()],
-      ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [getSuras(), getJuzes(), getNotes()],
+        ),
         bottomNavigationBar: getAudioLine());
   }
 
@@ -186,12 +186,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       SvgPicture.asset(
                         "images/${sura.type == 0 ? 'meccan' : 'median'}.svg",
                         color: theme.primaryColor,
-                        width: 48,
-                        height: 48,
+                        width: 36,
+                        height: 36,
                       ),
                       Positioned(
-                          top: 16,
-                          bottom: 16,
+                          top: 8,
+                          bottom: 8,
                           right: 4,
                           left: 4,
                           child: Text("${sura.index + 1}",
