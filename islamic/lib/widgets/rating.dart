@@ -3,25 +3,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../utils/localization.dart';
 
 class RatingDialog extends StatefulWidget {
-  /// Disables the cancel button and forces the user to leave a rating
-  final bool force;
-
   /// The initial rating of the rating bar
   final int initialRating;
 
-  /// Returns a RatingDialogResponse with user's rating and comment values
-  final Function(RatingDialogResponse)? onSubmitted;
-
-  /// called when user cancels/closes the dialog
-  final Function? onCancelled;
-
   const RatingDialog({
-    this.onSubmitted,
-    this.onCancelled,
-    this.force = false,
     this.initialRating = 1,
   });
-
   @override
   State<RatingDialog> createState() => RatingDialogState();
 }
@@ -41,9 +28,6 @@ class RatingDialogState extends State<RatingDialog> {
       title: Stack(
         alignment: Alignment.topRight,
         children: <Widget>[
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(12.0),
-          // child:
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
             child: Column(
@@ -102,24 +86,17 @@ class RatingDialogState extends State<RatingDialog> {
                   onPressed: _response.rating == 0
                       ? null
                       : () {
-                          if (!widget.force) Navigator.pop(context);
                           _response.comment = _commentController.text;
-                          widget.onSubmitted?.call(_response);
+                          Navigator.pop(context, _response);
                         },
                 ),
               ],
             ),
-            // ),
           ),
-          if (!widget.force && widget.onCancelled != null) ...[
-            IconButton(
-              icon: const Icon(Icons.close, size: 18),
-              onPressed: () {
-                Navigator.pop(context);
-                widget.onCancelled!.call();
-              },
-            )
-          ]
+          IconButton(
+            icon: const Icon(Icons.close, size: 18),
+            onPressed: () => Navigator.pop(context, _response),
+          )
         ],
       ),
     );
@@ -127,9 +104,6 @@ class RatingDialogState extends State<RatingDialog> {
 }
 
 class RatingDialogResponse {
-  /// The user's comment response
   String comment = '';
-
-  /// The user's rating response
   int rating = 0;
 }
