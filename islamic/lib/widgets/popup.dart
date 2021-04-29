@@ -221,6 +221,26 @@ class SettingsState extends State<Settings> {
                               ))
                       .toList(),
                 )),
+            Generics.text(theme, "select_font".l(), 400, isRtl ? p : null,
+                isRtl ? null : p),
+            Positioned(
+                top: 390,
+                left: isRtl ? p : null,
+                right: isRtl ? null : p,
+                child: DropdownButton<String>(
+                  value: Prefs.font,
+                  style: theme.textTheme.caption,
+                  onChanged: (String? newValue) {
+                    Prefs.instance.setString("font", newValue!);
+                    setState(() {});
+                    widget.updater();
+                  },
+                  items: <String>["mequran", "scheherazade"]
+                      .map<DropdownMenuItem<String>>((String value) =>
+                          DropdownMenuItem<String>(
+                            value: value,
+                      .toList(),
+                )),
             Positioned(
                 bottom: p,
                 left: isRtl ? p : null,

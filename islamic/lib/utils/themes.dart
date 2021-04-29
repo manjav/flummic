@@ -75,8 +75,7 @@ class Themes {
             selectionHandleColor: primaries[600],
             selectionColor: primaries[300]),
         snackBarTheme: SnackBarThemeData(
-            contentTextStyle: TextStyle(
-                fontFamily: "CubicSans", fontSize: 16, color: primaries[900]),
+            contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
             backgroundColor: primaries[500],
             actionTextColor: primaries[50]),
         fontFamily: "CubicSans",
@@ -155,7 +154,7 @@ class Themes {
                   fontWeight: FontWeight.bold)))),
       textSelectionTheme: TextSelectionThemeData(
           cursorColor: primaries[500],
-          selectionHandleColor: primaries[200],
+          selectionHandleColor: primaries[300],
           selectionColor: primaries[600]),
       snackBarTheme: SnackBarThemeData(
           contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),

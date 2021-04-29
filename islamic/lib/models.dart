@@ -14,6 +14,7 @@ class Prefs {
 
   static String get locale => instance.getString("locale") ?? "en";
   static String get naviMode => instance.getString("naviMode") ?? "sura";
+  static String get font => instance.getString("font") ?? "mequran";
   static double get textScale => instance.getDouble("textScale") ?? 1;
   static int get themeMode => instance.getInt("themeMode") ?? 0;
   static int get numRuns => instance.getInt("numRuns") ?? 0;
