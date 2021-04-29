@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
 import 'package:islamic/utils/player.dart';
@@ -265,11 +266,15 @@ class HomePageState extends State<HomePage> {
       var no = i < 1 ? (aya + 1).n(texts.flag) : '';
       if (dir == TextDirection.rtl) no = no.split('').reversed.join();
       if (no.length > 0) no += '. ';
-      var pre = "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no";
+      var text =
+          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${texts.data[sura][aya]}";
       rows.add(Stack(
         textDirection: dir,
         children: [
-          Text("$pre${texts.data[sura][aya]}",
+          texts.path == "en.transliteration"
+              ? HtmlWidget(
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$text")
+              : Text("$text",
               textAlign: TextAlign.justify,
               textDirection: dir,
               style: theme.textTheme.caption),
