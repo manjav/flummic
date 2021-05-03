@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:android_intent/android_intent.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -442,6 +443,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       var data = await rootBundle.loadString('texts/buildconfigs.json');
       var configs = jsonDecode(data);
       if (configs["target"] == "cafebazaar") {
+        if (Platform.isAndroid) {
+          AndroidIntent intent = AndroidIntent(
+              data: 'bazaar://details?id=com.gerantech.muslim.holy.quran',
+              action: 'android.intent.action.EDIT',
+              package: 'com.farsitel.bazaar');
+          await intent.launch();
+        }
         return;
       }
 
