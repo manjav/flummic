@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:islamic/models.dart';
@@ -435,6 +439,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     // Send to store
     if (Prefs.rate == 5) {
       Prefs.instance.setInt("rate", 500);
+      var data = await rootBundle.loadString('texts/buildconfigs.json');
+      var configs = jsonDecode(data);
+      if (configs["target"] == "cafebazaar") {
+        return;
+      }
+
       final InAppReview inAppReview = InAppReview.instance;
       if (await inAppReview.isAvailable()) {
         if (!Prefs.instance.containsKey("rated")) {

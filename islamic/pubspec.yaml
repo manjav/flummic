@@ -45,6 +45,7 @@ flutter:
 
   assets:
     - images/
+    - texts/
     - anims/
     - locs/
 
