@@ -60,7 +60,7 @@ class PersonPageState extends State<PersonPage>
                   automaticallyImplyLeading: false,
                 ),
                 body: ReorderableListView(
-                    children: personItems(context),
+                    children: personItems(context, theme),
                     onReorder: (int oldIndex, int newIndex) {
                       setState(() {
                         if (oldIndex < newIndex) newIndex -= 1;
@@ -103,7 +103,10 @@ class PersonPageState extends State<PersonPage>
     setState(() {});
   }
 
-  List<Widget> personItems(BuildContext context) {
+  List<Widget> personItems(BuildContext context, ThemeData theme) {
+    var color = Prefs.persons[widget.type]!.length > 1
+        ? theme.buttonTheme.colorScheme!.onSurface
+        : theme.buttonTheme.colorScheme!.onSurface.withOpacity(0.38);
     var items = <Widget>[];
     for (var t in Prefs.persons[widget.type]!) {
       var p = configPersons[t];
@@ -115,7 +118,7 @@ class PersonPageState extends State<PersonPage>
             title: Text(p!.title),
             subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
             trailing: IconButton(
-                icon: Icon(Icons.delete),
+                icon: Icon(Icons.delete, color: color),
                 onPressed: () => removePerson(context, p)),
           )));
     }
@@ -123,6 +126,14 @@ class PersonPageState extends State<PersonPage>
   }
 
   void removePerson(BuildContext context, Person p) {
+    if (Prefs.persons[widget.type]!.length <= 1) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        "forbiden_l".l(),
+        textDirection: Localization.dir,
+      )));
+      return;
+    }
     var index = Prefs.persons[widget.type]!.indexOf(p.path);
     Prefs.removePerson(p.type, p.path);
     setState(() => p.deselect());
