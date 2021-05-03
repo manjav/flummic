@@ -59,7 +59,6 @@ class HomePageState extends State<HomePage> {
     if (suraPageController != null) return;
     initAudio();
 
-    toolbarHeight = _toolbarHeight;
     suraPageController =
         PageController(keepPage: true, initialPage: selectedPage);
     suraPageController!.addListener(() {
@@ -73,18 +72,6 @@ class HomePageState extends State<HomePage> {
           toolbarHeight = _toolbarHeight;
         });
       }
-    });
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Future.delayed(Duration(milliseconds: 2000), () {
-        var controller =
-            ayaList.itemScrollController?.of(context)?.primary.scrollController;
-        controller?.addListener(() {
-          onPageScroll(controller.position);
-        });
-      });
-
-      if (selectedIndex > 0) gotoIndex(selectedIndex, 1200);
     });
   }
 
@@ -152,18 +139,29 @@ class HomePageState extends State<HomePage> {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     // selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
-    return ayaList = ScrollablePositionedList.builder(
-      initialAlignment: 0.15,
+    var initMode = ayaList == null;
+    ayaList = ScrollablePositionedList.builder(
+      initialAlignment: selectedIndex > 0 ? 0.12 : 0,
+      initialScrollIndex: selectedIndex,
       itemScrollController: ItemScrollController(),
       itemPositionsListener: ItemPositionsListener.create(),
       padding: EdgeInsets.only(top: _toolbarHeight, bottom: 76),
       itemCount: Configs.instance.pageItems[p].length,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
     );
+    if (initMode) Future.delayed(Duration(milliseconds: 10), listenScroll);
+    return ayaList!;
+  }
+
+  void listenScroll() {
+      var controller =
+          ayaList!.itemScrollController?.of(context)?.primary.scrollController;
+      controller?.addListener(() {
+        onPageScroll(controller.position);
+      });
   }
 
   void onPageScroll(ScrollPosition position) {
-    if (position.pixels < 122) return;
     var changes = startScrollBarIndicator - position.pixels;
     startScrollBarIndicator = position.pixels;
     var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
@@ -394,9 +392,9 @@ class HomePageState extends State<HomePage> {
   void gotoIndex(int index, int duration) {
     print("index $index, duration $duration");
     if (duration == 0) {
-      ayaList.itemScrollController!.jumpTo(index: index);
+      ayaList!.itemScrollController!.jumpTo(index: index);
     } else {
-      ayaList.itemScrollController!.scrollTo(
+      ayaList!.itemScrollController!.scrollTo(
           index: index,
           duration: Duration(milliseconds: duration),
           curve: Curves.easeInOut);
