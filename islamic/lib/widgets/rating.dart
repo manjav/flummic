@@ -14,8 +14,7 @@ class RatingDialog extends StatefulWidget {
 }
 
 class RatingDialogState extends State<RatingDialog> {
-  final _commentController = TextEditingController();
-  final _response = RatingDialogResponse();
+  int _response = 0;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,19 +28,19 @@ class RatingDialogState extends State<RatingDialog> {
         alignment: Alignment.topRight,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text(
-                  "rating_l".l(),
+                  "rate_l".l(),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headline6,
                 ),
                 const SizedBox(height: 15),
                 Text(
-                  "rating_m".l(),
+                  "rate_m".l(),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyText2,
                 ),
@@ -58,35 +57,22 @@ class RatingDialogState extends State<RatingDialog> {
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
                     onRatingUpdate: (rating) {
-                      _response.rating = rating.toInt();
+                      _response = rating.toInt();
                       setState(() {});
                     },
                     itemBuilder: (context, _) => Icon(
                       Icons.star,
-                      color: Colors.amber[_response.rating == 0 ? 800 : 500],
+                      color: Colors.amber[_response == 0 ? 800 : 500],
                     ),
                   ),
                 ),
-                _response.rating < 5
-                    ? TextField(
-                        controller: _commentController,
-                        textAlign: TextAlign.center,
-                        textInputAction: TextInputAction.newline,
-                        minLines: 1,
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          hintText: "rating_p".l(),
-                        ),
-                      )
-                    : SizedBox(height: 56),
                 TextButton(
                   child: Text(
                     "save_l".l(),
                   ),
-                  onPressed: _response.rating == 0
+                  onPressed: _response == 0
                       ? null
                       : () {
-                          _response.comment = _commentController.text;
                           Navigator.pop(context, _response);
                         },
                 ),
@@ -103,7 +89,71 @@ class RatingDialogState extends State<RatingDialog> {
   }
 }
 
-class RatingDialogResponse {
-  String comment = '';
-  int rating = 0;
+class ReviewDialog extends StatefulWidget {
+  @override
+  State<ReviewDialog> createState() => ReviewDialogState();
+}
+
+class ReviewDialogState extends State<ReviewDialog> {
+  final _commentController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _commentController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        titlePadding: EdgeInsets.zero,
+        title: Container(
+          width: 360,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const SizedBox(height: 15),
+                    TextField(
+                        autofocus: true,
+                        controller: _commentController,
+                        textAlign: TextAlign.center,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 1,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          hintText: "rate_p".l(),
+                        )),
+                    TextButton(
+                      child: Text(
+                        "save_l".l(),
+                      ),
+                      onPressed: _commentController.text == ""
+                          ? null
+                          : () {
+                              Navigator.pop(context, _commentController.text);
+                            },
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, size: 18),
+                onPressed: () =>
+                    Navigator.pop(context, _commentController.text),
+              )
+            ],
+          ),
+        ));
+  }
 }

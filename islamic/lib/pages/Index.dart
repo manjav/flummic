@@ -442,24 +442,31 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     if (Prefs.rate == 5 || Prefs.numRuns <= Prefs.rate) return;
 
     // Repeat rating request
-    RatingDialogResponse response = await showDialog(
+    int rating = await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) =>
             WillPopScope(onWillPop: () async => false, child: RatingDialog()));
 
-    Prefs.instance.setInt(
-        "rate", response.rating >= 5 ? response.rating : (Prefs.rate + 10));
+    Prefs.instance.setInt("rate", rating >= 5 ? rating : (Prefs.rate + 10));
 
-    if (response.rating > 0)
+    String comment = "";
+    if (rating > 0) {
+      if (rating < 5) {
+        comment = await showDialog(
+            context: context,
+            builder: (context) => WillPopScope(
+                onWillPop: () async => false, child: ReviewDialog()));
+      }
       AppState.analytics.logEvent(
         name: 'rate',
         parameters: <String, dynamic>{
           'numRuns': Prefs.numRuns,
-          'rating': response.rating,
-          'comment': response.comment
+          'rating': rating,
+          'comment': comment
         },
       );
-    print(" Prefs.rate ${Prefs.rate} response.rating ${response.rating}");
+    }
+    print(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
   }
 }
