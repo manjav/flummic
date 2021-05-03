@@ -483,18 +483,18 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             builder: (context) => WillPopScope(
                 onWillPop: () async => false, child: ReviewDialog()));
       }
-      AppState.analytics.logEvent(
-        name: 'rate',
-        parameters: <String, dynamic>{
-          'numRuns': Prefs.numRuns,
-          'rating': rating,
-          'comment': comment
-        },
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("thanks_l".l()),
+      ));
     }
+    AppState.analytics.logEvent(
+      name: 'rate',
+      parameters: <String, dynamic>{
+        'numRuns': Prefs.numRuns,
+        'rating': rating,
+        'comment': comment
+      },
+    );
     print(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("thanks_l".l()),
-    ));
   }
 }
