@@ -468,5 +468,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       );
     }
     print(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("thanks_l".l()),
+    ));
   }
 }
