@@ -249,10 +249,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             suras.sort((Sura l, Sura r) {
               if (value == "ayas")
                 return l.ayas.compareTo(r.ayas);
-              else if (value == "order")
-                return l.order.compareTo(r.order);
-              else
-                return l.index.compareTo(r.index);
+              else if (value == "order") return l.order.compareTo(r.order);
+              return l.index.compareTo(r.index);
             });
           }
           setState(() {});

@@ -177,10 +177,17 @@ class PersonListPageState extends State<PersonListPage> {
     super.initState();
 
     defaultPersons = <Person>[];
-    persons = defaultPersons = widget.configPersons.values
-        .where((p) => p.mode == widget.mode)
-        .toList();
+    var foreign = <Person>[];
+    for (var p in widget.configPersons.values) {
+      if (p.mode != widget.mode) continue;
+      if (p.flag == Localization.languageCode)
+        defaultPersons!.add(p);
+      else
+        foreign.add(p);
+    }
+    defaultPersons!.addAll(foreign);
 
+    persons = defaultPersons!;
     searchController.addListener(() {
       setState(() => persons = search(searchController.text));
     });
