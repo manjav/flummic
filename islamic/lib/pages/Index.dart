@@ -409,7 +409,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                               theme,
                               sura,
                               aya,
-                              () => setState(() {})))),
+                              (string, number) => setState(() {})))),
                   IconButton(
                       icon: Icon(
                         Icons.delete,
