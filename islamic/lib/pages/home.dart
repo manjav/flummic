@@ -25,15 +25,18 @@ class HomePageState extends State<HomePage> {
   static int selectedPage = 0;
   static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
-  late ScrollablePositionedList ayaList;
+  ScrollablePositionedList? ayaList;
   PageController? suraPageController;
-  late TextStyle headerStyle;
+  TextStyle headerStyle = TextStyle(
+    fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
+    fontSize: Prefs.naviMode == "sura" ? 32 : 18,
+  );
   TextStyle titlesStyle =
       TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
-  late TextStyle uthmaniStyle;
+  TextStyle? uthmaniStyle;
   // int selectedSura = 0;
   // int selectedAya = 0;
-  late double toolbarHeight;
+  double toolbarHeight = 56;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
   Person? playingSound;
@@ -49,12 +52,7 @@ class HomePageState extends State<HomePage> {
         fontFamily: Prefs.font,
         fontSize: 20,
         height: 2,
-        // wordSpacing: 2,
         color: theme.textTheme.bodyText1!.color);
-    headerStyle = TextStyle(
-      fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
-      fontSize: Prefs.naviMode == "sura" ? 32 : 18,
-    );
     Texts.teal =
         TextStyle(color: theme.textSelectionTheme.selectionHandleColor);
     if (suraPageController != null) return;
