@@ -106,7 +106,6 @@ class ReviewDialogState extends State<ReviewDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

@@ -195,12 +195,19 @@ class HomePageState extends State<HomePage> {
       Prefs.getNote(part.sura, part.aya) == null
           ? SizedBox()
           : Positioned(
-              top: -2,
-              left: 8,
-              child: Icon(
-                Icons.bookmark_sharp,
-                size: 14,
-                color: theme.textTheme.caption!.color,
+              top: -18,
+              child: IconButton(
+                icon: Icon(
+                  Icons.bookmark_sharp,
+                  size: 14,
+                  color: theme.textTheme.caption!.color,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => Generics.editNote(
+                          context, theme, part.sura, part.aya, null));
+                },
               )),
       Positioned(
           top: -8,

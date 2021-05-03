@@ -291,7 +291,7 @@ class Generics {
   }
 
   static Widget editNote(BuildContext context, ThemeData theme, int sura,
-      int aya, Function updater) {
+      int aya, Function? updater) {
     final textController =
         TextEditingController(text: Prefs.getNote(sura, aya));
     return AlertDialog(
@@ -338,7 +338,7 @@ class Generics {
                       TextButton(
                         child: Text("save_l".l()),
                         onPressed: () {
-                          updater("note", 0);
+                          updater?.call("note", 0);
                           Prefs.addNote(sura, aya, textController.text);
                           Navigator.of(context).pop();
                         },
