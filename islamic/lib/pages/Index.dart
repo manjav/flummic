@@ -431,17 +431,24 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   void showRating() async {
-    print("showRating last rate ${Prefs.rate}, num runs: ${Prefs.numRuns}");
+    print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
     // Send to store
     if (Prefs.rate == 5) {
+      Prefs.instance.setInt("rate", 500);
       final InAppReview inAppReview = InAppReview.instance;
-      if (await inAppReview.isAvailable()) inAppReview.requestReview();
+      if (await inAppReview.isAvailable()) {
+        if (!Prefs.instance.containsKey("rated")) {
+          inAppReview.requestReview();
+          Prefs.instance.setBool("rated", true);
+          return;
+        }
+        inAppReview.openStoreListing();
+      }
       return;
     }
 
-    if (Prefs.rate == 5 || Prefs.numRuns <= Prefs.rate) return;
-
     // Repeat rating request
+    if (Prefs.numRuns <= Prefs.rate) return;
     int rating = await showDialog(
         barrierDismissible: false,
         context: context,
