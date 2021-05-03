@@ -4,6 +4,7 @@ class Themes {
   static Map<int, Color> get primaries => <int, Color>{
         50: Color(0xFFF0F9FF),
         100: Color(0xFFD2E6F0),
+        150: Color(0xFF445555),
         200: Color(0xFF90C0CB),
         300: Color(0xFF4DAFB6),
         400: Color(0xFF269DA6),
@@ -78,6 +79,8 @@ class Themes {
             contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
             backgroundColor: primaries[500],
             actionTextColor: primaries[50]),
+        inputDecorationTheme:
+            InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
         fontFamily: "CubicSans",
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
@@ -160,6 +163,8 @@ class Themes {
           contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
           backgroundColor: primaries[700],
           actionTextColor: primaries[500]),
+      inputDecorationTheme:
+          InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
       fontFamily: "CubicSans",
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],

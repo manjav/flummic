@@ -294,15 +294,14 @@ class Generics {
       int aya, Function updater) {
     final textController =
         TextEditingController(text: Prefs.getNote(sura, aya));
-    return Dialog(
+    return AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12.0),
         ),
-        child: Container(
-            width: 360,
-            height: 360,
-            clipBehavior: Clip.none,
-            padding: EdgeInsets.only(top: 44, right: 16, left: 16),
+        titlePadding: EdgeInsets.fromLTRB(16, 40, 16, 8),
+        // scrollable: true,
+        title: Container(
+            width: 320,
             child: Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.topCenter,
@@ -321,30 +320,51 @@ class Generics {
                           size: 32,
                           color: theme.primaryColor,
                         ))),
-                Positioned(
-                    child: TextFormField(
-                  autofocus: true,
-                  controller: textController,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    hintText: 'note_hint'.l(),
-                  ),
-                  minLines: 1, //Normal textInputField will be displayed
-                  maxLines: 6, //Normal textInputField will be displayed
-                )),
-                Positioned(
-                  bottom: 14,
-                  child: TextButton(
-                    child: Text("save_l".l()),
-                    onPressed: () {
-                      updater("note", 0);
-                      Prefs.addNote(sura, aya, textController.text);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextFormField(
+                        autofocus: true,
+                        controller: textController,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText: 'note_hint'.l(),
+                        ),
+                        minLines: 1, //Normal textInputField will be displayed
+                        maxLines: 6, //Normal textInputField will be displayed
+                      ),
+                      SizedBox(height: 8),
+                      TextButton(
+                        child: Text("save_l".l()),
+                        onPressed: () {
+                          updater("note", 0);
+                          Prefs.addNote(sura, aya, textController.text);
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ])
               ],
             )));
   }
+
+  /* static void toast(BuildContext context, ThemeData theme, String text) {
+    showDialog(
+        context: context,
+        barrierColor: Colors.transparent,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+            backgroundColor: Color(0x66111111),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            titlePadding: EdgeInsets.fromLTRB(8, 6, 8, 8),
+            // scrollable: true,
+            title: Center(
+              child: Text(
+                text,
+                style: theme.textTheme.caption,
+              ),
+            )));
+  } */
 }
