@@ -39,7 +39,8 @@ class HomePageState extends State<HomePage> {
   double toolbarHeight = 56;
   double startScrollBarIndicator = 0;
   bool hasQuranText = false;
-  Person? playingSound;
+  Person playingSound =
+      Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   late ThemeData theme;
   bool isPlaying = false;
   static int soundState = 0;
@@ -329,12 +330,12 @@ class HomePageState extends State<HomePage> {
                 Positioned(
                     top: 10 - coef * 0.11,
                     right: 86 - coef * 0.4,
-                    child: Avatar(playingSound!.path, 20 - coef * 0.12)),
+                    child: Avatar(playingSound.path, 20 - coef * 0.12)),
                 Positioned(
                     top: 10 - coef * 0.2,
                     right: 132 - coef * 0.65,
                     child: Text(
-                      playingSound!.title,
+                      playingSound.title,
                       style: theme.textTheme.bodyText2,
                       textAlign: TextAlign.right,
                     )),
@@ -466,7 +467,7 @@ class HomePageState extends State<HomePage> {
     if (AudioService.connected && AudioService.running) return;
 
     List<String>? sounds = Prefs.persons[PType.sound];
-    playingSound = Configs.instance.sounds[sounds![0]];
+    playingSound = Configs.instance.sounds[sounds![0]]!;
     setState(() {});
     soundState = 2;
     await AudioService.start(
@@ -486,7 +487,7 @@ class HomePageState extends State<HomePage> {
       var event = json.decode(state as String);
       if (event["type"] == "select") {
         var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
-        playingSound = Configs.instance.sounds[sounds[event["data"][1]]];
+        playingSound = Configs.instance.sounds[sounds[event["data"][1]]]!;
         soundState = 1;
         goto(aya.sura, aya.aya);
       } else if (event["type"] == "stop") {
