@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static int selectedPage = 0;
   static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
@@ -31,6 +31,7 @@ class HomePageState extends State<HomePage> {
     fontFamily: Prefs.naviMode == "sura" ? 'Titles' : null,
     fontSize: Prefs.naviMode == "sura" ? 32 : 18,
   );
+  AnimationController? headerAnimation;
   TextStyle titlesStyle =
       TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
   TextStyle? uthmaniStyle;
@@ -72,6 +73,12 @@ class HomePageState extends State<HomePage> {
           toolbarHeight = _toolbarHeight;
         });
       }
+    });
+    headerAnimation = AnimationController(
+        duration: const Duration(milliseconds: 500), value: 1, vsync: this);
+    headerAnimation!.addListener(() {
+      toolbarHeight = headerAnimation!.value * _toolbarHeight;
+      setState(() {});
     });
   }
 
@@ -153,8 +160,8 @@ class HomePageState extends State<HomePage> {
   }
 
   void listenScroll() {
-      var controller =
-          ayaList!.itemScrollController?.of(context)?.primary.scrollController;
+    var controller =
+        ayaList!.itemScrollController?.of(context)?.primary.scrollController;
     controller?.addListener(() => onPageScroll(controller.position));
   }
 
@@ -172,11 +179,12 @@ class HomePageState extends State<HomePage> {
     var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
     var part = Configs.instance.pageItems[position][index];
     return GestureDetector(
-              onTap: () => setState(() {
-                    // var tween = Tween<double>(begin: -200, end: 0);
-                    toolbarHeight = _toolbarHeight;
-                  }),
-              onLongPress: () => showAyaDetails(part.sura, part.aya),
+        onTap: () {
+          headerAnimation!.value = toolbarHeight / _toolbarHeight;
+          headerAnimation!.animateTo(toolbarHeight > 0.0 ? 0.0 : 1.0,
+              curve: Curves.easeOutExpo);
+        },
+        onLongPress: () => showAyaDetails(part.sura, part.aya),
         child: Stack(children: [
           Container(
               color: index == selectedIndex ? theme.focusColor : color,
@@ -186,31 +194,31 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: textsProvider(part.sura, part.aya)))),
-      Prefs.getNote(part.sura, part.aya) == null
-          ? SizedBox()
-          : Positioned(
-              top: -18,
+          Prefs.getNote(part.sura, part.aya) == null
+              ? SizedBox()
+              : Positioned(
+                  top: -18,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.bookmark_sharp,
+                      size: 14,
+                      color: theme.textTheme.caption!.color,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Generics.editNote(
+                              context, theme, part.sura, part.aya, null));
+                    },
+                  )),
+          Positioned(
+              top: -8,
+              right: -14,
               child: IconButton(
-                icon: Icon(
-                  Icons.bookmark_sharp,
-                  size: 14,
-                  color: theme.textTheme.caption!.color,
-                ),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => Generics.editNote(
-                          context, theme, part.sura, part.aya, null));
-                },
+                icon: Icon(Icons.more_vert,
+                    size: 16, color: theme.textTheme.caption!.color),
+                onPressed: () => showAyaDetails(part.sura, part.aya),
               )),
-      Positioned(
-          top: -8,
-          right: -14,
-          child: IconButton(
-            icon: Icon(Icons.more_vert,
-                size: 16, color: theme.textTheme.caption!.color),
-            onPressed: () => showAyaDetails(part.sura, part.aya),
-          )),
         ]));
   }
 
