@@ -171,21 +171,21 @@ class HomePageState extends State<HomePage> {
   Widget ayaItemBuilder(int position, int index) {
     var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
     var part = Configs.instance.pageItems[position][index];
-    return Stack(children: [
-      Container(
-          color: index == selectedIndex ? theme.focusColor : color,
-          child: GestureDetector(
+    return GestureDetector(
               onTap: () => setState(() {
                     // var tween = Tween<double>(begin: -200, end: 0);
                     toolbarHeight = _toolbarHeight;
                   }),
               onLongPress: () => showAyaDetails(part.sura, part.aya),
+        child: Stack(children: [
+          Container(
+              color: index == selectedIndex ? theme.focusColor : color,
               child: Padding(
                   padding:
                       EdgeInsets.only(top: 14, right: 16, bottom: 5, left: 16),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: textsProvider(part.sura, part.aya))))),
+                      children: textsProvider(part.sura, part.aya)))),
       Prefs.getNote(part.sura, part.aya) == null
           ? SizedBox()
           : Positioned(
@@ -211,7 +211,7 @@ class HomePageState extends State<HomePage> {
                 size: 16, color: theme.textTheme.caption!.color),
             onPressed: () => showAyaDetails(part.sura, part.aya),
           )),
-    ]);
+        ]));
   }
 
   void showAyaDetails(int sura, int aya) {
