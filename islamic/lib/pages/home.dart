@@ -17,6 +17,7 @@ import '../pages/persons.dart';
 import '../utils/localization.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
   @override
   HomePageState createState() => HomePageState();
 }
@@ -25,6 +26,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static int selectedPage = 0;
   static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
+  double toolbarHeight = 56;
   ScrollablePositionedList? ayaList;
   PageController? suraPageController;
   TextStyle headerStyle = TextStyle(
@@ -35,10 +37,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TextStyle titlesStyle =
       TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
   TextStyle? uthmaniStyle;
-  // int selectedSura = 0;
-  // int selectedAya = 0;
-  double toolbarHeight = 56;
-  double startScrollBarIndicator = 0;
   bool hasQuranText = false;
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
@@ -67,9 +65,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (selectedPage != page) {
         setState(() {
           selectedPage = page;
-          // var res = Configs.instance.pageItems[page][0];
-          // Prefs.selectedSura = res.sura;
-          // Prefs.selectedAya = res.aya;
+          setLast(0);
           toolbarHeight = _toolbarHeight;
         });
       }
@@ -155,6 +151,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ayaList!.itemPositionsNotifier!.itemPositions.value.toList();
             for (var item in items) {
               if (item.itemLeadingEdge > 0.1 && item.itemTrailingEdge < 0.5) {
+                setLast(item.index);
                 return true;
               }
             }
@@ -162,14 +159,20 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           return true;
         },
         child: ayaList = ScrollablePositionedList.builder(
-      initialAlignment: selectedIndex > 0 ? 0.12 : 0,
-      initialScrollIndex: selectedIndex,
-      itemScrollController: ItemScrollController(),
-      itemPositionsListener: ItemPositionsListener.create(),
-      padding: EdgeInsets.only(top: _toolbarHeight, bottom: 76),
-      itemCount: Configs.instance.pageItems[p].length,
-      itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
+          initialAlignment: selectedIndex > 0 ? 0.12 : 0,
+          initialScrollIndex: selectedIndex,
+          itemScrollController: ItemScrollController(),
+          itemPositionsListener: ItemPositionsListener.create(),
+          padding: EdgeInsets.only(top: _toolbarHeight, bottom: 76),
+          itemCount: Configs.instance.pageItems[p].length,
+          itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
         ));
+  }
+
+  void setLast(int index) {
+    print("$index ${Configs.instance.pageItems[selectedPage][index].index}");
+    Prefs.instance
+        .setInt("last", Configs.instance.pageItems[selectedPage][index].index);
   }
 
   void onPageScroll(double changes) {

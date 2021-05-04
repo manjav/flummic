@@ -42,7 +42,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   double startScrollBarIndicator = 0;
   late ScrollController suraListController;
 
-  late Tween<double> tween;
   late AnimationController controller;
 
   @override
@@ -56,7 +55,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     controller.addListener(() {
       setState(() {});
     });
-    tween = Tween<double>(begin: 0.0, end: 2.800);
 
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
@@ -112,29 +110,51 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   Widget getAudioLine() {
-    if (HomePageState.soundState != 1) return SizedBox();
-    return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Container(
-            color: theme.appBarTheme.backgroundColor,
-            height: 36,
-            child: Row(
-              children: [
-                SizedBox(width: 4),
-                // Avatar(quran!.playingSound!.path, 12),
-                // SizedBox(width: 4),
-                Expanded(
-                    child: Text("playing_l".l(),
-                        style: theme.textTheme.bodyText2)),
-                IconButton(
-                    icon: Icon(Icons.stop, size: 16),
-                    onPressed: () {
-                      AudioService.stop();
-                      HomePageState.soundState = 0;
-                      setState(() {});
-                    })
-              ],
-            )));
+    var last = Configs.instance.navigations["all"]![0][Prefs.last];
+    var sura = Configs.instance.metadata.suras[last.sura];
+    return Container(
+        height: HomePageState.soundState != 1 ? 64 : 100,
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          GestureDetector(
+              onTap: () => goto(last.sura, last.aya),
+              child: Container(
+                  height: 64,
+                  color: theme.buttonColor,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          right: Localization.isRTL ? 16 : 0,
+                          left: Localization.isRTL ? 0 : 16),
+                      child: Row(children: [
+                        Icon(Icons.arrow_back),
+                        SizedBox(width: 16),
+                        Text(
+                          "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
+                          style: theme.textTheme.subtitle1,
+                        ),
+                      ])))),
+          HomePageState.soundState != 1
+              ? SizedBox()
+              : Container(
+                  height: 36,
+                  color: theme.appBarTheme.backgroundColor,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 16),
+                      Expanded(
+                          child: Text("playing_l".l(),
+                              textDirection: Localization.dir,
+                              style: theme.textTheme.bodyText2)),
+                      IconButton(
+                          icon: Icon(Icons.stop, size: 16),
+                          onPressed: () {
+                            AudioService.stop();
+                            HomePageState.soundState = 0;
+                            setState(() {});
+                          })
+                    ],
+                  ))
+        ]));
   }
 
   Widget getSuras() {
@@ -423,9 +443,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   void goto(int sura, int aya) async {
     Prefs.selectedSura = sura;
     Prefs.selectedAya = aya;
-    var res = Configs.instance.getPart(sura, aya);
-    HomePageState.selectedPage = res[0];
-    HomePageState.selectedIndex = res[1];
+    var part = Configs.instance.getPart(sura, aya);
+    HomePageState.selectedPage = part[0];
+    HomePageState.selectedIndex = part[1];
+    Prefs.instance.setInt("last", part[2]);
     await Navigator.push(
         context,
         MaterialPageRoute(

@@ -85,8 +85,7 @@ class SearchPageState extends State<SearchPage> {
               var p = Configs.instance.getPart(s.sura, s.aya);
               HomePageState.selectedPage = p[0];
               HomePageState.selectedIndex = p[1];
-              // Prefs.selectedSura = s.sura;
-              // Prefs.selectedAya = s.aya;
+              Prefs.instance.setInt("last", p[2]);
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },

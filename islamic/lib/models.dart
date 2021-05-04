@@ -19,6 +19,7 @@ class Prefs {
   static int get themeMode => instance.getInt("themeMode") ?? 0;
   static int get numRuns => instance.getInt("numRuns") ?? 0;
   static int get rate => instance.getInt("rate") ?? 3;
+  static int get last => instance.getInt("last") ?? 0;
 
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
@@ -247,10 +248,10 @@ class Configs {
   }
 
   List<int> getPart(int sura, int aya) {
-    if (Prefs.naviMode == "sura") return [sura, aya];
     var a = navigations["sura"]![sura][aya];
-    if (Prefs.naviMode == "juze") return [a.juze, a.juzeIndex];
-    return [a.page, a.pageIndex];
+    if (Prefs.naviMode == "sura") return [sura, aya, a.index];
+    if (Prefs.naviMode == "juze") return [a.juze, a.juzeIndex, a.index];
+    return [a.page, a.pageIndex, a.index];
   }
 }
 
