@@ -146,7 +146,22 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     selectedIndex = selectedPage == p ? selectedIndex : 0;
-    ayaList = ScrollablePositionedList.builder(
+    return NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollUpdateNotification) {
+            onPageScroll(-scrollNotification.scrollDelta!);
+          } else if (scrollNotification is ScrollEndNotification) {
+            var items =
+                ayaList!.itemPositionsNotifier!.itemPositions.value.toList();
+            for (var item in items) {
+              if (item.itemLeadingEdge > 0.1 && item.itemTrailingEdge < 0.5) {
+                return true;
+              }
+            }
+          }
+          return true;
+        },
+        child: ayaList = ScrollablePositionedList.builder(
       initialAlignment: selectedIndex > 0 ? 0.12 : 0,
       initialScrollIndex: selectedIndex,
       itemScrollController: ItemScrollController(),
@@ -154,20 +169,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       padding: EdgeInsets.only(top: _toolbarHeight, bottom: 76),
       itemCount: Configs.instance.pageItems[p].length,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
-    );
-    Future.delayed(Duration(milliseconds: 10), listenScroll);
-    return ayaList!;
+        ));
   }
 
-  void listenScroll() {
-    var controller =
-        ayaList!.itemScrollController?.of(context)?.primary.scrollController;
-    controller?.addListener(() => onPageScroll(controller.position));
-  }
-
-  void onPageScroll(ScrollPosition position) {
-    var changes = startScrollBarIndicator - position.pixels;
-    startScrollBarIndicator = position.pixels;
+  void onPageScroll(double changes) {
     var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
     if (toolbarHeight != h) {
       toolbarHeight = h;
