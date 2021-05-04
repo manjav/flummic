@@ -145,7 +145,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget suraPageBuilder(BuildContext context, int p) {
-    // selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
+    selectedIndex = selectedPage == p ? selectedIndex : 0;
     ayaList = ScrollablePositionedList.builder(
       initialAlignment: selectedIndex > 0 ? 0.12 : 0,
       initialScrollIndex: selectedIndex,
