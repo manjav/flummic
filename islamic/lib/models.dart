@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -320,11 +321,11 @@ class Person {
   int? size;
   PType type;
   late PState state;
-  late Loader loader;
   double progress = 0;
   late List<List<String>> data;
   late String url, path, name, ename, flag, mode;
 
+  Loader? _loader;
   Timer? _removeTimer;
 
   Person(this.type, p) {
@@ -352,7 +353,7 @@ class Person {
     if (onDone != null)
       _removeTimer = Timer(duration!, () {
         _removeTimer!.cancel();
-    Prefs.removePerson(type, path);
+        Prefs.removePerson(type, path);
         state = PState.ready;
         onDone();
       });
@@ -372,8 +373,8 @@ class Person {
   void load(Function onDone, Function(double)? onProgress,
       Function(dynamic)? onError) {
     state = PState.downloading;
-    loader = Loader();
-    loader.load(path, url, (String _data) {
+    _loader = Loader();
+    _loader!.load(path, url, (String _data) {
       var list = json.decode(_data);
       data = <List<String>>[];
       for (var s in list) {
@@ -393,7 +394,7 @@ class Person {
 
   void cancelLoading() {
     if (state != PState.downloading) return;
-    loader.abort();
+    _loader!.abort();
     state = PState.waiting;
   }
 
