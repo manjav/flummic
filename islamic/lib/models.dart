@@ -313,7 +313,7 @@ class Search {
   Search(this.sura, this.aya, this.index);
 }
 
-enum PState { waiting, downloading, ready, selected }
+enum PState { waiting, downloading, ready, selected, removing }
 enum PType { text, sound, athan }
 
 class Person {
@@ -324,6 +324,8 @@ class Person {
   double progress = 0;
   late List<List<String>> data;
   late String url, path, name, ename, flag, mode;
+
+  Timer? _removeTimer;
 
   Person(this.type, p) {
     state = type == PType.text ? PState.waiting : PState.ready;
@@ -345,9 +347,20 @@ class Person {
       onSelecFinish(onDone);
   }
 
-  void deselect() {
-    state = PState.ready;
+  void deselect(Duration? duration, Function? onDone) async {
+    state = onDone != null ? PState.removing : PState.ready;
+    if (onDone != null)
+      _removeTimer = Timer(duration!, () {
+        _removeTimer!.cancel();
     Prefs.removePerson(type, path);
+        state = PState.ready;
+        onDone();
+      });
+  }
+
+  void cancelDeselect() {
+    state = PState.selected;
+    _removeTimer!.cancel();
   }
 
   void onSelecFinish(Function onDone) {

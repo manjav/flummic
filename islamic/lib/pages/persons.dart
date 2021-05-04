@@ -60,7 +60,7 @@ class PersonPageState extends State<PersonPage>
                   automaticallyImplyLeading: false,
                 ),
                 body: ReorderableListView(
-                    children: personItems(context, theme),
+                    children: _personItems(context, theme),
                     onReorder: (int oldIndex, int newIndex) {
                       setState(() {
                         if (oldIndex < newIndex) newIndex -= 1;
@@ -103,30 +103,70 @@ class PersonPageState extends State<PersonPage>
     setState(() {});
   }
 
-  List<Widget> personItems(BuildContext context, ThemeData theme) {
-    var color = Prefs.persons[widget.type]!.length > 1
-        ? theme.buttonTheme.colorScheme!.onSurface
-        : theme.buttonTheme.colorScheme!.onSurface.withOpacity(0.38);
+  List<Widget> _personItems(BuildContext context, ThemeData theme) {
+    var removable = _removable();
     var items = <Widget>[];
-    for (var t in Prefs.persons[widget.type]!) {
-      var p = configPersons[t];
-      items.add(Directionality(
-          key: Key(t),
-          textDirection: Localization.dir,
-          child: ListTile(
-            leading: Avatar(t, 24),
-            title: Text(p!.title),
-            subtitle: Text("${p.mode.l()} ${(p.flag + '_fl').l()}"),
-            trailing: IconButton(
-                icon: Icon(Icons.delete, color: color),
-                onPressed: () => removePerson(context, p)),
-          )));
-    }
+    for (var p in Prefs.persons[widget.type]!)
+      items.add(_personItem(p, removable, theme));
     return items;
   }
 
-  void removePerson(BuildContext context, Person p) {
-    if (Prefs.persons[widget.type]!.length <= 1) {
+  Widget _personItem(String p, bool removable, ThemeData theme) {
+    var ps = configPersons[p];
+    var color = theme.buttonTheme.colorScheme!.onSurface
+        .withOpacity(!removable ? 0.4 : 1);
+    return Directionality(
+        key: Key(p),
+          textDirection: Localization.dir,
+        child: Stack(children: [
+          ListTile(
+              leading: Avatar(p, 24),
+              title: Text(ps!.title),
+              subtitle: Text("${ps.mode.l()} ${(ps.flag + '_fl').l()}")),
+          ps.state == PState.removing
+              ? Positioned(
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    color: theme.backgroundColor.withOpacity(0.9),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("undo_b".l(), style: theme.textTheme.subtitle1),
+                          LinearProgressIndicator(value: removeAnimation!.value)
+                        ]),
+                  ))
+              : SizedBox(),
+          Positioned(
+              left: 8,
+              top: 8,
+              bottom: 8,
+              child: IconButton(
+                  icon: Icon(
+                      ps.state == PState.removing
+                          ? Icons.restore_from_trash_sharp
+                          : Icons.delete,
+                      color: color),
+                  onPressed: () => _removePerson(context, ps)))
+        ]));
+    }
+
+  bool _removable() {
+    var numSelecteds = 0;
+    for (var p in Prefs.persons[widget.type]!)
+      if (configPersons[p]!.state == PState.selected) ++numSelecteds;
+    return numSelecteds > 1;
+  }
+
+  void _removePerson(BuildContext context, Person p) {
+    if (p.state == PState.removing) {
+      p.cancelDeselect();
+      setState(() {});
+      return;
+    }
+    if (!_removable()) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
         "forbiden_l".l(),
@@ -134,20 +174,8 @@ class PersonPageState extends State<PersonPage>
       )));
       return;
     }
-    var index = Prefs.persons[widget.type]!.indexOf(p.path);
-    Prefs.removePerson(p.type, p.path);
-    setState(() => p.deselect());
-    final snackBar = SnackBar(
-      content: Text("undo_t".l()),
-      action: SnackBarAction(
-        label: "undo_b".l(),
-        onPressed: () {
-          Prefs.persons[widget.type]!.insert(index, p.path);
+    p.deselect(duration, () => setState(() {}));
           setState(() {});
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
