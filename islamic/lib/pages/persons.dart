@@ -30,9 +30,7 @@ class PersonPageState extends State<PersonPage>
     configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
     modes = t ? PersonPage.textModes : PersonPage.soundModes;
     removeAnimation = AnimationController(vsync: this);
-    removeAnimation!.addListener(() {
-      setState(() {});
-    });
+    removeAnimation!.addListener(() => setState(() {}));
   }
 
   @override
@@ -119,7 +117,7 @@ class PersonPageState extends State<PersonPage>
   Widget _personItem(String p, bool removable, ThemeData theme) {
     var ps = configPersons[p];
     var color = theme.buttonTheme.colorScheme!.onSurface
-        .withOpacity(!removable ? 0.4 : 1);
+        .withOpacity(!removable && ps!.state == PState.selected ? 0.4 : 1);
     return Directionality(
         key: Key(p),
         textDirection: Localization.dir,
@@ -135,7 +133,7 @@ class PersonPageState extends State<PersonPage>
                   bottom: 0,
                   left: 0,
                   child: Container(
-                    color: theme.backgroundColor.withOpacity(0.9),
+                    color: theme.backgroundColor.withOpacity(0.8),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -152,7 +150,7 @@ class PersonPageState extends State<PersonPage>
               child: IconButton(
                   icon: Icon(
                       ps.state == PState.removing
-                          ? Icons.restore_from_trash_sharp
+                          ? Icons.restore_from_trash
                           : Icons.delete,
                       color: color),
                   onPressed: () => _removePerson(context, ps)))
@@ -183,7 +181,7 @@ class PersonPageState extends State<PersonPage>
     const duration = Duration(seconds: 3);
     removeAnimation!.value = 0;
     removeAnimation!
-        .animateTo(1, duration: duration, curve: Curves.easeOutCubic);
+        .animateTo(1, duration: duration, curve: Curves.easeOutSine);
     p.deselect(duration, () => setState(() {}));
     setState(() {});
   }
