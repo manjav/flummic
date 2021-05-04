@@ -139,7 +139,6 @@ class HomePageState extends State<HomePage> {
 
   Widget suraPageBuilder(BuildContext context, int p) {
     // selectedAya = Prefs.selectedSura == selectedSura ? Prefs.selectedAya : 0;
-    var initMode = ayaList == null;
     ayaList = ScrollablePositionedList.builder(
       initialAlignment: selectedIndex > 0 ? 0.12 : 0,
       initialScrollIndex: selectedIndex,
@@ -149,16 +148,14 @@ class HomePageState extends State<HomePage> {
       itemCount: Configs.instance.pageItems[p].length,
       itemBuilder: (BuildContext ctx, i) => ayaItemBuilder(p, i),
     );
-    if (initMode) Future.delayed(Duration(milliseconds: 10), listenScroll);
+    Future.delayed(Duration(milliseconds: 10), listenScroll);
     return ayaList!;
   }
 
   void listenScroll() {
       var controller =
           ayaList!.itemScrollController?.of(context)?.primary.scrollController;
-      controller?.addListener(() {
-        onPageScroll(controller.position);
-      });
+    controller?.addListener(() => onPageScroll(controller.position));
   }
 
   void onPageScroll(ScrollPosition position) {
