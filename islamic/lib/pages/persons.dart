@@ -7,8 +7,8 @@ import '../models.dart';
 import '../utils/localization.dart';
 
 class PersonPage extends StatefulWidget {
-  static List<String> soundModes = ["murat_t", "treci_t", "mujaw_t"]; //muall_t
-  static List<String> textModes = ["quran_t", "trans_t", "tafsi_t"];
+  static List<String> soundModes = ["mujaw_t", "treci_t", "murat_t"]; //muall_t
+  static List<String> textModes = ["tafsi_t", "trans_t", "quran_t"];
   final PType type;
   PersonPage(this.type) : super();
   @override
@@ -20,6 +20,7 @@ class PersonPageState extends State<PersonPage>
   String title = "";
   late List<String> modes;
   late Map<String, Person> configPersons;
+  AnimationController? removeAnimation;
 
   @override
   void initState() {
@@ -28,6 +29,10 @@ class PersonPageState extends State<PersonPage>
     title = (t ? "page_texts" : "page_sounds").l();
     configPersons = t ? Configs.instance.texts : Configs.instance.sounds;
     modes = t ? PersonPage.textModes : PersonPage.soundModes;
+    removeAnimation = AnimationController(vsync: this);
+    removeAnimation!.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -117,7 +122,7 @@ class PersonPageState extends State<PersonPage>
         .withOpacity(!removable ? 0.4 : 1);
     return Directionality(
         key: Key(p),
-          textDirection: Localization.dir,
+        textDirection: Localization.dir,
         child: Stack(children: [
           ListTile(
               leading: Avatar(p, 24),
@@ -135,6 +140,7 @@ class PersonPageState extends State<PersonPage>
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text("undo_b".l(), style: theme.textTheme.subtitle1),
+                          SizedBox(height: 16),
                           LinearProgressIndicator(value: removeAnimation!.value)
                         ]),
                   ))
@@ -151,7 +157,7 @@ class PersonPageState extends State<PersonPage>
                       color: color),
                   onPressed: () => _removePerson(context, ps)))
         ]));
-    }
+  }
 
   bool _removable() {
     var numSelecteds = 0;
@@ -174,8 +180,12 @@ class PersonPageState extends State<PersonPage>
       )));
       return;
     }
+    const duration = Duration(seconds: 3);
+    removeAnimation!.value = 0;
+    removeAnimation!
+        .animateTo(1, duration: duration, curve: Curves.easeOutCubic);
     p.deselect(duration, () => setState(() {}));
-          setState(() {});
+    setState(() {});
   }
 }
 
@@ -304,7 +314,7 @@ class PersonListPageState extends State<PersonListPage> {
   void selectPerson(Person p) {
     switch (p.state) {
       case PState.selected:
-        p.deselect();
+        p.deselect(null, null);
         break;
       case PState.ready:
       case PState.waiting:
