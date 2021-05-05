@@ -5,11 +5,14 @@ import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import 'package:crypto/crypto.dart';
+
 class Loader {
   HttpClient httpClient = HttpClient();
   Future<Loader> load(String path, String url, Function(String) onDone,
-      [Function(double)? onProgress, Function(dynamic)? onError]) async {
-    var baseURL = (await getApplicationSupportDirectory()).path;
+      {Function(double)? onProgress,
+      Function(dynamic)? onError,
+      String? hash,
     var ext = p.extension(url);
     var file = File('$baseURL/$path');
     if (await file.exists()) {
@@ -28,6 +31,14 @@ class Loader {
         bytes.addAll(newBytes);
         onProgress?.call(bytes.length / contentLength);
       }, onDone: () async {
+        if (hash != null) {
+          var t = DateTime.now().millisecondsSinceEpoch;
+          var _hash = md5.convert(bytes);
+          print(
+              "$path $hash $_hash ${DateTime.now().millisecondsSinceEpoch - t}");
+          if (hash != _hash.toString())
+            return onError?.call("$path md5 is invalid!");
+        }
         if (ext == ".zip" || ext == ".zson") {
           Archive archive = ZipDecoder().decodeBytes(bytes);
           bytes = archive.first.content as List<int>;
