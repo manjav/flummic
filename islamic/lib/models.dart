@@ -130,43 +130,51 @@ class Configs {
     if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
     instance.onError = onError;
-    instance.loadConfigs();
-    instance.loadMetadata();
+    instance._loadConfigs();
   }
 
-  Future<void> loadConfigs() async {
-    await Loader().load("config.json", baseURL + "config.ijson", (String data) {
+  void _loadConfigs() {
+    Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
       var map = json.decode(data);
-      for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
-      for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
-
-      for (var t in Prefs.persons[PType.text]!) texts[t]?.select(finalize);
-      for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(finalize);
-    });
+      for (var f in map["files"]) _loadFile(f["path"], f["md5"]);
+    }, forceUpdate: true);
   }
 
-  void loadMetadata() async {
-    await Loader().load("uthmani-meta.json", baseURL + "uthmani-meta.ijson",
-        (String data) {
+  void _loadFile(String path, String md5) {
+    Loader().load("$path.json", "$baseURL$path.ijson", (String data) {
       var map = json.decode(data);
-      var _m = QuranMeta();
-      var keys = map.keys;
-      for (var k in keys) {
-        if (k == "suras")
-          for (var c in map[k]) _m.suras.add(Sura(c));
-        else if (k == "juzes")
-          for (var c in map[k])
-            _m.juzes.add(Juz(c['sura'], c['aya'], c['page'], c['name']));
-        else if (k == "hizbs")
-          for (var c in map[k]) _m.hizbs.add(Part(c['sura'], c['aya']));
-        else if (k == "pages")
-          for (var c in map[k]) _m.pages.add(Part(c['sura'], c['aya']));
-      }
-      for (var i = 0; i < _m.suras.length; i++) _m.suras[i].index = i;
-      _metadata = _m;
-      createAyas();
-      finalize();
-    }, null, onError);
+      if (path == "persons")
+        _loadPersons(map);
+      else if (path == "uthmani-meta") _loadMetadata(map);
+    }, hash: md5, onError: onError);
+  }
+
+  void _loadPersons(Map map) {
+    for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
+    for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
+
+    for (var t in Prefs.persons[PType.text]!) texts[t]?.select(finalize);
+    for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(finalize);
+  }
+
+  void _loadMetadata(Map map) {
+    var _m = QuranMeta();
+    var keys = map.keys;
+    for (var k in keys) {
+      if (k == "suras")
+        for (var c in map[k]) _m.suras.add(Sura(c));
+      else if (k == "juzes")
+        for (var c in map[k])
+          _m.juzes.add(Juz(c['sura'], c['aya'], c['page'], c['name']));
+      else if (k == "hizbs")
+        for (var c in map[k]) _m.hizbs.add(Part(c['sura'], c['aya']));
+      else if (k == "pages")
+        for (var c in map[k]) _m.pages.add(Part(c['sura'], c['aya']));
+    }
+    for (var i = 0; i < _m.suras.length; i++) _m.suras[i].index = i;
+    _metadata = _m;
+    createAyas();
+    finalize();
   }
 
   void finalize() {
@@ -383,10 +391,10 @@ class Person {
         data.add(sura);
       }
       onDone();
-    }, (double p) {
+    }, onProgress: (double p) {
       progress = p;
       if (onProgress != null) onProgress(p);
-    }, (e) {
+    }, onError: (e) {
       state = PState.waiting;
       onError?.call(e);
     });
