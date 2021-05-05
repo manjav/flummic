@@ -13,12 +13,14 @@ class Loader {
       {Function(double)? onProgress,
       Function(dynamic)? onError,
       String? hash,
+      bool forceUpdate = false}) async {
+    var dir = (await getApplicationSupportDirectory()).path;
     var ext = p.extension(url);
-    var file = File('$baseURL/$path');
+    var file = File('$dir/$path');
     if (await file.exists()) {
       var str = await file.readAsString();
       onDone(str);
-      return this;
+      if (!forceUpdate) return this;
     }
 
     try {
