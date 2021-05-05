@@ -42,19 +42,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   double startScrollBarIndicator = 0;
   late ScrollController suraListController;
 
-  late AnimationController controller;
+  AnimationController? hizbAnimation;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      value: 0,
-      vsync: this,
-    );
-    controller.addListener(() {
-      setState(() {});
-    });
+    hizbAnimation = AnimationController(vsync: this);
+    hizbAnimation!.addListener(() => setState(() {}));
+
 
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
@@ -317,8 +312,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return GestureDetector(
         onTap: () {
           selectedJuzIndex = index;
-          controller.value = 0;
-          controller.animateTo(1);
+          hizbAnimation!.value = 0;
+          hizbAnimation!.animateTo(1, duration: Duration(milliseconds: 1000));
         },
         child: Container(
             height: 80,
@@ -362,7 +357,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     var hIndex = juzIndex * 8 + hizbIndex * 2;
     var hizb = Configs.instance.metadata.hizbs[hIndex];
     return Opacity(
-        opacity: (controller.value - (hizbIndex * 0.05)).clamp(0.0, 1.0),
+        opacity: (hizbAnimation!.value - (hizbIndex * 0.05)).clamp(0.0, 1.0),
         child: GestureDetector(
             onTap: () => goto(hizb.sura - 1, hizb.aya - 1),
             child: Container(
