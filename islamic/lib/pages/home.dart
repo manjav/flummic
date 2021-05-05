@@ -27,6 +27,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static int selectedIndex = 0;
   final _toolbarHeight = 56.0;
   double toolbarHeight = 56;
+  int scrollIndex = 0;
   ScrollablePositionedList? ayaList;
   PageController? suraPageController;
   TextStyle headerStyle = TextStyle(
@@ -151,7 +152,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ayaList!.itemPositionsNotifier!.itemPositions.value.toList();
             for (var item in items) {
               if (item.itemLeadingEdge > 0.1 && item.itemTrailingEdge < 0.5) {
-                setLast(item.index);
+                setLast(scrollIndex = item.index);
                 return true;
               }
             }
@@ -376,10 +377,17 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  void goto(int sura, int aya) {
+  void goto(int sura, int aya, {bool fromPlayer = false}) {
     var part = Configs.instance.getPart(sura, aya);
     var page = part[0];
     var index = part[1];
+    if (fromPlayer) {
+      print("---index:$index scrollIndex:$scrollIndex");
+      if (page != selectedPage) return;
+      selectedIndex = index;
+      if ((index - scrollIndex).abs() > 4) return;
+    }
+
     if (page != selectedPage) {
       var dis = (page - selectedPage).abs();
       gotoPage(page, dis > 3 ? 0 : 400);
@@ -500,7 +508,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
         playingSound = Configs.instance.sounds[sounds[event["data"][1]]]!;
         soundState = 1;
-        goto(aya.sura, aya.aya);
+        goto(aya.sura, aya.aya, fromPlayer: true);
       } else if (event["type"] == "stop") {
         soundState = 0;
         setState(() {});

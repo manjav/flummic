@@ -106,55 +106,58 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           controller: _tabController,
           children: [getSuras(), getJuzes(), getNotes()],
         ),
-        bottomNavigationBar: getAudioLine());
+        bottomNavigationBar: footer());
   }
 
-  Widget getAudioLine() {
+  Widget footer() {
     var last = Configs.instance.navigations["all"]![0][Prefs.last];
     var sura = Configs.instance.metadata.suras[last.sura];
-    return Container(
-        height: HomePageState.soundState != 1 ? 64 : 100,
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          GestureDetector(
-              onTap: () => goto(last.sura, last.aya),
-              child: Container(
-                  height: 64,
-                  color: theme.buttonColor,
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          right: Localization.isRTL ? 16 : 0,
-                          left: Localization.isRTL ? 0 : 16),
-                      child: Row(children: [
-                        Icon(Icons.arrow_back),
-                        SizedBox(width: 16),
-                        Text(
-                          "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
-                          style: theme.textTheme.subtitle1,
-                        ),
-                      ])))),
-          HomePageState.soundState != 1
-              ? SizedBox()
-              : Container(
-                  height: 36,
-                  color: theme.appBarTheme.backgroundColor,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 16),
-                      Expanded(
-                          child: Text("playing_l".l(),
-                              textDirection: Localization.dir,
-                              style: theme.textTheme.bodyText2)),
-                      IconButton(
-                          icon: Icon(Icons.stop, size: 16),
-                          onPressed: () {
-                            AudioService.stop();
-                            HomePageState.soundState = 0;
-                            setState(() {});
-                          })
-                    ],
-                  ))
-        ]));
+    return Prefs.last == 0
+        ? SizedBox(height: 0)
+        : Container(
+            height: HomePageState.soundState != 1 ? 64 : 100,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GestureDetector(
+                      onTap: () => goto(last.sura, last.aya),
+                      child: Container(
+                          height: 64,
+                          color: theme.buttonColor,
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  right: Localization.isRTL ? 16 : 0,
+                                  left: Localization.isRTL ? 0 : 16),
+                              child: Row(children: [
+                                Icon(Icons.arrow_back),
+                                SizedBox(width: 16),
+                                Text(
+                                  "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
+                                  style: theme.textTheme.subtitle1,
+                                ),
+                              ])))),
+                  HomePageState.soundState != 1
+                      ? SizedBox()
+                      : Container(
+                          height: 36,
+                          color: theme.appBarTheme.backgroundColor,
+                          child: Row(
+                            children: [
+                              SizedBox(width: 16),
+                              Expanded(
+                                  child: Text("playing_l".l(),
+                                      textDirection: Localization.dir,
+                                      style: theme.textTheme.bodyText2)),
+                              IconButton(
+                                  icon: Icon(Icons.stop, size: 16),
+                                  onPressed: () {
+                                    AudioService.stop();
+                                    HomePageState.soundState = 0;
+                                    setState(() {});
+                                  })
+                            ],
+                          ))
+                ]));
   }
 
   Widget getSuras() {
