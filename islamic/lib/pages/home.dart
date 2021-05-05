@@ -522,7 +522,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       isPlaying ? AudioService.pause() : AudioService.play();
       return;
     }
-    play(Configs.instance.pageItems[selectedPage][0].index);
+    play(Configs.instance.pageItems[selectedPage][scrollIndex].index);
   }
 
   void play(int index) async {
