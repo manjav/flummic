@@ -35,7 +35,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   bool reversed = false;
   String lastSort = "suras";
   late List<Sura> suras;
-  late List<String> notes;
+  late List<Note> notes;
   double toolbarHeight = 0;
   int selectedJuzIndex = -1;
   final _toolbarHeight = 56.0;
@@ -43,6 +43,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   late ScrollController suraListController;
 
   AnimationController? hizbAnimation;
+  AnimationController? removeAnimation;
 
   @override
   void initState() {
@@ -50,6 +51,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     hizbAnimation = AnimationController(vsync: this);
     hizbAnimation!.addListener(() => setState(() {}));
 
+    removeAnimation = AnimationController(vsync: this);
+    removeAnimation!.addListener(() => setState(() {}));
 
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
@@ -67,6 +70,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     suras = Configs.instance.metadata.suras;
     Future.delayed(Duration(seconds: 1))
         .then((_) => showRating()); //this inside the initstate
+
+    createNotes();
   }
 
   @override
@@ -299,7 +304,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                 ])));
   }
 
-// ____________________________________________________________
+  // ____________________________________________________________
   Widget getJuzes() {
     return ListView.builder(
         itemBuilder: juzeItemBuilder,
@@ -373,10 +378,16 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                 ]))));
   }
 
-// ____________________________________________________________
+  // ____________________________________________________________
+
+  void createNotes() {
+    notes = <Note>[];
+    for (var k in Prefs.notes.keys)
+      notes.add(Note(int.parse(k.substring(0, 3)), int.parse(k.substring(3)),
+          Prefs.notes[k]!));
+  }
 
   Widget getNotes() {
-    notes = Prefs.notes.keys.toList();
     return notes.length == 0
         ? Center(
             child: Text("note_empty".l(),
@@ -386,56 +397,94 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   Widget noteItemBuilder(BuildContext context, int index) {
-    var sura = int.parse(notes[index].substring(0, 3));
-    var aya = int.parse(notes[index].substring(3));
-    String? text = Prefs.getNote(sura, aya);
+    var note = notes[index];
     return GestureDetector(
-        onTap: () => goto(sura, aya),
-        child: Container(
-            height: 72,
-            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
-            child: Padding(
-                padding: EdgeInsets.only(
-                    left: Localization.isRTL ? 4 : 16,
-                    right: Localization.isRTL ? 16 : 4),
-                child: Row(children: [
-                  Expanded(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${'sura_l'.l()} ${Configs.instance.metadata.suras[sura].title} - ${'verse_l'.l()} ${(aya + 1).n()}",
-                        style: theme.textTheme.subtitle1,
-                      ),
-                      text!.length > 0
-                          ? Text(text, overflow: TextOverflow.ellipsis)
-                          : SizedBox()
-                    ],
-                  )),
-                  IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        size: 20,
-                      ),
-                      onPressed: () => showDialog(
-                          context: context,
-                          builder: (BuildContext context) => Generics.editNote(
-                              context,
-                              theme,
-                              sura,
-                              aya,
-                              (string, number) => setState(() {})))),
-                  IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        Prefs.removeNote(sura, aya);
-                        setState(() {});
-                      })
-                ]))));
+        onTap: () => goto(note.sura, note.aya),
+        child: Stack(children: [
+          Container(
+              height: 72,
+              color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+              child: Padding(
+                  padding: EdgeInsets.only(
+                      left: Localization.isRTL ? 4 : 16,
+                      right: Localization.isRTL ? 16 : 4),
+                  child: Row(children: [
+                    Expanded(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${'sura_l'.l()} ${Configs.instance.metadata.suras[note.sura].title} - ${'verse_l'.l()} ${(note.aya + 1).n()}",
+                          style: theme.textTheme.subtitle1,
+                        ),
+                        note.text.length > 0
+                            ? Text(note.text, overflow: TextOverflow.ellipsis)
+                            : SizedBox()
+                      ],
+                    )),
+                    IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                Generics.editNote(
+                                    context,
+                                    theme,
+                                    note.sura,
+                                    note.aya,
+                                    (string, number) => setState(() {})))),
+                    SizedBox(width: 64)
+                  ]))),
+          note.removing
+              ? Positioned(
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    color: theme.backgroundColor.withOpacity(0.8),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("undo_b".l(), style: theme.textTheme.subtitle1),
+                          SizedBox(height: 16),
+                          LinearProgressIndicator(value: removeAnimation!.value)
+                        ]),
+                  ))
+              : SizedBox(),
+          Positioned(
+              top: 8,
+              bottom: 8,
+              left: Localization.isRTL ? 8 : null,
+              right: Localization.isRTL ? null : 8,
+              child: IconButton(
+                  icon: Icon(
+                    note.removing ? Icons.restore_from_trash : Icons.delete,
+                  ),
+                  onPressed: () => _removeNote(note)))
+        ]));
+  }
+
+  void _removeNote(Note note) {
+    if (note.removing) {
+      note.cancelRemove();
+      setState(() {});
+      return;
+    }
+
+    const duration = Duration(seconds: 3);
+    note.remove(
+        duration,
+        () => setState(() {
+              createNotes();
+            }));
+    removeAnimation!.value = 0;
+    removeAnimation!
+        .animateTo(1, duration: duration, curve: Curves.easeOutSine);
   }
 
   void goto(int sura, int aya) async {
@@ -449,7 +498,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(
             builder: (context) => AudioServiceWidget(child: HomePage())));
-    setState(() {});
+    createNotes();
   }
 
   void showRating() async {

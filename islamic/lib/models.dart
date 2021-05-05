@@ -289,6 +289,27 @@ class Sura {
   String get title => Localization.isRTL ? name : tname;
 }
 
+class Note extends Part {
+  String text;
+  Timer? _removeTimer;
+  late bool removing = false;
+  Note(int sura, int aya, this.text) : super(sura, aya);
+
+  void remove(Duration? duration, Function? onDone) async {
+    removing = true;
+    if (onDone != null)
+      _removeTimer = Timer(duration!, () {
+        Prefs.removeNote(sura, aya);
+        onDone();
+      });
+  }
+
+  void cancelRemove() {
+    removing = false;
+    _removeTimer!.cancel();
+  }
+}
+
 class Juz extends Part {
   int page;
   String name;
