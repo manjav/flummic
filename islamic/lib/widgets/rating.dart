@@ -117,7 +117,7 @@ class ReviewDialogState extends State<ReviewDialog> {
             alignment: Alignment.topRight,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,7 +126,6 @@ class ReviewDialogState extends State<ReviewDialog> {
                     TextField(
                         autofocus: true,
                         controller: _commentController,
-                        textAlign: TextAlign.center,
                         textInputAction: TextInputAction.newline,
                         minLines: 1,
                         maxLines: 5,

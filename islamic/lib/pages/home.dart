@@ -348,7 +348,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     right: 132 - coef * 0.65,
                     child: Text(
                       playingSound.title,
-                      style: theme.textTheme.bodyText2,
+                      style: theme.textTheme.button,
                       textAlign: TextAlign.right,
                     )),
                 Positioned(

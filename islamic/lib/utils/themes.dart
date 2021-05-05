@@ -33,7 +33,7 @@ class Themes {
         headline5: hl,
         caption: TextStyle(
             color: primaries[910], fontSize: 15, fontWeight: FontWeight.w100),
-        button: TextStyle(color: primaries[50]),
+        button: TextStyle(color: primaries[50], fontWeight: FontWeight.normal),
         headline6: TextStyle(
             color: primaries[920],
             fontFamily: "CubicSans",
@@ -117,7 +117,7 @@ class Themes {
         headline5: hl,
         caption: TextStyle(
             color: primaries[200], fontSize: 15, fontWeight: FontWeight.w100),
-        button: TextStyle(color: primaries[900]),
+        button: TextStyle(color: primaries[100], fontWeight: FontWeight.normal),
         headline6: TextStyle(
             color: primaries[100],
             fontFamily: "CubicSans",
