@@ -7,6 +7,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
 import 'package:islamic/utils/player.dart';
+import 'package:islamic/utils/utils.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:islamic/widgets/texts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -42,7 +43,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   ThemeData? _theme;
-  ThemeData get theme => _theme! ;
+  ThemeData get theme => _theme!;
   bool isPlaying = false;
   static int soundState = 0;
 
@@ -146,7 +147,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     selectedIndex = selectedPage == p ? selectedIndex : 0;
     return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollUpdateNotification) {
+          if (scrollNotification is ScrollStartNotification) {
+            Utils.wakeup();
+          } else if (scrollNotification is ScrollUpdateNotification) {
             onPageScroll(-scrollNotification.scrollDelta!);
           } else if (scrollNotification is ScrollEndNotification) {
             var items =
@@ -172,7 +175,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void setLast(int index) {
-    print("$index ${Configs.instance.pageItems[selectedPage][index].index}");
+    // print("$index ${Configs.instance.pageItems[selectedPage][index].index}");
     Prefs.instance
         .setInt("last", Configs.instance.pageItems[selectedPage][index].index);
   }
@@ -190,6 +193,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var part = Configs.instance.pageItems[position][index];
     return GestureDetector(
         onTap: () {
+          Utils.wakeup();
           headerAnimation!.value = toolbarHeight / _toolbarHeight;
           headerAnimation!.animateTo(toolbarHeight > 0.0 ? 0.0 : 1.0,
               curve: Curves.easeOutExpo);

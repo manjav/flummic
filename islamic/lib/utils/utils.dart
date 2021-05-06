@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:wakelock/wakelock.dart';
 
 class Utils {
   static String getLocaleByTimezone(String timezone) {
@@ -22,7 +26,7 @@ class Utils {
     return "Europe/London";
   }
 
-   static bool equalLists(List? left, List? right) {
+  static bool equalLists(List? left, List? right) {
     if (left == null || right == null) return false;
     if (left.length != right.length) return false;
     for (var i = 0; i < left.length; i++) if (left[i] != right[i]) return false;
@@ -33,5 +37,16 @@ class Utils {
     if (number < 10) return "00$number";
     if (number < 100) return "0$number";
     return "$number";
+  }
+
+  static Timer? _wakeupTimer;
+  static void wakeup({int seconds = 60}) async {
+    debugPrint("wakeup started");
+    _wakeupTimer?.cancel();
+    Wakelock.enable();
+    _wakeupTimer = Timer(Duration(seconds: seconds), () {
+      Wakelock.disable();
+      debugPrint("wakeup stopped.");
+    });
   }
 }
