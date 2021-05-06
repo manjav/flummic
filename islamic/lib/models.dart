@@ -225,7 +225,7 @@ class Configs {
     }
     fillParts("juze", _metadata!.juzes);
     fillParts("page", _metadata!.pages);
-    print(DateTime.now().millisecondsSinceEpoch - t);
+    debugPrint("${DateTime.now().millisecondsSinceEpoch - t}");
   }
 
   void fillParts(String mode, List<Part> source) {

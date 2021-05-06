@@ -53,8 +53,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _theme = Theme.of(context);
     uthmaniStyle = TextStyle(
         fontFamily: Prefs.font,
-        fontSize: 20,
-        height: 2,
+        fontSize: 18 * Prefs.textScale,
+        height: 2.2,
         color: theme.textTheme.bodyText1!.color);
     Texts.teal =
         TextStyle(color: theme.textSelectionTheme.selectionHandleColor);
