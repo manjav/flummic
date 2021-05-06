@@ -121,7 +121,7 @@ class SettingsState extends State<Settings> {
     var queryData = MediaQuery.of(context);
 
     return Container(
-        height: 540,
+        height: 580,
         child: MediaQuery(
           data: queryData.copyWith(
               textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
