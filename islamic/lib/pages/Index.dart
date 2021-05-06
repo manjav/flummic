@@ -218,10 +218,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         height: 36,
                       ),
                       Positioned(
-                          top: 8,
-                          bottom: 8,
-                          right: 4,
-                          left: 4,
+                          top: 11,
+                          bottom: 6,
+                          right: 2,
+                          left: 2,
                           child: Text("${sura.index + 1}",
                               style: uthmaniStyle, textAlign: TextAlign.center))
                     ]),
