@@ -505,7 +505,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
     // Send to store
     if (Prefs.rate == 5) {
-      Prefs.instance.setInt("rate", 500);
       var data = await rootBundle.loadString('texts/buildconfigs.json');
       var configs = jsonDecode(data);
       if (configs["target"] == "cafebazaar") {
@@ -516,6 +515,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
               package: 'com.farsitel.bazaar');
           await intent.launch();
         }
+        Prefs.instance.setInt("rate", 100);
         return;
       }
 
@@ -527,6 +527,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           return;
         }
         inAppReview.openStoreListing();
+        Prefs.instance.setInt("rate", 100);
       }
       return;
     }
