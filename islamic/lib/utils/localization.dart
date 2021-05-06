@@ -9,10 +9,10 @@ import 'package:intl/intl.dart' show Bidi;
 import '../main.dart';
 
 extension Localization on String {
-  static bool isRTL = true;
-  static late String languageCode;
-  static Map<String, dynamic>? sentences;
-  static late TextDirection dir;
+  static bool isRTL = false;
+  static String languageCode = "en";
+  static Map<String, dynamic>? _sentences;
+  static TextDirection dir = TextDirection.ltr;
 
   static Future<void> change(BuildContext context, String _languageCode) async {
     String data;
@@ -28,18 +28,18 @@ extension Localization on String {
     MyApp.of(context)!.setLocale(languageCode);
 
     var _result = json.decode(data);
-    sentences = Map();
+    _sentences = Map();
     _result.forEach((String key, dynamic value) {
-      sentences![key] = value.toString();
+      _sentences![key] = value.toString();
     });
   }
 
   String l([List<String>? args]) {
     final key = this;
-    if (sentences == null) {
+    if (_sentences == null) {
       throw "[Localization System] sentences = null";
     }
-    String? res = sentences![key];
+    String? res = _sentences![key];
     if (res == null) {
       res = key;
     } else {

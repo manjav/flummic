@@ -9,9 +9,10 @@ import 'utils/loader.dart';
 import 'utils/utils.dart';
 
 class Prefs {
-  static late SharedPreferences instance;
+  static SharedPreferences? _instance;
+  static SharedPreferences get instance => _instance!;
   static Map<PType, List<String>> persons = Map();
-  static late Map<String, String> notes = Map();
+  static Map<String, String> notes = Map();
 
   static String get locale => instance.getString("locale") ?? "en";
   static String get naviMode => instance.getString("naviMode") ?? "sura";
@@ -29,7 +30,7 @@ class Prefs {
 
   static void init(Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
-      instance = prefs;
+      _instance = prefs;
 
       bool initialized = instance.containsKey("locale");
       if (initialized) {
@@ -109,14 +110,14 @@ class Prefs {
 }
 
 class Configs {
-  static late Configs instance;
-  late Function onCreate;
-  late Function(dynamic) onError;
+  static Configs instance = Configs();
+  Function? onCreate;
+  Function(dynamic)? onError;
   QuranMeta? _metadata;
-  QuranMeta get metadata => _metadata ?? QuranMeta();
+  QuranMeta get metadata => _metadata!;
 
-  late List<Word> words;
-  List<List<String>>? simpleQuran;
+  List<Word> words = <Word>[];
+  List<List<String>> simpleQuran = <List<String>>[];
   Map<String, List<List<Aya>>> navigations = Map();
 
   var sounds = Map<String, Person>();
@@ -183,26 +184,24 @@ class Configs {
       if (texts[t]?.state != PState.selected) return;
     for (var r in Prefs.persons[PType.sound]!)
       if (sounds[r]?.state != PState.selected) return;
-    onCreate();
+    onCreate?.call();
   }
 
   Future<void> loadSearchAssets(Function onDone) async {
-    if (simpleQuran != null) {
+    if (simpleQuran.isNotEmpty) {
       onDone();
       return;
     }
     await Loader().load("words.json", baseURL + "words.zip",
         (String data) async {
       var list = json.decode(data);
-      words = <Word>[];
       for (var w in list) words.add(new Word(w));
       await Loader().load("simple.json", baseURL + "simple.zip", (String data) {
         var list = json.decode(data);
-        simpleQuran = <List<String>>[];
         for (var s in list) {
           var sura = <String>[];
           for (var a in s) sura.add(a);
-          simpleQuran!.add(sura);
+          simpleQuran.add(sura);
         }
         onDone();
       });
@@ -218,7 +217,7 @@ class Configs {
     navigations["sura"] = <List<Aya>>[];
     for (var i = 0, n = 0; i < 114; i++) {
       navigations["sura"]!.add(<Aya>[]);
-      for (var j = 0; j < _metadata!.suras[i].ayas; j++, n++) {
+      for (var j = 0; j < _metadata!.suras[i].ayas!; j++, n++) {
         aya = Aya(i, j, n);
         navigations["all"]![0].add(aya);
         navigations["sura"]![i].add(aya);
@@ -239,7 +238,7 @@ class Configs {
       var index = 0;
       for (var s = p.sura - 1; s < np.sura; s++, a = 0) {
         var len = s == np.sura - 1 ? np.aya - 1 : _metadata!.suras[s].ayas;
-        for (; a < len; a++) {
+        for (; a < len!; a++) {
           var aya = navigations["sura"]![s][a];
           if (mode == "juze") {
             aya.juze = i;
@@ -259,8 +258,8 @@ class Configs {
   List<int> getPart(int sura, int aya) {
     var a = navigations["sura"]![sura][aya];
     if (Prefs.naviMode == "sura") return [sura, aya, a.index];
-    if (Prefs.naviMode == "juze") return [a.juze, a.juzeIndex, a.index];
-    return [a.page, a.pageIndex, a.index];
+    if (Prefs.naviMode == "juze") return [a.juze!, a.juzeIndex!, a.index];
+    return [a.page!, a.pageIndex!, a.index];
   }
 }
 
@@ -272,8 +271,8 @@ class QuranMeta {
 }
 
 class Sura {
-  late int index, ayas, start, order, rukus, page, type;
-  late String name, tname, ename;
+  int? index, ayas, start, order, rukus, page, type;
+  String? name, tname, ename;
   Sura(s) {
     ayas = s["ayas"];
     start = s["start"];
@@ -286,13 +285,13 @@ class Sura {
     type = s["type"];
   }
 
-  String get title => Localization.isRTL ? name : tname;
+  String get title => Localization.isRTL ? name! : tname!;
 }
 
 class Note extends Part {
   String text;
   Timer? _removeTimer;
-  late bool removing = false;
+  bool removing = false;
   Note(int sura, int aya, this.text) : super(sura, aya);
 
   void remove(Duration? duration, Function? onDone) async {
@@ -317,7 +316,7 @@ class Juz extends Part {
 }
 
 class Aya extends Search {
-  late int page, juze, pageIndex, juzeIndex;
+  int? page, juze, pageIndex, juzeIndex;
   Aya(int sura, int aya, int index) : super(sura, aya, index);
   Map<String, dynamic> toJson() => {'sura': sura, 'aya': aya};
 }
@@ -328,8 +327,8 @@ class Part {
 }
 
 class Word {
-  late int c;
-  late String t;
+  int? c;
+  String? t;
   Word(w) {
     t = w["t"];
     c = w["c"];
@@ -348,11 +347,11 @@ enum PType { text, sound, athan }
 
 class Person {
   int? size;
-  PType type;
-  late PState state;
-  double progress = 0;
-  late List<List<String>> data;
-  late String url, path, name, ename, flag, mode;
+  PType? type;
+  PState? state;
+  double? progress = 0;
+  List<List<String>>? data;
+  String? url, path, name, ename, flag, mode;
 
   Loader? _loader;
   Timer? _removeTimer;
@@ -382,7 +381,7 @@ class Person {
     if (onDone != null)
       _removeTimer = Timer(duration!, () {
         _removeTimer!.cancel();
-        Prefs.removePerson(type, path);
+        Prefs.removePerson(type!, path!);
         state = PState.ready;
         onDone();
       });
@@ -395,7 +394,7 @@ class Person {
 
   void onSelecFinish(Function onDone) {
     state = PState.selected;
-    Prefs.addPerson(type, path);
+    Prefs.addPerson(type!, path!);
     onDone();
   }
 
@@ -403,13 +402,13 @@ class Person {
       Function(dynamic)? onError) {
     state = PState.downloading;
     _loader = Loader();
-    _loader!.load(path, url, (String _data) {
+    _loader!.load(path!, url!, (String _data) {
       var list = json.decode(_data);
       data = <List<String>>[];
       for (var s in list) {
         var sura = <String>[];
         for (var a in s) sura.add(a);
-        data.add(sura);
+        data!.add(sura);
       }
       onDone();
     }, onProgress: (double p) {
@@ -433,7 +432,7 @@ class Person {
     return "$url/${Utils.fillZero(sura + 1)}${Utils.fillZero(aya + 1)}.mp3";
   }
 
-  String get title => Localization.isRTL ? name : ename;
+  String get title => Localization.isRTL ? name! : ename!;
 
   Map<String, dynamic> toJson() {
     return {

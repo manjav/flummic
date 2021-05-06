@@ -41,14 +41,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool hasQuranText = false;
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
-  late ThemeData theme;
+  ThemeData? _theme;
+  ThemeData get theme => _theme! ;
   bool isPlaying = false;
   static int soundState = 0;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
 
-    theme = Theme.of(context);
+    _theme = Theme.of(context);
     uthmaniStyle = TextStyle(
         fontFamily: Prefs.font,
         fontSize: 20,
@@ -285,7 +286,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (dir == TextDirection.rtl) no = no.split('').reversed.join();
       if (no.length > 0) no += '. ';
       var text =
-          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${texts.data[sura][aya]}";
+          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${texts.data![sura][aya]}";
       rows.add(Stack(
         textDirection: dir,
         children: [
@@ -342,7 +343,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Positioned(
                     top: 10 - coef * 0.11,
                     right: 86 - coef * 0.4,
-                    child: Avatar(playingSound.path, 20 - coef * 0.12)),
+                    child: Avatar(playingSound.path!, 20 - coef * 0.12)),
                 Positioned(
                     top: 10 - coef * 0.2,
                     right: 132 - coef * 0.65,

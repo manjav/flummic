@@ -66,7 +66,7 @@ class AyaDetailsState extends State<AyaDetails> {
             Configs.instance.quran[s][a];
         if (Prefs.persons[PType.text]!.length > 1) {
           var p = Configs.instance.texts[Prefs.persons[PType.text]![1]];
-          text += "\n\n${p!.data[s][a]}\n\n${'trans_t'.l()} ${p.name}";
+          text += "\n\n${p!.data![s][a]}\n\n${'trans_t'.l()} ${p.name}";
         }
         text += "\n\n$subject";
         Share.share(text, subject: subject);

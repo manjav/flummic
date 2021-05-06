@@ -17,7 +17,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  static late int t;
+  static int? t;
 
   @override
   AppState createState() => AppState();
@@ -29,7 +29,7 @@ class AppState extends State<MyApp> {
   Locale? locale;
   ThemeMode? themeMode;
   int loadingState = 0;
-  late WaitingPage waitingPage;
+  WaitingPage? waitingPage;
   var supportedLocales = [
     const Locale("ar", ""),
     const Locale("en", ""),
@@ -91,7 +91,7 @@ class AppState extends State<MyApp> {
   Widget preparedPage() {
     switch (loadingState) {
       case 1:
-        return waitingPage;
+        return waitingPage!;
       case 2:
         return IndexPage();
       default:
@@ -117,12 +117,12 @@ class AppState extends State<MyApp> {
 
   void loadConfig() {
     Configs.create(() {
-      if (waitingPage.page.state > 1)
-        waitingPage.page.end(() {
+      if (waitingPage!.page!.state > 1)
+        waitingPage!.page!.end(() {
           setState(() => loadingState = 2);
         });
       else
         setState(() => loadingState = 2);
-    }, (e) => waitingPage.page.error(loadConfig));
+    }, (e) => waitingPage!.page!.error(loadConfig));
   }
 }

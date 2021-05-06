@@ -18,8 +18,8 @@ class PersonPage extends StatefulWidget {
 class PersonPageState extends State<PersonPage>
     with SingleTickerProviderStateMixin {
   String title = "";
-  late List<String> modes;
-  late Map<String, Person> configPersons;
+  List<String>? modes;
+  Map<String, Person>? configPersons;
   AnimationController? removeAnimation;
 
   @override
@@ -84,15 +84,15 @@ class PersonPageState extends State<PersonPage>
                   backgroundColor:
                       theme.floatingActionButtonTheme.backgroundColor,
                   children: [
-                    for (int i = 0; i < modes.length; i++)
+                    for (int i = 0; i < modes!.length; i++)
                       SpeedDialChild(
-                          labelWidget: Text(modes[i].l(),
+                          labelWidget: Text(modes![i].l(),
                               textAlign: TextAlign.right,
                               style: theme.textTheme.bodyText1),
                           child: Icon(Icons.arrow_back),
                           backgroundColor:
                               theme.floatingActionButtonTheme.backgroundColor,
-                          onTap: () => onSpeedChildTap(modes[i])),
+                          onTap: () => onSpeedChildTap(modes![i])),
                   ],
                 ))));
   }
@@ -102,7 +102,7 @@ class PersonPageState extends State<PersonPage>
         context,
         MaterialPageRoute(
             builder: (context) =>
-                PersonListPage(widget.type, mode, configPersons)));
+                PersonListPage(widget.type, mode, configPersons!)));
     setState(() {});
   }
 
@@ -115,7 +115,7 @@ class PersonPageState extends State<PersonPage>
   }
 
   Widget _personItem(String p, bool removable, ThemeData theme) {
-    var ps = configPersons[p];
+    var ps = configPersons![p];
     var color = theme.buttonTheme.colorScheme!.onSurface
         .withOpacity(!removable && ps!.state == PState.selected ? 0.4 : 1);
     return Directionality(
@@ -125,7 +125,7 @@ class PersonPageState extends State<PersonPage>
           ListTile(
               leading: Avatar(p, 24),
               title: Text(ps!.title),
-              subtitle: Text("${ps.mode.l()} ${(ps.flag + '_fl').l()}")),
+              subtitle: Text("${ps.mode!.l()} ${(ps.flag! + '_fl').l()}")),
           ps.state == PState.removing
               ? Positioned(
                   top: 0,
@@ -160,7 +160,7 @@ class PersonPageState extends State<PersonPage>
   bool _removable() {
     var numSelecteds = 0;
     for (var p in Prefs.persons[widget.type]!)
-      if (configPersons[p]!.state == PState.selected) ++numSelecteds;
+      if (configPersons![p]!.state == PState.selected) ++numSelecteds;
     return numSelecteds > 1;
   }
 
@@ -273,13 +273,13 @@ class PersonListPageState extends State<PersonListPage> {
     if (pattern.isEmpty) return defaultPersons!;
     pattern = pattern.toLowerCase();
     return defaultPersons!
-        .where((p) => p.name.toLowerCase().indexOf(pattern) > -1)
+        .where((p) => p.name!.toLowerCase().indexOf(pattern) > -1)
         .toList();
   }
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
-    var subtitle = "${p.mode.l()} ${(p.flag + '_fl').l()}";
+    var subtitle = "${p.mode!.l()} ${(p.flag! + '_fl').l()}";
     if (widget.type == PType.text) {
       String size;
       if (p.size! > 5048576)
@@ -291,7 +291,7 @@ class PersonListPageState extends State<PersonListPage> {
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
-        leading: Avatar(p.path, 24),
+        leading: Avatar(p.path!, 24),
         title: Text(p.title),
         subtitle: Text(subtitle),
         trailing: Stack(
@@ -302,7 +302,7 @@ class PersonListPageState extends State<PersonListPage> {
                 strokeWidth: 2,
                 value: p.progress,
               ),
-            downloadIcon(context, p.state)
+            downloadIcon(context, p.state!)
           ],
         ),
       ),

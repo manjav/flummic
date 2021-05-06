@@ -7,7 +7,7 @@ import '../models.dart';
 
 // ignore: must_be_immutable
 class WaitingPage extends StatefulWidget {
-  late WaitingPageState page;
+  WaitingPageState? page;
 
   @override
   WaitingPageState createState() => page = WaitingPageState();
@@ -15,8 +15,8 @@ class WaitingPage extends StatefulWidget {
 
 class WaitingPageState extends State<WaitingPage> {
   int state = 0;
-  late Artboard artboard;
-  late RiveAnimationController controller;
+  Artboard? artboard;
+  RiveAnimationController? controller;
   bool errorMode = false;
   Function? onRreload;
 
@@ -30,8 +30,8 @@ class WaitingPageState extends State<WaitingPage> {
     await Localization.change(context, Prefs.locale);
     final riveData = RiveFile.import(data);
     artboard = riveData.mainArtboard;
-    artboard.addController(SimpleAnimation('start'));
-    artboard.addController(SimpleAnimation('idle'));
+    artboard!.addController(SimpleAnimation('start'));
+    artboard!.addController(SimpleAnimation('idle'));
     Future.delayed(const Duration(milliseconds: 500), () => state = 2);
     state = 1;
     setState(() {});
@@ -44,7 +44,7 @@ class WaitingPageState extends State<WaitingPage> {
       state < 1
           ? const SizedBox()
           : Rive(
-              artboard: artboard,
+              artboard: artboard!,
               fit: BoxFit.none,
             ),
       errorMode
@@ -67,7 +67,7 @@ class WaitingPageState extends State<WaitingPage> {
   }
 
   void end(Function onFinish) {
-    artboard.addController(SimpleAnimation('end'));
+    artboard!.addController(SimpleAnimation('end'));
     Future.delayed(const Duration(milliseconds: 700), () {
       state = 3;
       onFinish();

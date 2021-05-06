@@ -12,21 +12,19 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
-  GlobalKey<AutoCompleteTextFieldState<Word>> key = GlobalKey();
   String pattern = "";
+  FocusNode? focusNode;
+  List<Search>? results;
   bool assetsLoaded = false;
-  late List<Search> results;
-  late ThemeData theme;
-  late List<List<String>> quran;
-  late FocusNode focusNode;
   AutoCompleteTextField<Word>? textField;
+  List<List<String>> get quran => Configs.instance.simpleQuran;
+  GlobalKey<AutoCompleteTextFieldState<Word>> key = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     Configs.instance.loadSearchAssets(() {
       assetsLoaded = true;
-      quran = Configs.instance.simpleQuran!;
       focusNode = FocusNode();
       textField = AutoCompleteTextField<Word>(
           key: key,
@@ -39,11 +37,11 @@ class SearchPageState extends State<SearchPage> {
           suggestionsAmount: 12,
           suggestions: Configs.instance.words,
           itemBuilder: suggestionBuilder,
-          itemSorter: (a, b) => b.c - a.c,
-          itemFilter: (w, t) => w.t.indexOf(t) > -1,
+          itemSorter: (a, b) => b.c! - a.c!,
+          itemFilter: (w, t) => w.t!.indexOf(t) > -1,
           clearOnSubmit: false,
-          itemSubmitted: (Word w) => setState(() => results = search(w.t)));
-      focusNode.requestFocus();
+          itemSubmitted: (Word w) => setState(() => results = search(w.t!)));
+      focusNode!.requestFocus();
       setState(() {});
     });
     results = <Search>[];
@@ -55,21 +53,22 @@ class SearchPageState extends State<SearchPage> {
         height: 40,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(item.t), Text("${item.c.n()}")]));
+            children: [Text(item.t!), Text("${item.c!.n()}")]));
   }
 
   @override
   Widget build(BuildContext context) {
-    theme = Theme.of(context);
+    var theme = Theme.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(title: textField == null ? SizedBox() : textField),
         body: ListView.builder(
-            itemBuilder: searchItemBuilder, itemCount: results.length));
+            itemBuilder: (BuildContext c, int i) => _itemBuilder(c, theme, i),
+            itemCount: results!.length));
   }
 
-  Widget searchItemBuilder(BuildContext context, int index) {
-    var s = results[index];
+  Widget _itemBuilder(BuildContext context, ThemeData theme, int index) {
+    var s = results![index];
     var max = 58;
     var t = quran[s.sura][s.aya];
     var end = s.index + pattern.length + max;
@@ -128,7 +127,7 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
-    focusNode.dispose();
+    focusNode!.dispose();
     super.dispose();
   }
 }

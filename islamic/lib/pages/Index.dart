@@ -23,24 +23,23 @@ class IndexPage extends StatefulWidget {
 }
 
 class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+  TabController? _tabController;
 
   Icon searchIcon = Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
-  late ThemeData theme;
-  late TextStyle titlesStyle;
-  late TextStyle uthmaniStyle;
+  TextStyle? titlesStyle;
+  TextStyle? uthmaniStyle;
 
+  List<Sura> suras = <Sura>[];
+  List<Note> notes = <Note>[];
   bool reversed = false;
   String lastSort = "suras";
-  late List<Sura> suras;
-  late List<Note> notes;
   double toolbarHeight = 0;
   int selectedJuzIndex = -1;
   final _toolbarHeight = 56.0;
   double startScrollBarIndicator = 0;
-  late ScrollController suraListController;
+  ScrollController? suraListController;
 
   AnimationController? hizbAnimation;
   AnimationController? removeAnimation;
@@ -57,10 +56,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     _tabController = TabController(length: 3, vsync: this);
     toolbarHeight = _toolbarHeight;
     suraListController = ScrollController();
-    suraListController.addListener(() {
+    suraListController!.addListener(() {
       var changes =
-          startScrollBarIndicator - suraListController.position.pixels;
-      startScrollBarIndicator = suraListController.position.pixels;
+          startScrollBarIndicator - suraListController!.position.pixels;
+      startScrollBarIndicator = suraListController!.position.pixels;
       var h = (toolbarHeight + changes).clamp(0.0, _toolbarHeight);
       if (toolbarHeight != h) {
         toolbarHeight = h;
@@ -76,7 +75,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    theme = Theme.of(context);
+    var theme = Theme.of(context);
     titlesStyle = TextStyle(
         fontFamily: 'titles',
         fontSize: 24,
@@ -104,12 +103,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         ),
         body: TabBarView(
           controller: _tabController,
-          children: [getSuras(), getJuzes(), getNotes()],
+          children: [getSuras(theme), getJuzes(theme), getNotes(theme)],
         ),
-        bottomNavigationBar: footer());
+        bottomNavigationBar: footer(theme));
   }
 
-  Widget footer() {
+  Widget footer(ThemeData theme) {
     var last = Configs.instance.navigations["all"]![0][Prefs.last];
     var sura = Configs.instance.metadata.suras[last.sura];
     return Prefs.last == 0
@@ -160,11 +159,11 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                 ]));
   }
 
-  Widget getSuras() {
+  Widget getSuras(ThemeData theme) {
     return Stack(children: [
       ListView.builder(
           padding: EdgeInsets.only(top: _toolbarHeight),
-          itemBuilder: suraItemBuilder,
+          itemBuilder: (BuildContext c, int i) => suraItemBuilder(theme, i),
           controller: suraListController,
           itemCount: suras.length),
       Container(
@@ -187,20 +186,20 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
               child: Row(
                 children: [
                   Expanded(
-                    child: getHeader("suras"),
+                    child: getHeader(theme, "suras"),
                   ),
-                  getHeader("order"),
-                  getHeader("ayas"),
-                  getHeader("page")
+                  getHeader(theme, "order"),
+                  getHeader(theme, "ayas"),
+                  getHeader(theme, "page")
                 ],
               )))
     ]);
   }
 
-  Widget suraItemBuilder(context, int index) {
+  Widget suraItemBuilder(ThemeData theme, int index) {
     var sura = suras[index];
     return GestureDetector(
-        onTap: () => goto(sura.index, 0),
+        onTap: () => goto(sura.index!, 0),
         child: Container(
             height: Localization.isRTL ? 64 : 72,
             color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
@@ -222,7 +221,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                           bottom: 6,
                           right: 2,
                           left: 2,
-                          child: Text("${sura.index + 1}",
+                          child: Text("${sura.index! + 1}",
                               style: uthmaniStyle, textAlign: TextAlign.center))
                     ]),
                     SizedBox(width: 8, height: 48),
@@ -235,7 +234,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      "${String.fromCharCode(sura.index + 204)}${String.fromCharCode(192)}",
+                                      "${String.fromCharCode(sura.index! + 204)}${String.fromCharCode(192)}",
                                       style: titlesStyle,
                                       textDirection: TextDirection.ltr),
                                   Localization.isRTL
@@ -245,9 +244,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                       ? SizedBox(height: 0)
                                       : Text("    ${sura.title}")
                                 ]))),
-                    getText(sura.order),
-                    getText(sura.ayas),
-                    getText(sura.page)
+                    getText(sura.order!),
+                    getText(sura.ayas!),
+                    getText(sura.page!)
                   ],
                 ))));
   }
@@ -260,7 +259,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         child: Text("$value", style: uthmaniStyle));
   }
 
-  GestureDetector getHeader(String value) {
+  GestureDetector getHeader(ThemeData theme, String value) {
     return GestureDetector(
         onTap: () {
           if (lastSort == value) {
@@ -271,9 +270,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             lastSort = value;
             suras.sort((Sura l, Sura r) {
               if (value == "ayas")
-                return l.ayas.compareTo(r.ayas);
-              else if (value == "order") return l.order.compareTo(r.order);
-              return l.index.compareTo(r.index);
+                return l.ayas!.compareTo(r.ayas!);
+              else if (value == "order") return l.order!.compareTo(r.order!);
+              return l.index!.compareTo(r.index!);
             });
           }
           setState(() {});
@@ -305,13 +304,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   // ____________________________________________________________
-  Widget getJuzes() {
+  Widget getJuzes(ThemeData theme) {
     return ListView.builder(
-        itemBuilder: juzeItemBuilder,
+        itemBuilder: (BuildContext c, int i) => juzeItemBuilder(theme, i),
         itemCount: Configs.instance.metadata.juzes.length);
   }
 
-  Widget juzeItemBuilder(context, int index) {
+  Widget juzeItemBuilder(ThemeData theme, int index) {
     var juz = Configs.instance.metadata.juzes[index];
     var j = index + 1;
     return GestureDetector(
@@ -348,15 +347,15 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                             style: theme.textTheme.caption)
                       ],
                     )),
-                    getHizb(index, 0),
-                    getHizb(index, 1),
-                    getHizb(index, 2),
-                    getHizb(index, 3)
+                    getHizb(theme, index, 0),
+                    getHizb(theme, index, 1),
+                    getHizb(theme, index, 2),
+                    getHizb(theme, index, 3)
                   ],
                 ))));
   }
 
-  Widget getHizb(int juzIndex, int hizbIndex) {
+  Widget getHizb(ThemeData theme, int juzIndex, int hizbIndex) {
     var hidden = juzIndex != selectedJuzIndex;
     if (hidden) return SizedBox();
     var hIndex = juzIndex * 8 + hizbIndex * 2;
@@ -381,22 +380,23 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   // ____________________________________________________________
 
   void createNotes() {
-    notes = <Note>[];
+    notes.clear();
     for (var k in Prefs.notes.keys)
       notes.add(Note(int.parse(k.substring(0, 3)), int.parse(k.substring(3)),
           Prefs.notes[k]!));
   }
 
-  Widget getNotes() {
+  Widget getNotes(ThemeData theme) {
     return notes.length == 0
         ? Center(
             child: Text("note_empty".l(),
                 style: theme.textTheme.caption, textAlign: TextAlign.center))
         : ListView.builder(
-            itemBuilder: noteItemBuilder, itemCount: notes.length);
+            itemBuilder: (c, int i) => noteItemBuilder(c, theme, i),
+            itemCount: notes.length);
   }
 
-  Widget noteItemBuilder(BuildContext context, int index) {
+  Widget noteItemBuilder(BuildContext context, ThemeData theme, int index) {
     var note = notes[index];
     return GestureDetector(
         onTap: () => goto(note.sura, note.aya),

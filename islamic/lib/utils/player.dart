@@ -5,7 +5,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
 class Aya {
-  late int sura, aya;
+  int? sura, aya;
   Aya(a) {
     sura = a["sura"];
     aya = a["aya"];
@@ -13,7 +13,7 @@ class Aya {
 }
 
 class Sound {
-  late String url, path, name, ename, mode;
+  String? url, path, name, ename, mode;
   Sound(p) {
     name = p["name"];
     ename = p["ename"] ?? p["name"];
@@ -37,7 +37,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
   AudioPlayer _player = new AudioPlayer();
   AudioProcessingState? _skipState;
   Seeker? _seeker;
-  late StreamSubscription<PlaybackEvent> _eventSubscription;
+  StreamSubscription<PlaybackEvent>? _eventSubscription;
   MediaItem? mediaItem;
   int index = 0;
   int soundIndex = 0;
@@ -119,13 +119,13 @@ class AudioPlayerTask extends BackgroundAudioTask {
   Future<void> select(int index, int soundIndex) async {
     var aya = ayas![index];
     var sound = sounds![soundIndex];
-    var url = sound.getURL(aya.sura, aya.aya);
+    var url = sound.getURL(aya.sura!, aya.aya!);
     var duration = await _player.setUrl(url);
     mediaItem = MediaItem(
         artUri: Uri.parse("https://hidaya.sarand.net/images/${sound.path}.png"),
-        title: "${suras![aya.sura]} (${aya.aya + 1})",
+        title: "${suras![aya.sura!]} (${aya.aya! + 1})",
         artist: sound.name,
-        album: sound.ename,
+        album: sound.ename!,
         id: url,
         duration: duration);
     AudioServiceBackground.setMediaItem(mediaItem!);
@@ -195,7 +195,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
     // print("------------------------------ onStop");
 
     await _player.dispose();
-    _eventSubscription.cancel();
+    _eventSubscription!.cancel();
     // It is important to wait for this state to be broadcast before we shut
     // down the task. If we don't, the background task will be destroyed before
     // the message gets sent to the UI.
