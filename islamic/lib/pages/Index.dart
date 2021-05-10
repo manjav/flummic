@@ -505,9 +505,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
     // Send to store
     if (Prefs.rate == 5) {
-      var data = await rootBundle.loadString('texts/buildconfigs.json');
-      var configs = jsonDecode(data);
-      if (configs["target"] == "cafebazaar") {
+      if (Configs.instance.buildConfig!.target == "cafebazaar") {
         if (Platform.isAndroid) {
           AndroidIntent intent = AndroidIntent(
               data: 'bazaar://details?id=com.gerantech.muslim.holy.quran',

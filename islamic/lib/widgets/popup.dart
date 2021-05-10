@@ -119,7 +119,7 @@ class SettingsState extends State<Settings> {
     var p = 24.0;
     var isRtl = Bidi.isRtlLanguage(app.locale!.languageCode);
     var queryData = MediaQuery.of(context);
-
+    var config = Configs.instance.buildConfig;
     return Container(
         height: 580,
         child: MediaQuery(
@@ -257,7 +257,7 @@ class SettingsState extends State<Settings> {
                     left: isRtl ? p : null,
                     right: isRtl ? null : p,
                     child: Text(
-                        "${'app_title'.l()}  ${'app_ver'.l()} ${'1.1.2'.n()}",
+                        "${'app_title'.l()}  ${'app_ver'.l()} ${config!.packageInfo!.version.n()}  (${config.target})",
                         style: theme.textTheme.caption))
               ])),
         ));
