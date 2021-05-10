@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:islamic/utils/localization.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/loader.dart';
@@ -114,6 +116,7 @@ class Configs {
   Function? onCreate;
   Function(dynamic)? onError;
   QuranMeta? _metadata;
+  BuildConfig? buildConfig;
   QuranMeta get metadata => _metadata!;
 
   List<Word> words = <Word>[];
@@ -128,6 +131,7 @@ class Configs {
 
   static void create(Function onCreate, Function(dynamic) onError) async {
     instance = Configs();
+    instance.buildConfig = BuildConfig();
     if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
     instance.onCreate = onCreate;
     instance.onError = onError;
@@ -340,6 +344,21 @@ class Search {
   int aya;
   int index;
   Search(this.sura, this.aya, this.index);
+}
+
+class BuildConfig {
+  String? target;
+  PackageInfo? packageInfo;
+  BuildConfig() {
+    _load();
+  }
+
+  void _load() async {
+    var data = await rootBundle.loadString('texts/buildconfigs.json');
+    var configs = jsonDecode(data);
+    target = configs["target"];
+    packageInfo = await PackageInfo.fromPlatform();
+  }
 }
 
 enum PState { waiting, downloading, ready, selected, removing }
