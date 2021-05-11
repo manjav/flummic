@@ -45,10 +45,7 @@ class Utils {
 
   static Timer? _wakeupTimer;
   static void wakeup(BuildContext context, {int seconds = 15}) async {
-  static void wakeup({int seconds = 60}) async {
-    debugPrint("wakeup started");
-    _wakeupTimer?.cancel();
-    Wakelock.enable();
+    if (_wakeupTimer != null) return;
     _wakeupTimer = Timer(Duration(seconds: seconds), () {
       Generics.confirm(context,
           text: "wake_l".l(),
