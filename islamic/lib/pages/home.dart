@@ -148,7 +148,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           if (scrollNotification is ScrollStartNotification) {
-            Utils.wakeup();
+            Utils.wakeup(context);
           } else if (scrollNotification is ScrollUpdateNotification) {
             onPageScroll(-scrollNotification.scrollDelta!);
           } else if (scrollNotification is ScrollEndNotification) {
@@ -193,7 +193,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var part = Configs.instance.pageItems[position][index];
     return GestureDetector(
         onTap: () {
-          Utils.wakeup();
+          Utils.wakeup(context);
           headerAnimation!.value = toolbarHeight / _toolbarHeight;
           headerAnimation!.animateTo(toolbarHeight > 0.0 ? 0.0 : 1.0,
               curve: Curves.easeOutExpo);
