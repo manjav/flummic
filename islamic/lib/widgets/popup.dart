@@ -349,6 +349,42 @@ class Generics {
             )));
   }
 
+  static Future<void> confirm(BuildContext context,
+      {String? title,
+      String? text,
+      String? acceptLabel,
+      String? declineLabel,
+      Function? onAccept,
+      Function? onDecline,
+      bool barrierDismissible = true}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: title == null ? SizedBox() : Text(title),
+          content: text == null ? SizedBox() : Text(text),
+          actions: <Widget>[
+            TextButton(
+              child: Text(acceptLabel ?? "yes_l".l()),
+              onPressed: () {
+                onAccept?.call();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(declineLabel ?? "no_l".l()),
+              onPressed: () {
+                onDecline?.call();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   /* static void toast(BuildContext context, ThemeData theme, String text) {
     showDialog(
         context: context,
