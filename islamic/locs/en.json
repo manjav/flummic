@@ -281,5 +281,8 @@
     "rate_p": "Tell us your comments",
     "thanks_l": "Thanks for your support!",
     "forbiden_l": "Add other item before delete!",
-    "last_l": "Return to last position"
+    "last_l": "Return to last position",
+    "yes_l": "Yes",
+    "no_l": "No",
+    "wake_l": "Your screen will never sleep while reading. Are you sure?"
 }
