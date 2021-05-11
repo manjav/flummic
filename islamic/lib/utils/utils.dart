@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:islamic/widgets/popup.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:wakelock/wakelock.dart';
+
+import 'localization.dart';
 
 class Utils {
   static String getLocaleByTimezone(String timezone) {
@@ -40,13 +44,16 @@ class Utils {
   }
 
   static Timer? _wakeupTimer;
+  static void wakeup(BuildContext context, {int seconds = 15}) async {
   static void wakeup({int seconds = 60}) async {
     debugPrint("wakeup started");
     _wakeupTimer?.cancel();
     Wakelock.enable();
     _wakeupTimer = Timer(Duration(seconds: seconds), () {
-      Wakelock.disable();
-      debugPrint("wakeup stopped.");
+      Generics.confirm(context,
+          text: "wake_l".l(),
+          onAccept: Wakelock.enable,
+          onDecline: Wakelock.disable);
     });
   }
 }
