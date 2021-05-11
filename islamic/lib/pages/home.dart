@@ -11,6 +11,7 @@ import 'package:islamic/utils/utils.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:islamic/widgets/texts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../buttons.dart';
 import '../models.dart';
@@ -543,6 +544,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       sounds.add(Configs.instance.sounds[p]!);
     AudioService.customAction(
         "update", {"sounds": jsonEncode(sounds), "suras": suras});
+  }
+
+  @override
+  void dispose() {
+    Wakelock.disable();
+    super.dispose();
   }
 }
 
