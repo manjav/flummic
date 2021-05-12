@@ -176,8 +176,8 @@ class SettingsState extends State<Settings> {
                     isRtl ? null : p),
                 Positioned(
                     top: 220,
-                    right: p,
-                    left: p,
+                    right: p - 16,
+                    left: p - 16,
                     child: Slider(
                         autofocus: true,
                         min: 0.85,
