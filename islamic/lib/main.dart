@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
+import 'package:smartlook/smartlook.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'models.dart';
@@ -68,7 +69,15 @@ class AppState extends State<MyApp> {
       setTheme(ThemeMode.values[Prefs.themeMode]);
       loadConfig();
     });
+
     Wakelock.disable();
+
+    // Smartlook
+    SetupOptions options =
+        (SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071'))
+            .build();
+    Smartlook.setupAndStartRecording(options);
+
     super.initState();
   }
 
