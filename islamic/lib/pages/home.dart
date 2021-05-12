@@ -60,6 +60,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Texts.teal =
         TextStyle(color: theme.textSelectionTheme.selectionHandleColor);
     if (suraPageController != null) return;
+    Utils.wakeup(context);
     initAudio();
 
     suraPageController =
