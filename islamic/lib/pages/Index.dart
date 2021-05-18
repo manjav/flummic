@@ -507,9 +507,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       if (s["availableAt"] < Prefs.numRuns &&
           Prefs.surveys.indexOf(s["id"]) < 0) {
         print("Survey ${s["id"]} in ${s["availableAt"]}/${Prefs.numRuns}");
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => WebPage(url: s["url"])));
-        Prefs.addSurvey(s["id"]);
+        bool accept = false;
+        await Generics.confirm(context,
+            text: "survey_l".l(), onAccept: () => accept = true);
+        if (accept) {
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => WebPage(url: s["url"])));
+          Prefs.addSurvey(s["id"]);
+        }
         return;
       }
     }
