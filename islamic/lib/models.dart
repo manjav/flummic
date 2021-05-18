@@ -126,7 +126,6 @@ class Configs {
   dynamic? configs;
   QuranMeta? _metadata;
   BuildConfig? buildConfig;
-
   QuranMeta get metadata => _metadata!;
 
   List<Word> words = <Word>[];
