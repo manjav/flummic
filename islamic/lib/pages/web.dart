@@ -26,6 +26,8 @@ class _WebPageState extends State<WebPage> {
                   loaded = true;
                   setState(() {});
                 }
+                if (url.indexOf("hidaya") > -1 || url.indexOf("islam") > -1)
+                  Navigator.pop(context);
             },
               initialUrl: widget.data["url"]),
           loaded
