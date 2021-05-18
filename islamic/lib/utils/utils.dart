@@ -49,6 +49,8 @@ class Utils {
     _wakeupTimer = Timer(Duration(seconds: seconds), () {
       Generics.confirm(context,
           text: "wake_l".l(),
+          acceptLabel: "wake_a".l(),
+          declineLabel: "wake_d".l(),
           onAccept: Wakelock.enable,
           onDecline: Wakelock.disable);
     });

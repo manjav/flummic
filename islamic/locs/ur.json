@@ -236,5 +236,7 @@
     "yes_l": "Yes",
     "no_l": "No",
     "wait_l": "\n\n\nPlease wait ...",
+    "wake_a": "Awake",
+    "wake_d": "Sleep",
     "wake_l": "Your screen will never sleep while reading. Are you sure?"
 }
