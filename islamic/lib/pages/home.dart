@@ -278,7 +278,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (hasQuranText) {
       var hizbFlag = getHizbFlag(sura + 1, aya + 1);
       rows.add(Texts.quran(hizbFlag, Configs.instance.quran[sura][aya],
-          " ﴿${(aya + 1).toArabic()}﴾", uthmaniStyle));
+          " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle));
       ++i;
     }
 
@@ -361,7 +361,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   right: 86 - coef * 0.4,
                   child: Avatar(playingSound.path!, 20 - coef * 0.12)),
               Positioned(
-                  top: 34 - coef * 0.2,
+                  top: 36 - coef * 0.2,
                   right: 132 - coef * 0.65,
                   child: Text(
                     playingSound.title,
