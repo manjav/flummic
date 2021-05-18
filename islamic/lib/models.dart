@@ -15,6 +15,7 @@ class Prefs {
   static SharedPreferences get instance => _instance!;
   static Map<PType, List<String>> persons = Map();
   static Map<String, String> notes = Map();
+  static List<String>? _surveys = <String>[];
 
   static String get locale => instance.getString("locale") ?? "en";
   static String get naviMode => instance.getString("naviMode") ?? "sura";
@@ -43,6 +44,7 @@ class Prefs {
         Map<String, dynamic> map =
             jsonDecode(instance.getString("bookmarks") ?? "{}");
         notes = map.cast();
+        _surveys = instance.getStringList("surveys") ?? <String>[];
         instance.setInt("numRuns", numRuns + 1);
         onInit();
         return;
@@ -109,14 +111,22 @@ class Prefs {
   static bool? hasNote(int sura, int aya) {
     return notes.containsKey("${Utils.fillZero(sura)}${Utils.fillZero(aya)}");
   }
+
+  static get surveys => _surveys;
+  static void addSurvey(String id) {
+    _surveys!.add(id);
+    instance.setStringList("surveys", _surveys!);
+  }
 }
 
 class Configs {
   static Configs instance = Configs();
   Function? onCreate;
   Function(dynamic)? onError;
+  dynamic? configs;
   QuranMeta? _metadata;
   BuildConfig? buildConfig;
+
   QuranMeta get metadata => _metadata!;
 
   List<Word> words = <Word>[];
@@ -140,8 +150,8 @@ class Configs {
 
   void _loadConfigs() {
     Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
-      var map = json.decode(data);
-      for (var f in map["files"]) _loadFile(f["path"], f["md5"]);
+      configs = json.decode(data);
+      for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
     }, forceUpdate: true);
   }
 

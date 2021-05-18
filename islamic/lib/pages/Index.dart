@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
+import 'package:islamic/pages/web.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:islamic/widgets/rating.dart';
 
@@ -65,8 +66,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       }
     });
     suras = Configs.instance.metadata.suras;
-    Future.delayed(Duration(seconds: 1))
-        .then((_) => showRating()); //this inside the initstate
+    Future.delayed(Duration(seconds: 1)).then((_) {
+      showRating();
+      showSurveys();
+    }); //this inside the initstate
 
     createNotes();
   }
@@ -497,6 +500,19 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         MaterialPageRoute(
             builder: (context) => AudioServiceWidget(child: HomePage())));
     createNotes();
+  }
+
+  void showSurveys() async {
+    for (var s in Configs.instance.configs["surveys"]) {
+      if (s["availableAt"] < Prefs.numRuns &&
+          Prefs.surveys.indexOf(s["id"]) < 0) {
+        print("Survey ${s["id"]} in ${s["availableAt"]}/${Prefs.numRuns}");
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => WebPage(url: s["url"])));
+        Prefs.addSurvey(s["id"]);
+        return;
+      }
+    }
   }
 
   void showRating() async {
