@@ -327,52 +327,55 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Align(
         alignment: Alignment.bottomCenter,
         child: Container(
+            height: 80,
             transform: Matrix4.identity()..translate(0.001, coef * 0.4),
-            height: 56,
-            child: Stack(
-              fit: StackFit.expand,
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                    top: 0,
-                    bottom: 0,
-                    child: Opacity(
-                        opacity: toolbarHeight / _toolbarHeight,
-                        child: getButton("texts"))),
-                Positioned(
-                    top: 0,
-                    bottom: 0,
-                    left: 48,
-                    child: Opacity(
-                        opacity: toolbarHeight / _toolbarHeight,
-                        child: getButton("sounds"))),
-                Positioned(
-                    top: 10 - coef * 0.11,
-                    right: 86 - coef * 0.4,
-                    child: Avatar(playingSound.path!, 20 - coef * 0.12)),
-                Positioned(
-                    top: 10 - coef * 0.2,
-                    right: 132 - coef * 0.65,
-                    child: Text(
-                      playingSound.title,
-                      style: theme.textTheme.button,
-                      textAlign: TextAlign.right,
-                    )),
-                Positioned(
-                    top: -_toolbarHeight * 0.5 + coef * 0.15,
-                    right: _toolbarHeight * 0.5 - coef * 0.15,
-                    child: SizedBox(
-                        height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
-                        width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
-                        child: getToggleButton(context)))
-              ],
-            ),
-            decoration: BoxDecoration(
-              color: theme.appBarTheme.backgroundColor,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-            )));
+            child: Stack(fit: StackFit.expand, children: [
+              Positioned(
+                  top: 24,
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                      decoration: BoxDecoration(
+                    color: theme.appBarTheme.backgroundColor,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16)),
+                  ))),
+              Positioned(
+                  top: 24,
+                  bottom: 0,
+                  child: Opacity(
+                      opacity: toolbarHeight / _toolbarHeight,
+                      child: getButton("texts"))),
+              Positioned(
+                  top: 24,
+                  bottom: 0,
+                  left: 48,
+                  child: Opacity(
+                      opacity: toolbarHeight / _toolbarHeight,
+                      child: getButton("sounds"))),
+              Positioned(
+                  top: 34 - coef * 0.11,
+                  right: 86 - coef * 0.4,
+                  child: Avatar(playingSound.path!, 20 - coef * 0.12)),
+              Positioned(
+                  top: 34 - coef * 0.2,
+                  right: 132 - coef * 0.65,
+                  child: Text(
+                    playingSound.title,
+                    style: theme.textTheme.button,
+                    textAlign: TextAlign.right,
+                  )),
+              Positioned(
+                  top: coef * 0.15,
+                  right: _toolbarHeight * 0.5 - coef * 0.15,
+                  child: SizedBox(
+                      height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
+                      width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
+                      child: getToggleButton(context))),
+            ])));
   }
 
   Future<void> footerPressed(PType type) async {
