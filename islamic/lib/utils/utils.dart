@@ -44,9 +44,12 @@ class Utils {
   }
 
   static Timer? _wakeupTimer;
+  static bool wakeupPassed = false;
   static void wakeup(BuildContext context, {int seconds = 15}) async {
-    if (_wakeupTimer != null) return;
+    _wakeupTimer?.cancel();
+    if (wakeupPassed) return;
     _wakeupTimer = Timer(Duration(seconds: seconds), () {
+      wakeupPassed = true;
       Generics.confirm(context,
           text: "wake_l".l(),
           acceptLabel: "wake_a".l(),
