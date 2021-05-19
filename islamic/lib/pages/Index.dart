@@ -115,7 +115,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return Prefs.last == 0
         ? SizedBox(height: 0)
         : Container(
-            height: HomePageState.soundState != 1 ? 64 : 100,
+            height: HomePageState.soundState == SoundState.playing ? 100 : 64,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -136,7 +136,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                   style: theme.textTheme.subtitle1,
                                 ),
                               ])))),
-                  HomePageState.soundState != 1
+                  HomePageState.soundState != SoundState.playing //dfsdfsdfsfds
                       ? SizedBox()
                       : Container(
                           height: 36,
@@ -152,7 +152,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                   icon: Icon(Icons.stop, size: 16),
                                   onPressed: () {
                                     AudioService.stop();
-                                    HomePageState.soundState = 0;
+                                    HomePageState.soundState = SoundState.stop;
                                     setState(() {});
                                   })
                             ],

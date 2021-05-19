@@ -45,8 +45,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   ThemeData? _theme;
   ThemeData get theme => _theme!;
-  bool isPlaying = false;
-  static int soundState = 0;
+  static SoundState soundState = SoundState.stop;
 
   void initHome() {
     hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
@@ -438,7 +437,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             .map((state) => state.playing)
             .distinct(),
         builder: (context, snapshot) {
-          isPlaying = snapshot.data ?? false;
+          if (soundState.index > SoundState.ready.index)
+            soundState = (snapshot.data ?? false)
+                ? SoundState.playing
+                : SoundState.pause;
           return FloatingActionButton(
               heroTag: "fab",
               child: Icon(getIcon()),
@@ -447,8 +449,14 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   IconData getIcon() {
-    if (soundState == 2) return Icons.access_alarm;
-    return isPlaying ? Icons.pause : Icons.play_arrow;
+    switch (soundState) {
+      case SoundState.loading:
+        return Icons.hourglass_bottom;
+      case SoundState.playing:
+        return Icons.pause;
+      default:
+        return Icons.play_arrow;
+    }
   }
 
   IconButton getButton(String type) {
@@ -495,10 +503,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     print("initAudio c ${AudioService.connected} r ${AudioService.running}");
     if (AudioService.connected && AudioService.running) return;
 
+    soundState = SoundState.loading;
+    setState(() {});
     List<String>? sounds = Prefs.persons[PType.sound];
     playingSound = Configs.instance.sounds[sounds![0]]!;
-    setState(() {});
-    soundState = 2;
     await AudioService.start(
         backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint,
         androidNotificationChannelName: 'قرآن هدایت',
@@ -509,7 +517,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         androidEnableQueue: true,
         params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
     updatePlayer();
-    soundState = 0;
+    soundState = SoundState.ready;
     setState(() {});
 
     AudioService.customEventStream.listen((state) {
@@ -517,10 +525,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (event["type"] == "select") {
         var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
         playingSound = Configs.instance.sounds[sounds[event["data"][1]]]!;
-        soundState = 1;
+        soundState = SoundState.playing;
         goto(aya.sura, aya.aya, fromPlayer: true);
       } else if (event["type"] == "stop") {
-        soundState = 0;
+        soundState = SoundState.stop;
         setState(() {});
       }
     });
@@ -528,14 +536,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void onTogglePressed() async {
     await initAudio();
-    if (soundState == 1) {
-      isPlaying ? AudioService.pause() : AudioService.play();
+    if (soundState == SoundState.pause || soundState == SoundState.playing) {
+      soundState == SoundState.playing
+          ? AudioService.pause()
+          : AudioService.play();
       return;
     }
     play(Configs.instance.pageItems[selectedPage][scrollIndex].index);
   }
 
   void play(int index) async {
+    soundState = SoundState.loading;
+    setState(() {});
     await initAudio();
     AudioService.customAction("select", {"index": index});
   }
@@ -556,6 +568,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 }
+
+enum SoundState { stop, loading, ready, playing, pause }
 
 void _audioPlayerTaskEntrypoint() async {
   AudioServiceBackground.run(() => AudioPlayerTask());

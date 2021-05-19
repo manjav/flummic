@@ -19,16 +19,16 @@ class _WebPageState extends State<WebPage> {
         appBar: AppBar(title: Text(widget.data["title"] ?? "")),
         body: Stack(alignment: Alignment.center, children: [
           WebView(
-            allowsInlineMediaPlayback: true,
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (String url) {
+              allowsInlineMediaPlayback: true,
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (String url) {
                 if (url == widget.data["url"]) {
                   loaded = true;
                   setState(() {});
                 }
                 if (url.indexOf("hidaya") > -1 || url.indexOf("islam") > -1)
                   Navigator.pop(context);
-            },
+              },
               initialUrl: widget.data["url"]),
           loaded
               ? SizedBox()
