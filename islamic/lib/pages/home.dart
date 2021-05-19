@@ -391,8 +391,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var page = part[0];
     var index = part[1];
     if (fromPlayer) {
-      print("---index:$index scrollIndex:$scrollIndex");
-      if (page != selectedPage) return;
+      print("goto p:$page sp: $selectedPage i:$index si:$scrollIndex");
       selectedIndex = index;
       if ((index - scrollIndex).abs() > 4) return;
     }
@@ -400,14 +399,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (page != selectedPage) {
       var dis = (page - selectedPage).abs();
       gotoPage(page, dis > 3 ? 0 : 400);
-      // gotoAya(aya, 0);
+      Future.delayed(Duration(milliseconds: 500), () => gotoIndex(index, 800));
     } else {
       gotoIndex(index, 800);
     }
-    // Prefs.selectedSura = selectedSura = sura;
-    // Prefs.selectedAya = selectedAya = aya;
-    selectedIndex = index;
-    setState(() {});
     // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
   }
 
@@ -421,6 +416,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void gotoIndex(int index, int duration) {
     print("index $index, duration $duration");
+    selectedIndex = index;
+    setState(() {});
     if (duration == 0) {
       ayaList!.itemScrollController!.jumpTo(index: index);
     } else {
