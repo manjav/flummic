@@ -528,7 +528,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
               package: 'com.farsitel.bazaar');
           await intent.launch();
         }
-        Prefs.instance.setInt("rate", 100);
+        Prefs.instance.setInt("rate", 1000000);
         return;
       }
 
@@ -540,7 +540,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           return;
         }
         inAppReview.openStoreListing();
-        Prefs.instance.setInt("rate", 100);
+        Prefs.instance.setInt("rate", 1000000);
       }
       return;
     }
