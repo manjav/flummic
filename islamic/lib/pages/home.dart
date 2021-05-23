@@ -45,6 +45,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   dynamic playingAya;
   ThemeData? _theme;
+
   ThemeData get theme => _theme!;
   static SoundState soundState = SoundState.stop;
 
@@ -395,17 +396,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  void goto(int sura, int aya, {bool fromPlayer = false}) {
+  void goto(int sura, int aya, {bool force = false}) {
     var part = Configs.instance.getPart(sura, aya);
     var page = part[0];
     var index = part[1];
-    if (fromPlayer) {
-      print("goto p:$page sp: $selectedPage i:$index si:$scrollIndex");
-      selectedIndex = index;
-      if ((index - scrollIndex).abs() > 4) return;
-    }
 
     if (page != selectedPage) {
+      if (!force && index != 0) return;
       var dis = (page - selectedPage).abs();
       gotoPage(page, dis > 3 ? 0 : 400);
       Future.delayed(Duration(milliseconds: 500), () => gotoIndex(index, 800));
