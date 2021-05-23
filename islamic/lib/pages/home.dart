@@ -43,9 +43,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool hasQuranText = false;
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
-  dynamic playingAya;
+  Aya playingAya = new Aya(0, 0, 0);
   ThemeData? _theme;
-
   ThemeData get theme => _theme!;
   static SoundState soundState = SoundState.stop;
 
@@ -349,13 +348,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   right: 86 - coef * 0.4,
                   child: Avatar(playingSound.path!, 20 - coef * 0.12)),
               Positioned(
-                  top: 36 - coef * 0.2,
+                  top: 35 - coef * 0.2,
                   right: 132 - coef * 0.65,
                   child: Text(
-                    playingSound.title,
-                    style: theme.textTheme.button,
-                    textAlign: TextAlign.right,
-                  )),
+                      "${playingSound.title} - ${'sura_l'.l()} ${Configs.instance.metadata.suras[playingAya.sura].title} (${(playingAya.aya + 1).n()})",
+                      style: theme.textTheme.button,
+                      textAlign: TextAlign.right)),
               Positioned(
                   top: 24,
                   bottom: 0,
