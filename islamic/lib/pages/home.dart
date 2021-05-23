@@ -352,9 +352,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Positioned(
                   top: 35 - coef * 0.2,
                   right: 132 - coef * 0.65,
+                  left: 80,
                   child: Text(
                       "${playingSound.title} - ${'sura_l'.l()} ${Configs.instance.metadata.suras[playingAya.sura].title} (${(playingAya.aya + 1).n()})",
                       style: theme.textTheme.button,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      textDirection: TextDirection.rtl,
                       textAlign: TextAlign.right)),
               Positioned(
                   top: 24,
