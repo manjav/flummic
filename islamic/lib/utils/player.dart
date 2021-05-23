@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
-class Aya {
+class PlayerAya {
   int? sura, aya;
-  Aya(a) {
+  PlayerAya(a) {
     sura = a["sura"];
     aya = a["aya"];
   }
@@ -41,15 +41,15 @@ class AudioPlayerTask extends BackgroundAudioTask {
   MediaItem? mediaItem;
   int index = 0;
   int soundIndex = 0;
-  List<Aya>? ayas;
+  List<PlayerAya>? ayas;
   List<Sound>? sounds;
   List<String>? suras;
 
   @override
   Future<void> onStart(Map<String, dynamic>? params) async {
-    ayas = <Aya>[];
+    ayas = <PlayerAya>[];
     var list = json.decode(params!["ayas"]);
-    for (var a in list) ayas!.add(Aya(a));
+    for (var a in list) ayas!.add(PlayerAya(a));
 
     AudioServiceBackground.setQueue(<MediaItem>[]);
     // We configure the audio session for speech since we're playing a podcast.
