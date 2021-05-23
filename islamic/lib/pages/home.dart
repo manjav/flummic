@@ -363,24 +363,24 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Positioned(
                   top: 24,
                   bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: GestureDetector(
+                      onTap: () =>
+                          goto(playingAya.sura, playingAya.aya, force: true))),
+              Positioned(
+                  top: 24,
+                  bottom: 0,
                   child: Opacity(
                       opacity: toolbarHeight / _toolbarHeight,
                       child: getButton("texts"))),
               Positioned(
                   top: 24,
                   bottom: 0,
-                  left: 48,
+                  left: 44,
                   child: Opacity(
                       opacity: toolbarHeight / _toolbarHeight,
                       child: getButton("sounds"))),
-              Positioned(
-                  top: 24,
-                  bottom: 0,
-                  right: 0,
-                  left: 0,
-                  child: GestureDetector(
-                      onTap: () =>
-                          goto(playingAya.sura, playingAya.aya, force: true))),
               Positioned(
                   top: coef * 0.15,
                   right: _toolbarHeight * 0.5 - coef * 0.15,
