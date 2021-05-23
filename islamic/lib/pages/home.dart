@@ -65,11 +65,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     suraPageController =
         PageController(keepPage: true, initialPage: selectedPage);
+    playingAya.sura = Configs.instance.pageItems[selectedPage][0].sura;
     suraPageController!.addListener(() {
       var page = suraPageController!.page!.round();
       if (selectedPage != page) {
         setState(() {
           selectedPage = page;
+          playingAya.sura = Configs.instance.pageItems[selectedPage][0].sura;
           setLast(0);
           toolbarHeight = _toolbarHeight;
         });

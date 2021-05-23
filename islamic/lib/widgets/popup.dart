@@ -26,8 +26,6 @@ class AyaDetailsState extends State<AyaDetails> {
     return Container(
         height: 160,
         child: Stack(alignment: Alignment.topCenter,
-            // fit: StackFit.expand,
-            // clipBehavior: Clip.none,
             children: [
               Generics.draggable(theme),
               Positioned(
