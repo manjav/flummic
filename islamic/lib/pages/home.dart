@@ -43,6 +43,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool hasQuranText = false;
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
+  dynamic playingAya;
   ThemeData? _theme;
   ThemeData get theme => _theme!;
   static SoundState soundState = SoundState.stop;
@@ -343,6 +344,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         topRight: Radius.circular(16)),
                   ))),
               Positioned(
+                  top: 34 - coef * 0.11,
+                  right: 86 - coef * 0.4,
+                  child: Avatar(playingSound.path!, 20 - coef * 0.12)),
+              Positioned(
+                  top: 36 - coef * 0.2,
+                  right: 132 - coef * 0.65,
+                  child: Text(
+                    playingSound.title,
+                    style: theme.textTheme.button,
+                    textAlign: TextAlign.right,
+                  )),
+              Positioned(
                   top: 24,
                   bottom: 0,
                   child: Opacity(
@@ -356,24 +369,20 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       opacity: toolbarHeight / _toolbarHeight,
                       child: getButton("sounds"))),
               Positioned(
-                  top: 34 - coef * 0.11,
-                  right: 86 - coef * 0.4,
-                  child: Avatar(playingSound.path!, 20 - coef * 0.12)),
-              Positioned(
-                  top: 36 - coef * 0.2,
-                  right: 132 - coef * 0.65,
-                  child: Text(
-                    playingSound.title,
-                    style: theme.textTheme.button,
-                    textAlign: TextAlign.right,
-                  )),
+                  top: 24,
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: GestureDetector(
+                      onTap: () =>
+                          goto(playingAya.sura, playingAya.aya, force: true))),
               Positioned(
                   top: coef * 0.15,
                   right: _toolbarHeight * 0.5 - coef * 0.15,
                   child: SizedBox(
                       height: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
                       width: _toolbarHeight * 0.7 + toolbarHeight * 0.3,
-                      child: getToggleButton(context))),
+                      child: getToggleButton(context)))
             ])));
   }
 
@@ -520,10 +529,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     AudioService.customEventStream.listen((state) {
       var event = json.decode(state as String);
       if (event["type"] == "select") {
-        var aya = Configs.instance.navigations["all"]![0][event["data"][0]];
+        playingAya = Configs.instance.navigations["all"]![0][event["data"][0]];
         playingSound = Configs.instance.sounds[sounds[event["data"][1]]]!;
         soundState = SoundState.playing;
-        goto(aya.sura, aya.aya, fromPlayer: true);
+        goto(playingAya.sura, playingAya.aya);
       } else if (event["type"] == "stop") {
         soundState = SoundState.stop;
         setState(() {});
