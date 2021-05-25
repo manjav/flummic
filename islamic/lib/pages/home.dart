@@ -179,9 +179,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void setLast(int index) {
-    // print("$index ${Configs.instance.pageItems[selectedPage][index].index}");
-    Prefs.instance
-        .setInt("last", Configs.instance.pageItems[selectedPage][index].index);
+    Prefs.last = Configs.instance.pageItems[selectedPage][index].index;
   }
 
   void onPageScroll(double changes) {

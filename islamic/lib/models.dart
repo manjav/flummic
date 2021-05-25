@@ -24,8 +24,9 @@ class Prefs {
   static int get themeMode => instance.getInt("themeMode") ?? 0;
   static int get numRuns => instance.getInt("numRuns") ?? 0;
   static int get rate => instance.getInt("rate") ?? 3;
-  static int get last => instance.getInt("last") ?? 0;
 
+  static set last(int l) => instance.setInt("last", l);
+  static int get last => instance.getInt("last") ?? 0;
   static int get selectedSura => instance.getInt("s") ?? 0;
   static set selectedSura(int s) => instance.setInt("s", s);
   static int get selectedAya => instance.getInt("a") ?? 0;
