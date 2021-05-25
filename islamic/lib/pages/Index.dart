@@ -136,7 +136,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                   style: theme.textTheme.subtitle1,
                                 ),
                               ])))),
-                  HomePageState.soundState != SoundState.playing //dfsdfsdfsfds
+                  HomePageState.soundState != SoundState.playing
                       ? SizedBox()
                       : Container(
                           height: 36,

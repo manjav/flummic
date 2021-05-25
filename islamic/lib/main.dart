@@ -68,16 +68,16 @@ class AppState extends State<MyApp> {
       setState(() => loadingState = 1);
       setTheme(ThemeMode.values[Prefs.themeMode]);
       loadConfig();
+      if (Prefs.numRuns < 3) {
+        // Smartlook
+        SetupOptions options =
+            (SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071'))
+                .build();
+        Smartlook.setupAndStartRecording(options);
+      }
     });
 
     Wakelock.disable();
-
-    // Smartlook
-    SetupOptions options =
-        (SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071'))
-            .build();
-    Smartlook.setupAndStartRecording(options);
-
     super.initState();
   }
 
