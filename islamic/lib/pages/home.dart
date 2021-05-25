@@ -156,6 +156,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           } else if (scrollNotification is ScrollUpdateNotification) {
             onPageScroll(-scrollNotification.scrollDelta!);
           } else if (scrollNotification is ScrollEndNotification) {
+            if (soundState == SoundState.playing) return true;
             var items =
                 ayaList!.itemPositionsNotifier!.itemPositions.value.toList();
             for (var item in items) {
@@ -179,6 +180,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void setLast(int index) {
+    // print("$index ${Configs.instance.pageItems[selectedPage][index].index}");
     Prefs.last = Configs.instance.pageItems[selectedPage][index].index;
   }
 
@@ -402,6 +404,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var part = Configs.instance.getPart(sura, aya);
     var page = part[0];
     var index = part[1];
+    if (page == selectedPage && index == selectedPage) return;
+    Prefs.last = Configs.instance.pageItems[page][index].index;
+    // print("sura $sura aya $aya page $page index $index");
 
     if (page != selectedPage) {
       if (!force && index != 0) return;
@@ -411,7 +416,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       gotoIndex(index, 800);
     }
-    // print("sura ${player.sura} aya ${player.aya} index ${player.index}");
   }
 
   void gotoPage(int page, int duration) {
@@ -423,7 +427,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void gotoIndex(int index, int duration) {
-    print("index $index, duration $duration");
+    // print("index $index, duration $duration");
     selectedIndex = index;
     setState(() {});
     if (duration == 0) {
