@@ -504,7 +504,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   void showSurveys() async {
     for (var s in Configs.instance.configs["surveys"]) {
-      if (s["availableAt"] < Prefs.numRuns &&
+      if (s["url"] != "" &&
+          s["availableAt"] < Prefs.numRuns &&
           s["languageCode"] == Localization.languageCode &&
           Prefs.surveys.indexOf(s["id"]) < 0) {
         print("Survey ${s["id"]} in ${s["availableAt"]}/${Prefs.numRuns}");
