@@ -4,7 +4,7 @@ import 'package:islamic/utils/localization.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebPage extends StatefulWidget {
-  final dynamic? data;
+  final dynamic data;
   WebPage({Key? key, this.data}) : super(key: key);
 
   @override

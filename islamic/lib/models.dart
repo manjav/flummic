@@ -124,7 +124,7 @@ class Configs {
   static Configs instance = Configs();
   Function? onCreate;
   Function(dynamic)? onError;
-  dynamic? configs;
+  dynamic configs;
   QuranMeta? _metadata;
   BuildConfig? buildConfig;
   QuranMeta get metadata => _metadata!;
