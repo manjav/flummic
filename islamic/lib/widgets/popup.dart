@@ -25,25 +25,24 @@ class AyaDetailsState extends State<AyaDetails> {
     hasNote = Prefs.hasNote(widget.sura, widget.aya)!;
     return Container(
         height: 160,
-        child: Stack(alignment: Alignment.topCenter,
-            children: [
-              Generics.draggable(theme),
-              Positioned(
-                top: 20,
-                child: Text(
-                  "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
-                  style: theme.textTheme.headline5,
-                ),
-              ),
-              Positioned(
-                  right: 4,
-                  bottom: 4,
-                  child: Row(textDirection: TextDirection.ltr, children: [
-                    getButton(theme, Icons.share, "share"),
-                    getButton(theme, getNoteIcon(), "note"),
-                    getButton(theme, Icons.play_circle_fill, "play")
-                  ]))
-            ]));
+        child: Stack(alignment: Alignment.topCenter, children: [
+          Generics.draggable(theme),
+          Positioned(
+            top: 20,
+            child: Text(
+              "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
+              style: theme.textTheme.headline5,
+            ),
+          ),
+          Positioned(
+              right: 4,
+              bottom: 4,
+              child: Row(textDirection: TextDirection.ltr, children: [
+                getButton(theme, Icons.share, "share"),
+                getButton(theme, getNoteIcon(), "note"),
+                getButton(theme, Icons.play_circle_fill, "play")
+              ]))
+        ]));
   }
 
   IconButton getButton(ThemeData theme, IconData icon, String type) {
@@ -119,7 +118,7 @@ class SettingsState extends State<Settings> {
     var queryData = MediaQuery.of(context);
     var config = Configs.instance.buildConfig;
     return Container(
-        height: 580,
+        height: 500,
         child: MediaQuery(
           data: queryData.copyWith(
               textScaleFactor: queryData.textScaleFactor * Prefs.textScale),

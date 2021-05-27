@@ -478,6 +478,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             backgroundColor: theme.dialogBackgroundColor,
             context: context,
+            isScrollControlled: true,
             builder: (context) => Settings(() => setState(() {})),
           ),
         );
