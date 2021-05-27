@@ -125,7 +125,7 @@ class PersonPageState extends State<PersonPage>
           ListTile(
               leading: Avatar(p, 24),
               title: Text(ps!.title),
-              subtitle: Text("${ps.mode!.l()} ${(ps.flag! + '_fl').l()}")),
+              subtitle: Text("${ps.mode!.l()} ${(ps.flag! + '_l').l()}")),
           ps.state == PState.removing
               ? Positioned(
                   top: 0,

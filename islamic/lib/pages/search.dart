@@ -95,7 +95,7 @@ class SearchPageState extends State<SearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                          "${(index + 1).n()}. ${'sura_l'.l()} ${Configs.instance.metadata.suras[s.sura].name} - ${'verse_l'.l()} ${(s.aya + 1).n()}"),
+                          "${(index + 1).n()}. ${'sura_l'.l()} ${Configs.instance.metadata.suras[s.sura].name} - ${'aya_l'.l()} ${(s.aya + 1).n()}"),
                       RichText(
                         textAlign: TextAlign.justify,
                         textDirection: TextDirection.rtl,

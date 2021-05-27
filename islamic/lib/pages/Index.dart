@@ -339,12 +339,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         Text(
                             Localization.isRTL
                                 ? "$j. ${String.fromCharCode(index + 327)}${String.fromCharCode(193)}"
-                                : "$j. " + "j_$j".l() + " " + "juze_l".l(),
+                                : "$j. " + "n_$j".l() + " " + "juze_l".l(),
                             style: Localization.isRTL
                                 ? titlesStyle
                                 : theme.textTheme.subtitle1),
                         Text(
-                            "${'sura_l'.l()} ${Configs.instance.metadata.suras[juz.sura - 1].title} ${'verse_l'.l()} ${juz.aya.n()}",
+                            "${'sura_l'.l()} ${Configs.instance.metadata.suras[juz.sura - 1].title} ${'aya_l'.l()} ${juz.aya.n()}",
                             style: theme.textTheme.caption)
                       ],
                     )),
@@ -416,7 +416,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${'sura_l'.l()} ${Configs.instance.metadata.suras[note.sura].title} - ${'verse_l'.l()} ${(note.aya + 1).n()}",
+                          "${'sura_l'.l()} ${Configs.instance.metadata.suras[note.sura].title} - ${'aya_l'.l()} ${(note.aya + 1).n()}",
                           style: theme.textTheme.subtitle1,
                         ),
                         note.text.length > 0

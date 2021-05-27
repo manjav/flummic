@@ -30,7 +30,7 @@ class AyaDetailsState extends State<AyaDetails> {
           Positioned(
             top: 20,
             child: Text(
-              "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'verse_l'.l()} ${(widget.aya + 1).n()}",
+              "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'aya_l'.l()} ${(widget.aya + 1).n()}",
               style: theme.textTheme.headline5,
             ),
           ),
@@ -58,7 +58,7 @@ class AyaDetailsState extends State<AyaDetails> {
     switch (type) {
       case "share":
         var subject =
-            "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'verse_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
+            "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'aya_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
         var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
             Configs.instance.quran[s][a];
         if (Prefs.persons[PType.text]!.length > 1) {
@@ -165,11 +165,11 @@ class SettingsState extends State<Settings> {
                           .map<DropdownMenuItem<Locale>>(
                               (Locale value) => DropdownMenuItem<Locale>(
                                     value: value,
-                                    child: Text("${value.languageCode}_fl".l()),
+                                    child: Text("${value.languageCode}_f".l()),
                                   ))
                           .toList(),
                     )),
-                Generics.text(theme, "text_size".l(), 188, isRtl ? p : null,
+                Generics.text(theme, "tsize_l".l(), 188, isRtl ? p : null,
                     isRtl ? null : p),
                 Positioned(
                     top: 220,
@@ -195,7 +195,7 @@ class SettingsState extends State<Settings> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           for (var i = 0; i < 4; i++)
-                            Text("text_$i".l(), style: theme.textTheme.caption)
+                            Text("tsize_$i".l(), style: theme.textTheme.caption)
                         ])),
                 Generics.text(theme, "navi_mode".l(), 320, isRtl ? p : null,
                     isRtl ? null : p),
