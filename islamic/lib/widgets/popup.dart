@@ -157,8 +157,8 @@ class SettingsState extends State<Settings> {
                     child: DropdownButton<Locale>(
                       value: app.locale,
                       style: theme.textTheme.caption,
-                      onChanged: (Locale? newValue) {
-                        Localization.change(context, newValue!.languageCode);
+                      onChanged: (Locale? v) async {
+                        await Localization.change(context, v!.languageCode);
                         setState(() {});
                       },
                       items: app.supportedLocales
