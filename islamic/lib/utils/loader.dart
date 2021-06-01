@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -17,7 +18,8 @@ class Loader {
     var dir = (await getApplicationSupportDirectory()).path;
     var ext = p.extension(url);
     var file = File('$dir/$path');
-    if (await file.exists()) {
+    var exists = await file.exists();
+    if (exists) {
       var str = await file.readAsString();
       debugPrint("==> Complete loading $path");
       onDone(str);
@@ -48,6 +50,7 @@ class Loader {
         }
         await file.writeAsBytes(bytes);
         debugPrint("==> Complete loading $url");
+        if (!exists || !forceUpdate) onDone(utf8.decode(bytes));
       }, onError: (d) {
         print("$url loading failed.");
         return onError?.call(d);
