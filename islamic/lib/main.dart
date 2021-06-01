@@ -34,11 +34,14 @@ class AppState extends State<MyApp> {
   WaitingPage? waitingPage;
   var supportedLocales = [
     const Locale("ar", ""),
+    const Locale("de", ""),
     const Locale("en", ""),
     const Locale("es", ""),
     const Locale("fa", ""),
     const Locale("fr", ""),
+    const Locale("hi", ""),
     const Locale("id", ""),
+    const Locale("ml", ""),
     const Locale("ru", ""),
     const Locale("tr", ""),
     const Locale("ur", "")
@@ -65,9 +68,9 @@ class AppState extends State<MyApp> {
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
     waitingPage = WaitingPage();
     Prefs.init(() {
-      setState(() => loadingState = 1);
-      setTheme(ThemeMode.values[Prefs.themeMode]);
       loadConfig();
+      setTheme(ThemeMode.values[Prefs.themeMode]);
+      setState(() => loadingState = 1);
       if (Prefs.numRuns < 1)
         Smartlook.setupAndStartRecording(SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071').build());
     });

@@ -55,7 +55,6 @@ flutter:
     - images/
     - texts/
     - anims/
-    - locs/
 
   fonts:
     - family: mequran

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' show Bidi;
+import 'package:islamic/models.dart';
 
 import '../main.dart';
+import 'loader.dart';
 
 extension Localization on String {
   static bool isRTL = false;
@@ -15,22 +15,18 @@ extension Localization on String {
   static TextDirection dir = TextDirection.ltr;
 
   static Future<void> change(BuildContext context, String _languageCode) async {
-    String data;
-    debugPrint('Load $_languageCode.json');
-    try {
-      data = await rootBundle.loadString('locs/$_languageCode.json');
-    } catch (_) {
-      data = await rootBundle.loadString('locs/${Platform.localeName}.json');
-    }
-    languageCode = _languageCode;
+    dynamic? _result;
+    languageCode = MyApp.of(context)!.setLocale(_languageCode);
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-    MyApp.of(context)!.setLocale(languageCode);
-
-    var _result = json.decode(data);
-    _sentences = Map();
-    _result.forEach((String key, dynamic value) {
-      _sentences![key] = value.toString();
+    await Loader().load(
+        "$languageCode.json", "${Configs.baseURL}/locales/$languageCode.ijson",
+        (String data) {
+      _result = json.decode(data);
+      _sentences = Map();
+      _result.forEach((String key, dynamic value) {
+        _sentences![key] = value.toString();
+      });
     });
   }
 
@@ -51,10 +47,6 @@ extension Localization on String {
     }
     return res!;
   }
-
-  // static void fromJson(Map<String, dynamic> json) => sentences = json;
-
-  // Map<String, String> toJson() => sentences!;
 
   String toArabic() {
     return this
