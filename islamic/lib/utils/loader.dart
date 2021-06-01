@@ -19,6 +19,7 @@ class Loader {
     var file = File('$dir/$path');
     if (await file.exists()) {
       var str = await file.readAsString();
+      debugPrint("==> Complete loading $path");
       onDone(str);
       if (!forceUpdate) return this;
     }
@@ -46,7 +47,7 @@ class Loader {
           bytes = archive.first.content as List<int>;
         }
         await file.writeAsBytes(bytes);
-        onDone(utf8.decode(bytes));
+        debugPrint("==> Complete loading $url");
       }, onError: (d) {
         print("$url loading failed.");
         return onError?.call(d);
