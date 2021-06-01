@@ -173,7 +173,7 @@ class PersonPageState extends State<PersonPage>
     if (!_removable()) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-        "forbiden_l".l(),
+        "empty_err".l(),
         textDirection: Localization.dir,
       )));
       return;
