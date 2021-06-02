@@ -122,7 +122,7 @@ class Prefs {
 
 class Configs {
   static Configs instance = Configs();
-  Function? onCreate;
+  Function? onInit;
   Function(dynamic)? onError;
   dynamic configs;
   QuranMeta? _metadata;
@@ -139,20 +139,20 @@ class Configs {
   static String baseURL = "https://grantech.ir/islam/";
   get quran => instance.texts["ar.uthmanimin"]?.data;
 
-  static void create(Function onCreate, Function(dynamic) onError) async {
+  static void create(Function onCreate) {
     instance = Configs();
     instance.buildConfig = BuildConfig();
     if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
-    instance.onCreate = onCreate;
-    instance.onError = onError;
-    instance._loadConfigs();
+    Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
+      instance.configs = json.decode(data);
+      onCreate.call();
+    }, forceUpdate: true);
   }
 
-  void _loadConfigs() {
-    Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
-      configs = json.decode(data);
+  void init(Function onInit, Function(dynamic) onError) {
+    this.onInit = onInit;
+    this.onError = onError;
       for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
-    }, forceUpdate: true);
   }
 
   void _loadFile(String path, String md5) {
@@ -198,7 +198,7 @@ class Configs {
       if (texts[t]?.state != PState.selected) return;
     for (var r in Prefs.persons[PType.sound]!)
       if (sounds[r]?.state != PState.selected) return;
-    onCreate?.call();
+    onInit?.call();
   }
 
   Future<void> loadSearchAssets(Function onDone) async {
