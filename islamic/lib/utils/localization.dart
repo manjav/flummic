@@ -16,7 +16,10 @@ extension Localization on String {
 
   static Future<void> change(BuildContext context, String _languageCode) async {
     dynamic? _result;
-    languageCode = MyApp.of(context)!.setLocale(_languageCode);
+    var _loc = MyApp.supportedLocales.firstWhere(
+        (l) => l.languageCode == _languageCode,
+        orElse: () => MyApp.supportedLocales[2]);
+    languageCode = _loc.languageCode;
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     await Loader().load(

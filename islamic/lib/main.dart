@@ -115,14 +115,9 @@ class AppState extends State<MyApp> {
     setState(() {});
   }
 
-  String setLocale(String lang) {
-    var _loc = supportedLocales.firstWhere((l) => l.languageCode == lang,
-        orElse: () => supportedLocales[2]);
-    setState(() {
-      locale = _loc;
-      Prefs.instance.setString("locale", _loc.languageCode);
-    });
-    return _loc.languageCode;
+  void setLocale(Locale _locale) {
+    locale = _locale;
+    setState(() {});
   }
 
   void loadConfig() {
