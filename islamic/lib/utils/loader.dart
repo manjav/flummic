@@ -36,14 +36,8 @@ class Loader {
         bytes.addAll(newBytes);
         onProgress?.call(bytes.length / contentLength);
       }, onDone: () async {
-        if (hash != null) {
-          var t = DateTime.now().millisecondsSinceEpoch;
-          var _hash = md5.convert(bytes);
-          print(
-              "$path $hash $_hash ${DateTime.now().millisecondsSinceEpoch - t}");
-          if (hash != _hash.toString())
+        if (!hashMatch(bytes, hash, url))
             return onError?.call("$path md5 is invalid!");
-        }
         if (ext == ".zip" || ext == ".zson") {
           Archive archive = ZipDecoder().decodeBytes(bytes);
           bytes = archive.first.content as List<int>;
@@ -69,4 +63,11 @@ class Loader {
   }
 
   void abort() => httpClient.close(force: true);
+
+  bool hashMatch(List<int> bytes, String? hash, String path) {
+    if (hash == null) return true;
+    var _hash = md5.convert(bytes);
+    debugPrint("$path MD5 $hash <> $_hash}");
+    return hash == _hash.toString();
+  }
 }
