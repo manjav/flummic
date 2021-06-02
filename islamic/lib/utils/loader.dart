@@ -20,10 +20,12 @@ class Loader {
     var file = File('$dir/$path');
     var exists = await file.exists();
     if (exists) {
-      var str = await file.readAsString();
+      var bytes = await file.readAsBytes();
+      if (hashMatch(bytes, hash, path)) {
       debugPrint("==> Complete loading $path");
-      onDone(str);
+        onDone(utf8.decode(bytes));
       if (!forceUpdate) return this;
+    }
     }
 
     try {
