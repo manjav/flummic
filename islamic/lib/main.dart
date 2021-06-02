@@ -125,14 +125,15 @@ class AppState extends State<MyApp> {
 
   void loadConfig() {
     Configs.create(() => Localization.change(Prefs.locale, onDone: (l) {
+          setLocale(l);
           Configs.instance.init(() {
-      if (waitingPage!.page!.state > 1)
-        waitingPage!.page!.end(() {
-          setState(() => loadingState = 2);
-        });
-      else
-        setState(() => loadingState = 2);
-    }, (e) => waitingPage!.page!.error(loadConfig));
+            if (waitingPage!.page!.state > 1)
+              waitingPage!.page!.end(() {
+                setState(() => loadingState = 2);
+              });
+            else
+              setState(() => loadingState = 2);
+          }, (e) => waitingPage!.page!.error(loadConfig));
         }));
   }
 }

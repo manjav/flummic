@@ -158,14 +158,16 @@ class SettingsState extends State<Settings> {
                       value: app.locale,
                       style: theme.textTheme.caption,
                       onChanged: (Locale? v) async {
-                        await Localization.change(context, v!.languageCode);
-                        setState(() {});
+                        Localization.change(v!.languageCode, onDone: (l) {
+                          MyApp.of(context)!.setLocale(l);
+                          setState(() {});
+                        });
                       },
-                      items: app.supportedLocales
+                      items: MyApp.supportedLocales
                           .map<DropdownMenuItem<Locale>>(
                               (Locale value) => DropdownMenuItem<Locale>(
                                     value: value,
-                                    child: Text("${value.languageCode}_f".l()),
+                                    child: Text(value.languageCode),
                                   ))
                           .toList(),
                     )),

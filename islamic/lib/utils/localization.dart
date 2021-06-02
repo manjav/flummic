@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -14,7 +13,7 @@ extension Localization on String {
   static Map<String, dynamic>? _sentences;
   static TextDirection dir = TextDirection.ltr;
 
-  static Future<void> change(BuildContext context, String _languageCode) async {
+  static void change(String _languageCode, {Function(Locale)? onDone}) {
     dynamic? _result;
     var _loc = MyApp.supportedLocales.firstWhere(
         (l) => l.languageCode == _languageCode,
@@ -22,7 +21,7 @@ extension Localization on String {
     languageCode = _loc.languageCode;
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
-    await Loader().load(
+    Loader().load(
         "$languageCode.json", "${Configs.baseURL}/locales/$languageCode.ijson",
         (String data) {
       _result = json.decode(data);
@@ -30,14 +29,13 @@ extension Localization on String {
       _result.forEach((String key, dynamic value) {
         _sentences![key] = value.toString();
       });
+      onDone?.call(_loc);
     });
   }
 
   String l([List<String>? args]) {
     final key = this;
-    if (_sentences == null) {
-      throw "[Localization System] sentences = null";
-    }
+    if (_sentences == null) throw "[Localization System] sentences = null";
     String? res = _sentences![key];
     if (res == null) {
       res = key;

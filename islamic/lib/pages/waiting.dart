@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 import '../utils/localization.dart';
-import '../models.dart';
 
 // ignore: must_be_immutable
 class WaitingPage extends StatefulWidget {
@@ -26,8 +25,7 @@ class WaitingPageState extends State<WaitingPage> {
     rootBundle.load('anims/islam-logo.riv').then(animLoaded);
   }
 
-  animLoaded(ByteData data) async {
-    await Localization.change(context, Prefs.locale);
+  animLoaded(ByteData data) {
     final riveData = RiveFile.import(data);
     artboard = riveData.mainArtboard;
     artboard!.addController(SimpleAnimation('start'));
