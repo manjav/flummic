@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
+import 'package:islamic/utils/localization.dart';
 import 'package:smartlook/smartlook.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -20,19 +21,7 @@ Future<void> main() async {
 
 class MyApp extends StatefulWidget {
   static int? t;
-
-  @override
-  AppState createState() => AppState();
-  static AppState? of(BuildContext context) =>
-      context.findAncestorStateOfType<AppState>();
-}
-
-class AppState extends State<MyApp> {
-  Locale? locale;
-  ThemeMode? themeMode;
-  int loadingState = 0;
-  WaitingPage? waitingPage;
-  var supportedLocales = [
+  static final supportedLocales = [
     const Locale("ar", ""),
     const Locale("de", ""),
     const Locale("en", ""),
@@ -46,6 +35,18 @@ class AppState extends State<MyApp> {
     const Locale("tr", ""),
     const Locale("ur", "")
   ];
+
+  @override
+  AppState createState() => AppState();
+  static AppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<AppState>();
+}
+
+class AppState extends State<MyApp> {
+  Locale? locale;
+  ThemeMode? themeMode;
+  int loadingState = 0;
+  WaitingPage? waitingPage;
 
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
@@ -72,7 +73,9 @@ class AppState extends State<MyApp> {
       setTheme(ThemeMode.values[Prefs.themeMode]);
       setState(() => loadingState = 1);
       if (Prefs.numRuns < 1)
-        Smartlook.setupAndStartRecording(SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071').build());
+        Smartlook.setupAndStartRecording(
+            SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071')
+                .build());
     });
 
     Wakelock.disable();
@@ -88,7 +91,7 @@ class AppState extends State<MyApp> {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: supportedLocales,
+      supportedLocales: MyApp.supportedLocales,
       locale: locale,
       theme: Themes.data,
       darkTheme: Themes.darkData,
