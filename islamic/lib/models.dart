@@ -127,6 +127,7 @@ class Configs {
   dynamic configs;
   QuranMeta? _metadata;
   BuildConfig? buildConfig;
+
   QuranMeta get metadata => _metadata!;
 
   List<Word> words = <Word>[];
@@ -152,10 +153,11 @@ class Configs {
   void init(Function onInit, Function(dynamic) onError) {
     this.onInit = onInit;
     this.onError = onError;
-      for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
+    for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
   }
 
   void _loadFile(String path, String md5) {
+    if (path != "persons" && path != "uthmani-meta") return;
     Loader().load("$path.json", "$baseURL$path.ijson", (String data) {
       var map = json.decode(data);
       if (path == "persons")
