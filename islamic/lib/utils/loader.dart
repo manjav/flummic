@@ -22,10 +22,10 @@ class Loader {
     if (exists) {
       var bytes = await file.readAsBytes();
       if (hashMatch(bytes, hash, path)) {
-      debugPrint("==> Complete loading $path");
+        debugPrint("==> Complete loading $path");
         onDone(utf8.decode(bytes));
-      if (!forceUpdate) return this;
-    }
+        if (!forceUpdate) return this;
+      }
     }
 
     try {
@@ -39,7 +39,7 @@ class Loader {
         onProgress?.call(bytes.length / contentLength);
       }, onDone: () async {
         if (!hashMatch(bytes, hash, url))
-            return onError?.call("$path md5 is invalid!");
+          return onError?.call("$path md5 is invalid!");
         if (ext == ".zip" || ext == ".zson") {
           Archive archive = ZipDecoder().decodeBytes(bytes);
           bytes = archive.first.content as List<int>;

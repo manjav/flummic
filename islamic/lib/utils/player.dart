@@ -37,6 +37,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
   AudioPlayer _player = new AudioPlayer();
   AudioProcessingState? _skipState;
   Seeker? _seeker;
+  // ignore: cancel_subscriptions
   StreamSubscription<PlaybackEvent>? _eventSubscription;
   MediaItem? mediaItem;
   int index = 0;
