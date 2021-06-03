@@ -21,6 +21,8 @@ extension Localization on String {
     languageCode = _loc.languageCode;
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
+    List<dynamic> files = Configs.instance.configs["files"];
+    var file = files.firstWhere((f) => f["path"] == languageCode);
     Loader().load(
         "$languageCode.json", "${Configs.baseURL}/locales/$languageCode.ijson",
         (String data) {
@@ -30,7 +32,7 @@ extension Localization on String {
         _sentences![key] = value.toString();
       });
       onDone?.call(_loc);
-    });
+    }, hash: file != null ? file["md5"] : null);
   }
 
   String l([List<String>? args]) {
