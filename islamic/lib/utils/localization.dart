@@ -12,6 +12,52 @@ extension Localization on String {
   static String languageCode = "en";
   static Map<String, dynamic>? _sentences;
   static TextDirection dir = TextDirection.ltr;
+  static Map<String, String> names = {
+    'sq': 'Albanian (shqip)',
+    'ar': 'Arabic (العربية)',
+    'az': 'Azerbaijani (Azərbaycanca)',
+    'am': 'Amharic (አማርኛ)',
+    'bn': 'Bengali (বাংলা)',
+    'bs': 'Bosnian (Bosanski)',
+    'bg': 'Bulgarian (словѣньскъ )',
+    'zh': 'Chinese (贛語)',
+    'cs': 'Czech (Česky)',
+    'dv': 'Divehi',
+    'nl': 'Dutch (Nederlands)',
+    'en': 'English',
+    'fr': 'French (Français)',
+    'de': 'German (Deutsch)',
+    'ha': 'Hausa (هَوُسَ)',
+    'hi': 'Hindi (हिन्दी)',
+    'id': 'Indonesian',
+    'it': 'Italian (Italiano)',
+    'ja': 'Japanese (日本語)',
+    'ko': 'Korean (한국어)',
+    'ku': 'Kurdish (کوردی)',
+    'ms': 'Malay (Melayu)',
+    'ml': 'Malayalam (മലയാളം)',
+    'no': 'Norwegian (Norsk)',
+    'fa': 'Persian (فارسی)',
+    'pl': 'Polish (Polski)',
+    'pt': 'Portuguese (Português)',
+    'ro': 'Romanian (Română)',
+    'ru': 'Russian (Русский)',
+    'sd': 'Sindhi (सिनधि)',
+    'so': 'Somali (Soomaaliga)',
+    'es': 'Spanish (Español)',
+    'sw': 'Swahili (Kiswahili)',
+    'sv': 'Swedish (Svenska)',
+    'tg': 'Tajik (Тоҷикӣ)',
+    'ta': 'Tamil (தமிழ்)',
+    'tt': 'Tatar (Tatarça)',
+    'th': 'Thai (ไทย)',
+    'tr': 'Turkish (Türkçe)',
+    'ur': 'Urdu (اردو)',
+    'ug': 'Uyghur (ئۇيغۇرچە)',
+    'uz': 'Uzbek (Ўзбек)',
+    'ber': 'Amazigh (ܣܘܪܬ)',
+    'ot': 'Other Languages'
+  };
 
   static void change(String _languageCode, {Function(Locale)? onDone}) {
     dynamic? _result;
@@ -106,7 +152,6 @@ extension Localization on String {
     }
     return str.toLowerCase();
   }
-
   static String getFullPath(
       String path, int sura, int aya, String post /* ="dat" */) {
     return (path +
@@ -117,10 +162,12 @@ extension Localization on String {
         getZeroNum(aya.toString()) +
         "." +
         post);
+  }*/
+
+  String f() {
+    if (names.containsKey(this)) return names[this]!;
+    return this;
   }
-
-
-   */
 }
 
 extension LocalizeInt on int {

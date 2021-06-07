@@ -157,7 +157,7 @@ class SettingsState extends State<Settings> {
                     child: DropdownButton<Locale>(
                       value: app.locale,
                       style: theme.textTheme.caption,
-                      onChanged: (Locale? v) async {
+                      onChanged: (Locale? v) {
                         Localization.change(v!.languageCode, onDone: (l) {
                           MyApp.of(context)!.setLocale(l);
                           setState(() {});
@@ -167,7 +167,7 @@ class SettingsState extends State<Settings> {
                           .map<DropdownMenuItem<Locale>>(
                               (Locale value) => DropdownMenuItem<Locale>(
                                     value: value,
-                                    child: Text(value.languageCode),
+                                    child: Text(value.languageCode.f()),
                                   ))
                           .toList(),
                     )),

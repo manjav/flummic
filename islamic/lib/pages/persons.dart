@@ -279,7 +279,7 @@ class PersonListPageState extends State<PersonListPage> {
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
-    var subtitle = "${p.mode!.l()} ${(p.flag! + '_fl').l()}";
+    var subtitle = "${p.mode!.l()} ${p.flag!.f()}";
     if (widget.type == PType.text) {
       String size;
       if (p.size! > 5048576)
