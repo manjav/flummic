@@ -65,7 +65,7 @@ flutter:
         - asset: fonts/scheherazade.ttf
     - family: CubicSans
       fonts:
-        - asset: fonts/cubicsans-regular.ttf
+        - asset: fonts/cubicsans_regular.ttf
     - family: Titles
       fonts:
         - asset: fonts/titles.ttf
