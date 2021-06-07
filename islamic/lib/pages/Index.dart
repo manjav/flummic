@@ -133,7 +133,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                 SizedBox(width: 16),
                                 Text(
                                   "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
-                                  style: theme.textTheme.subtitle1,
+                                  style: theme.textTheme.subtitle2,
                                 ),
                               ])))),
                   HomePageState.soundState != SoundState.playing
@@ -225,7 +225,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                           child: Text("${sura.index! + 1}",
                               style: uthmaniStyle, textAlign: TextAlign.center))
                     ]),
-                    SizedBox(width: 8, height: 48),
+                    SizedBox(width: 4, height: 48),
                     Expanded(
                         child: Container(
                             padding: EdgeInsets.only(
@@ -243,7 +243,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                       : SizedBox(height: 4),
                                   Localization.isRTL
                                       ? SizedBox(height: 0)
-                                      : Text("    ${sura.title}")
+                                      : Text("    ${sura.title}",
+                                          style: TextStyle(fontSize: 12))
                                 ]))),
                     getText(sura.order!),
                     getText(sura.ayas!),
