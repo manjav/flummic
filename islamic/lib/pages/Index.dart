@@ -255,7 +255,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Container getText(int value) {
     return Container(
-        width: 56,
+        width: 50,
         height: 16,
         alignment: Alignment.center,
         child: Text("$value", style: uthmaniStyle));
@@ -280,7 +280,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           setState(() {});
         },
         child: Container(
-            width: 56,
+            width: 50,
             height: _toolbarHeight,
             color: Colors.transparent,
             child: Stack(alignment: Alignment.topCenter,
