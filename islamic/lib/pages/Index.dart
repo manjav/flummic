@@ -76,11 +76,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var queryData = MediaQuery.of(context);
     var theme = Theme.of(context);
     titlesStyle = TextStyle(
         fontFamily: 'titles',
-        fontSize: 24,
-        letterSpacing: -4,
+        fontSize: queryData.devicePixelRatio > 1.5 ? 24 : 20,
+        letterSpacing: -2,
         height: Localization.isRTL ? 1.1 : 0.1);
     uthmaniStyle = Localization.isRTL
         ? TextStyle(fontFamily: 'mequran', fontSize: 20)
