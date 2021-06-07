@@ -25,7 +25,7 @@ class Themes {
         bodyText2: TextStyle(color: primaries[920]),
         subtitle1: TextStyle(
             color: primaries[920], fontSize: 15, fontWeight: FontWeight.bold),
-        subtitle2: TextStyle(color: primaries[910]),
+        subtitle2: TextStyle(color: primaries[910], fontSize: 12),
         headline1: hl,
         headline2: hl,
         headline3: hl,
@@ -109,7 +109,7 @@ class Themes {
         bodyText2: TextStyle(color: primaries[200]),
         subtitle1: TextStyle(
             color: primaries[100], fontSize: 15, fontWeight: FontWeight.bold),
-        subtitle2: TextStyle(color: primaries[200]),
+        subtitle2: TextStyle(color: primaries[200], fontSize: 12),
         headline1: hl,
         headline2: hl,
         headline3: hl,
