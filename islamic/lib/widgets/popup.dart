@@ -114,7 +114,7 @@ class SettingsState extends State<Settings> {
     var app = MyApp.of(context)!;
     var theme = Theme.of(context);
     var p = 24.0;
-    var isRtl = Bidi.isRtlLanguage(app.locale!.languageCode);
+    var rtl = Localization.isRTL;
     var queryData = MediaQuery.of(context);
     var config = Configs.instance.buildConfig;
     return Container(
@@ -123,15 +123,15 @@ class SettingsState extends State<Settings> {
           data: queryData.copyWith(
               textScaleFactor: queryData.textScaleFactor * Prefs.textScale),
           child: Directionality(
-              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textDirection: Localization.dir,
               child: Stack(alignment: Alignment.topCenter, children: [
                 Generics.draggable(theme),
-                Generics.text(theme, "theme_mode".l(), 48, isRtl ? p : null,
-                    isRtl ? null : p),
+                Generics.text(theme, "theme_mode".l(), 48, rtl ? p : null,
+                    rtl ? null : p),
                 Positioned(
                     top: 40,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
+                    left: rtl ? p : null,
+                    right: rtl ? null : p,
                     child: DropdownButton<int>(
                       value: themeMode,
                       style: theme.textTheme.caption,
@@ -148,12 +148,12 @@ class SettingsState extends State<Settings> {
                                   ))
                           .toList(),
                     )),
-                Generics.text(theme, "select_loc".l(), 118, isRtl ? p : null,
-                    isRtl ? null : p),
+                Generics.text(theme, "select_loc".l(), 118, rtl ? p : null,
+                    rtl ? null : p),
                 Positioned(
                     top: 110,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
+                    left: rtl ? p : null,
+                    right: rtl ? null : p,
                     child: DropdownButton<Locale>(
                       value: app.locale,
                       style: theme.textTheme.caption,
@@ -171,8 +171,8 @@ class SettingsState extends State<Settings> {
                                   ))
                           .toList(),
                     )),
-                Generics.text(theme, "tsize_l".l(), 188, isRtl ? p : null,
-                    isRtl ? null : p),
+                Generics.text(
+                    theme, "tsize_l".l(), 188, rtl ? p : null, rtl ? null : p),
                 Positioned(
                     top: 220,
                     right: p - 16,
@@ -199,12 +199,12 @@ class SettingsState extends State<Settings> {
                           for (var i = 0; i < 4; i++)
                             Text("tsize_$i".l(), style: theme.textTheme.caption)
                         ])),
-                Generics.text(theme, "navi_mode".l(), 320, isRtl ? p : null,
-                    isRtl ? null : p),
+                Generics.text(theme, "navi_mode".l(), 320, rtl ? p : null,
+                    rtl ? null : p),
                 Positioned(
                     top: 310,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
+                    left: rtl ? p : null,
+                    right: rtl ? null : p,
                     child: DropdownButton<String>(
                       value: Prefs.naviMode,
                       style: theme.textTheme.caption,
@@ -225,8 +225,8 @@ class SettingsState extends State<Settings> {
                     isRtl ? null : p),
                 Positioned(
                     top: 380,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
+                    left: rtl ? p : null,
+                    right: rtl ? null : p,
                     child: DropdownButton<String>(
                       value: Prefs.font,
                       style: theme.textTheme.caption,
@@ -253,8 +253,8 @@ class SettingsState extends State<Settings> {
                     )),
                 Positioned(
                     bottom: p,
-                    left: isRtl ? p : null,
-                    right: isRtl ? null : p,
+                    left: rtl ? p : null,
+                    right: rtl ? null : p,
                     child: Text(
                         "${'app_title'.l()}  ${'app_ver'.l()} ${config!.packageInfo!.version.n()}  (${config.target})",
                         style: theme.textTheme.caption))
