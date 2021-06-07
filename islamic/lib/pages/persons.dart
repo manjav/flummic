@@ -123,6 +123,8 @@ class PersonPageState extends State<PersonPage>
         textDirection: Localization.dir,
         child: Stack(children: [
           ListTile(
+              horizontalTitleGap: 8,
+              contentPadding: EdgeInsets.only(left: 8, right: 8),
               leading: Avatar(p, 24),
               title: Text(ps!.title),
               subtitle: Text("${ps.mode!.l()} ${(ps.flag! + '_l').l()}")),
@@ -144,7 +146,8 @@ class PersonPageState extends State<PersonPage>
                   ))
               : SizedBox(),
           Positioned(
-              left: 8,
+              left: Localization.isRTL ? 8 : null,
+              right: Localization.isRTL ? null : 8,
               top: 8,
               bottom: 8,
               child: IconButton(
@@ -291,10 +294,14 @@ class PersonListPageState extends State<PersonListPage> {
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
+        horizontalTitleGap: 8,
+        contentPadding: EdgeInsets.only(left: 8, right: 8),
         leading: Avatar(p.path!, 24),
         title: Text(p.title),
-        subtitle: Text(subtitle),
-        trailing: Stack(
+        ),
+        trailing: SizedBox(
+            width: 48,
+            child: Stack(
           alignment: Alignment.center,
           children: [
             if (p.state == PState.downloading)
@@ -304,7 +311,7 @@ class PersonListPageState extends State<PersonListPage> {
               ),
             downloadIcon(context, p.state!)
           ],
-        ),
+            )),
       ),
     );
   }
