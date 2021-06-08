@@ -306,6 +306,7 @@ class PersonListPageState extends State<PersonListPage> {
           children: [
             if (p.state == PState.downloading)
               CircularProgressIndicator(
+                    backgroundColor: Colors.black12,
                 strokeWidth: 2,
                 value: p.progress,
               ),
@@ -345,8 +346,10 @@ class PersonListPageState extends State<PersonListPage> {
         return Icon(Icons.radio_button_off);
       case PState.selected:
         return Icon(Icons.check_circle_outline_outlined);
+      case PState.downloading:
+        return Icon(Icons.close_sharp);
       default:
-        return Icon(Icons.cloud_download);
+        return Icon(Icons.arrow_circle_down);
     }
   }
 }
