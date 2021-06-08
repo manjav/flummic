@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:islamic/widgets/texts.dart';
@@ -167,7 +166,14 @@ class SettingsState extends State<Settings> {
                           .map<DropdownMenuItem<Locale>>(
                               (Locale value) => DropdownMenuItem<Locale>(
                                     value: value,
-                                    child: Text(value.languageCode.f()),
+                                    child: Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        value.languageCode.f(),
+                                        textDirection: TextDirection.ltr,
+                                        style: theme.textTheme.subtitle2,
+                                      ),
+                                    ),
                                   ))
                           .toList(),
                     )),
@@ -191,8 +197,8 @@ class SettingsState extends State<Settings> {
                         })),
                 Positioned(
                     top: 260,
-                    right: -p * 2,
-                    left: -p * 2,
+                    right: -p,
+                    left: -p,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -203,9 +209,11 @@ class SettingsState extends State<Settings> {
                     rtl ? null : p),
                 Positioned(
                     top: 310,
+                    width: 172,
                     left: rtl ? p : null,
                     right: rtl ? null : p,
                     child: DropdownButton<String>(
+                      isExpanded: true,
                       value: Prefs.naviMode,
                       style: theme.textTheme.caption,
                       onChanged: (String? newValue) {
@@ -214,21 +222,23 @@ class SettingsState extends State<Settings> {
                         widget.updater();
                       },
                       items: <String>["sura", "juze", "page"]
-                          .map<DropdownMenuItem<String>>(
-                              (String value) => DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text("navi_$value".l()),
-                                  ))
+                          .map<DropdownMenuItem<String>>((String value) =>
+                              DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text("navi_$value".l(),
+                                      style: TextStyle(fontSize: 14))))
                           .toList(),
                     )),
-                Generics.text(theme, "select_font".l(), 390, isRtl ? p : null,
-                    isRtl ? null : p),
+                Generics.text(theme, "select_font".l(), 390, rtl ? p : null,
+                    rtl ? null : p),
                 Positioned(
                     top: 380,
+                    width: 174,
                     left: rtl ? p : null,
                     right: rtl ? null : p,
                     child: DropdownButton<String>(
                       value: Prefs.font,
+                      isExpanded: true,
                       style: theme.textTheme.caption,
                       onChanged: (String? newValue) {
                         Prefs.instance.setString("font", newValue!);
@@ -241,11 +251,11 @@ class SettingsState extends State<Settings> {
                                     value: value,
                                     child: Texts.quran(
                                         "",
-                                        "قُل إِنَّ هُدَى ۚ  اللَّهِ  ۖ  هُوَ الهُدىٰ ۗ ",
+                                        "قُل إِنَّ هُدَى ۚ اللَّهِ  ۖ هُوَ الهُدىٰ ۗ",
                                         "",
                                         TextStyle(
                                             fontFamily: value,
-                                            fontSize: 18,
+                                            fontSize: 17,
                                             color: theme
                                                 .textTheme.bodyText1!.color)),
                                   ))
