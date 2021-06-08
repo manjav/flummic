@@ -127,7 +127,7 @@ class PersonPageState extends State<PersonPage>
               contentPadding: EdgeInsets.only(left: 8, right: 8),
               leading: Avatar(p, 24),
               title: Text(ps!.title),
-              subtitle: Text("${ps.mode!.l()} ${(ps.flag! + '_l').l()}")),
+              subtitle: Text("${ps.mode!.l()} ${ps.flag!.f()}")),
           ps.state == PState.removing
               ? Positioned(
                   top: 0,
@@ -282,7 +282,7 @@ class PersonListPageState extends State<PersonListPage> {
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
-    var subtitle = "${p.mode!.l()} ${p.flag!.f()}";
+    var subtitle = "${p.flag!.f()}";
     if (widget.type == PType.text) {
       String size;
       if (p.size! > 5048576)
@@ -298,20 +298,24 @@ class PersonListPageState extends State<PersonListPage> {
         contentPadding: EdgeInsets.only(left: 8, right: 8),
         leading: Avatar(p.path!, 24),
         title: Text(p.title),
+        subtitle: Text(
+          subtitle,
+          softWrap: false,
+          overflow: TextOverflow.fade,
         ),
         trailing: SizedBox(
             width: 48,
             child: Stack(
-          alignment: Alignment.center,
-          children: [
-            if (p.state == PState.downloading)
-              CircularProgressIndicator(
+              alignment: Alignment.center,
+              children: [
+                if (p.state == PState.downloading)
+                  CircularProgressIndicator(
                     backgroundColor: Colors.black12,
-                strokeWidth: 2,
-                value: p.progress,
-              ),
-            downloadIcon(context, p.state!)
-          ],
+                    strokeWidth: 2,
+                    value: p.progress,
+                  ),
+                downloadIcon(context, p.state!)
+              ],
             )),
       ),
     );
