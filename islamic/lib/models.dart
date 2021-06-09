@@ -139,19 +139,19 @@ class Configs {
   static String baseURL = "https://grantech.ir/islam/";
   get quran => instance.texts["ar.uthmanimin"]?.data;
 
-  static void create(Function onCreate) {
+  static void create(Function onCreate, Function(dynamic) onError) {
     instance = Configs();
     instance.buildConfig = BuildConfig();
+    instance.onError = onError;
     if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
     Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
       instance.configs = json.decode(data);
       onCreate.call();
-    }, forceUpdate: true);
+    }, onError: onError, forceUpdate: true);
   }
 
-  void init(Function onInit, Function(dynamic) onError) {
+  void init(Function onInit) {
     this.onInit = onInit;
-    this.onError = onError;
     for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
   }
 

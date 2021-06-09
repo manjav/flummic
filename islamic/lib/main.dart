@@ -133,7 +133,7 @@ class AppState extends State<MyApp> {
               });
             else
               setState(() => loadingState = 2);
-          }, (e) => waitingPage!.page!.error(loadConfig));
-        }));
+          });
+        }), (e) => waitingPage!.page!.error(loadConfig));
   }
 }
