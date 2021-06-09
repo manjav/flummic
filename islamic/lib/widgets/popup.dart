@@ -158,7 +158,7 @@ class SettingsState extends State<Settings> {
                       style: theme.textTheme.caption,
                       onChanged: (Locale? v) {
                         Localization.change(v!.languageCode, onDone: (l) {
-                          MyApp.of(context)!.setLocale(l);
+                          app.setLocale(l);
                           setState(() {});
                         });
                       },

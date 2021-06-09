@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
+import 'package:islamic/pages/wizard.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:smartlook/smartlook.dart';
 import 'package:wakelock/wakelock.dart';
@@ -124,16 +125,18 @@ class AppState extends State<MyApp> {
   }
 
   void loadConfig() {
-    Configs.create(() => Localization.change(Prefs.locale, onDone: (l) {
-          setLocale(l);
-          Configs.instance.init(() {
-            if (waitingPage!.page!.state > 1)
-              waitingPage!.page!.end(() {
-                setState(() => loadingState = 2);
+    Configs.create(
+        () => Localization.change(Prefs.locale, onDone: (l) {
+              setLocale(l);
+              Configs.instance.init(() {
+                if (waitingPage!.page!.state > 1)
+                  waitingPage!.page!.end(() {
+                    setState(() => loadingState = 2);
+                  });
+                else
+                  setState(() => loadingState = 2);
               });
-            else
-              setState(() => loadingState = 2);
-          });
-        }), (e) => waitingPage!.page!.error(loadConfig));
+            }),
+        (e) => waitingPage!.page!.error(loadConfig));
   }
 }
