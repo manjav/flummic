@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-import '../utils/localization.dart';
-
 // ignore: must_be_immutable
 class WaitingPage extends StatefulWidget {
   WaitingPageState? page;
