@@ -49,13 +49,13 @@ class WaitingPageState extends State<WaitingPage> {
           ? Positioned(
               bottom: 64,
               child: Column(children: [
-                Text("net_alert".l()),
+                Text("No internet connection!"),
                 TextButton(
                     child: Row(
                       children: [
                         Icon(Icons.sync),
                         SizedBox(width: 10),
-                        Text("reload_l".l())
+                        Text("Try Again")
                       ],
                     ),
                     onPressed: onPressed)
