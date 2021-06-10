@@ -10,6 +10,7 @@ class WizardPage extends StatefulWidget {
   _WizardPageState createState() => _WizardPageState();
 }
 
+class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   final _items = [
     Icons.language,
     Icons.visibility,
@@ -17,6 +18,8 @@ class WizardPage extends StatefulWidget {
     Icons.translate
   ];
   final _pageController = PageController();
+  AnimationController? _progressAnimation;
+
   int _page = 0;
 
   ThemeData? _theme;
@@ -24,6 +27,9 @@ class WizardPage extends StatefulWidget {
   @override
   void initState() {
     super.initState();
+    _progressAnimation =
+        AnimationController(vsync: this, value: 1 / (_items.length + 1));
+    _progressAnimation!.addListener(() => setState(() {}));
   }
 
   @override
@@ -48,6 +54,14 @@ class WizardPage extends StatefulWidget {
   Widget _divider() {
     return Container(
         height: 4,
+        child: Stack(alignment: Alignment.center, children: [
+          LinearProgressIndicator(
+            minHeight: 4,
+            backgroundColor: Colors.teal[900],
+            value: _progressAnimation!.value,
+          ),
+        ])
+        );
         );
   }
 
@@ -60,6 +74,8 @@ class WizardPage extends StatefulWidget {
           itemBuilder: _pageItemBuilder,
           onPageChanged: (int index) {
             _page = index;
+            _progressAnimation!.animateTo((index + 1) / (_items.length + 1),
+                duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
           }),
     );
   }
