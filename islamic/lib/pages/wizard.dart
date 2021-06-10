@@ -43,6 +43,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[_header(), _divider(), _slides()],
       ),
+      _circlaButton(Icons.arrow_forward, 56, r ? null : 24, r ? 24 : null),
+      _circlaButton(Icons.arrow_back, 48, r ? 28 : null, r ? null : 28)
     ]));
   }
 
@@ -114,5 +116,23 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           Center(child: FlutterLogo(size: 200.0))
       ],
     );
+  }
+
+  Widget _circlaButton(
+      IconData icon, double size, double? right, double? left) {
+    var dir = icon == Icons.arrow_back ? -1 : 1;
+    return Positioned(
+        bottom: right ?? left,
+        right: right,
+        left: left,
+        width: size,
+        height: size,
+        child: FloatingActionButton(
+            backgroundColor:
+                dir == 1 ? _theme!.buttonColor : _theme!.primaryColor,
+            child: Icon(icon),
+            onPressed: () => _pageController.animateToPage(_page + dir,
+                duration: Duration(milliseconds: 600),
+                curve: Curves.easeInOutSine)));
   }
 }
