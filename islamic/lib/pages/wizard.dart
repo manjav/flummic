@@ -24,11 +24,12 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   ThemeData? _theme;
   AppState? _app;
+  double get progress => (_page + 1) / (_items.length + 1);
+
   @override
   void initState() {
     super.initState();
-    _progressAnimation =
-        AnimationController(vsync: this, value: 1 / (_items.length + 1));
+    _progressAnimation = AnimationController(vsync: this, value: progress);
     _progressAnimation!.addListener(() => setState(() {}));
   }
 
@@ -74,8 +75,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                   children: [
                     for (var i = 0; i < _items.length; i++) _indicator(i)
                   ])),
-        ])
-        );
+        ]));
   }
 
   Widget _indicator(int i) {
@@ -94,8 +94,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             child: Icon(_items[i],
                 color: i > _page
                     ? _theme!.iconTheme.color
-                    : _theme!.primaryColor))
-        );
+                    : _theme!.primaryColor)));
   }
 
   Widget _slides() {
@@ -107,7 +106,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           itemBuilder: _pageItemBuilder,
           onPageChanged: (int index) {
             _page = index;
-            _progressAnimation!.animateTo((index + 1) / (_items.length + 1),
+            _progressAnimation!.animateTo(progress,
                 duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
           }),
     );
