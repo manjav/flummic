@@ -116,9 +116,41 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     return Stack(
       alignment: Alignment.center,
       children: [
+        if (index == 0)
+          _slideLocale()
+        else
           Center(child: FlutterLogo(size: 200.0))
       ],
     );
+  }
+
+  Widget _slideLocale() {
+    return Container(
+        alignment: Alignment.center,
+        child: DropdownButton<Locale>(
+          value: _app!.locale,
+          style: _theme!.textTheme.caption,
+          onChanged: (Locale? v) {
+            Localization.change(v!.languageCode, onDone: (l) {
+              _app!.setLocale(l);
+              setState(() {});
+            });
+          },
+          items: MyApp.supportedLocales
+              .map<DropdownMenuItem<Locale>>(
+                  (Locale value) => DropdownMenuItem<Locale>(
+                        value: value,
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            value.languageCode.f(),
+                            textDirection: TextDirection.ltr,
+                            // style: _theme!.textTheme.subtitle2,
+                          ),
+                        ),
+                      ))
+              .toList(),
+        ));
   }
 
   Widget _circlaButton(
