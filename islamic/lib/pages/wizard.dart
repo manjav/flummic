@@ -50,6 +50,10 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _header() {
     return Container(
+        color: _theme!.appBarTheme.backgroundColor,
+        alignment: Alignment.center,
+        child:
+            Text(_items[_page].toString(), style: _theme!.textTheme.headline6),
         height: 200);
   }
 
