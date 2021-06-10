@@ -10,7 +10,17 @@ class WizardPage extends StatefulWidget {
   _WizardPageState createState() => _WizardPageState();
 }
 
-class _WizardPageState extends State<WizardPage> {
+  final _items = [
+    Icons.language,
+    Icons.visibility,
+    Icons.text_format,
+    Icons.translate
+  ];
+  final _pageController = PageController();
+  int _page = 0;
+
+  ThemeData? _theme;
+  AppState? _app;
   @override
   void initState() {
     super.initState();
@@ -43,6 +53,14 @@ class _WizardPageState extends State<WizardPage> {
 
   Widget _slides() {
     return Expanded(
+      child: PageView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _items.length,
+          controller: _pageController,
+          itemBuilder: _pageItemBuilder,
+          onPageChanged: (int index) {
+            _page = index;
+          }),
     );
   }
 
