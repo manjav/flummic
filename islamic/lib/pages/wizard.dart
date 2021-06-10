@@ -60,8 +60,35 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             backgroundColor: Colors.teal[900],
             value: _progressAnimation!.value,
           ),
+          FractionallySizedBox(
+              widthFactor: 0.94,
+              heightFactor: 10,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    for (var i = 0; i < _items.length; i++) _indicator(i)
+                  ])),
         ])
         );
+  }
+
+  Widget _indicator(int i) {
+    double size = i > _page ? 36 : 40;
+    return Container(
+        alignment: Alignment.center,
+        width: 40,
+        height: 40,
+        child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+                color: i > _page ? _theme!.primaryColor : _theme!.accentColor,
+                shape: BoxShape.circle,
+                boxShadow: i > _page ? [BoxShadow(blurRadius: 4)] : null),
+            child: Icon(_items[i],
+                color: i > _page
+                    ? _theme!.iconTheme.color
+                    : _theme!.primaryColor))
         );
   }
 
