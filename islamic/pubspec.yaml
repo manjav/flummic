@@ -27,7 +27,6 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   flutter_speed_dial: ^3.0.5
   flutter_svg: ^0.22.0
-  # flutter_inappwebview: ^5.3.2
   flutter_widget_from_html_core: ^0.6.1
   in_app_review: ^2.0.2
   intl: ^0.17.0
