@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/main.dart';
+import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:islamic/widgets/buttons.dart';
+import 'package:islamic/widgets/texts.dart';
 
 class WizardPage extends StatefulWidget {
   WizardPage({Key? key}) : super(key: key);
@@ -123,6 +125,24 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           Center(child: FlutterLogo(size: 200.0))
       ],
     );
+  }
+
+  Widget _circlaButton(
+      IconData icon, double size, double? right, double? left) {
+    var dir = icon == Icons.arrow_back ? -1 : 1;
+    return Positioned(
+        bottom: right ?? left,
+        right: right,
+        left: left,
+        width: size,
+        height: size,
+        child: FloatingActionButton(
+            backgroundColor:
+                dir == 1 ? _theme!.buttonColor : _theme!.primaryColor,
+            child: Icon(icon),
+            onPressed: () => _pageController.animateToPage(_page + dir,
+                duration: Duration(milliseconds: 600),
+                curve: Curves.easeInOutSine)));
   }
 
   Widget _slideLocale() {
