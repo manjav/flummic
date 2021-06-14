@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/main.dart';
 import 'package:islamic/utils/localization.dart';
+import 'package:islamic/widgets/buttons.dart';
 
 class WizardPage extends StatefulWidget {
   WizardPage({Key? key}) : super(key: key);
