@@ -170,7 +170,7 @@ class Themes {
           InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
       fontFamily: "CubicSans",
       accentColor: primaries[0],
-      buttonColor: primaries[400],
+      buttonColor: primaries[600],
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],
       cardColor: primaries[800],
