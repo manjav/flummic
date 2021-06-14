@@ -107,11 +107,14 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
         if (widget.onSwipe != null) widget.onSwipe?.call();
         //widget.onSwipe();
       },
+        child: Directionality(
+          textDirection: TextDirection.ltr,
       child: Container(
         padding: EdgeInsets.all(5),
         width: 130,
         decoration: BoxDecoration(
-            color: transitionColor, borderRadius: BorderRadius.circular(50)),
+                color: transitionColor,
+                borderRadius: BorderRadius.circular(50)),
         child: Stack(
           children: <Widget>[
             Transform.translate(
