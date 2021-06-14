@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Themes {
   static Map<int, Color> get primaries => <int, Color>{
+        0: Color(0xFF50E0E0),
         50: Color(0xFFF0F9FF),
         100: Color(0xFFD2E6F0),
         150: Color(0xFF445555),
@@ -82,6 +83,8 @@ class Themes {
         inputDecorationTheme:
             InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
         fontFamily: "CubicSans",
+        accentColor: primaries[0],
+        buttonColor: primaries[400],
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
         cardColor: primaries[100],
@@ -166,6 +169,8 @@ class Themes {
       inputDecorationTheme:
           InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
       fontFamily: "CubicSans",
+      accentColor: primaries[0],
+      buttonColor: primaries[400],
       scaffoldBackgroundColor: primaries[900],
       backgroundColor: primaries[900],
       cardColor: primaries[800],
