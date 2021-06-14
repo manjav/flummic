@@ -155,7 +155,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 return;
               }
               _pageController.animateToPage(_page + dir,
-                duration: Duration(milliseconds: 600),
+                  duration: Duration(milliseconds: 600),
                   curve: Curves.easeInOutSine);
             }));
   }
@@ -191,6 +191,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _slideAppearance() {
     var aya = 18;
+    var isLight = Prefs.themeMode == 1;
+    if (Prefs.themeMode == 0)
+      isLight = MediaQuery.of(context).platformBrightness == Brightness.light;
     var uthmaniStyle = TextStyle(
         fontFamily: Prefs.font,
         fontSize: 18 * Prefs.textScale,
@@ -234,7 +237,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           // width: 142,
           child: LiteRollingSwitch(
             //initial value
-            value: true,
+            value: isLight,
             textOn: "theme_${1}".l(),
             textOff: "theme_${2}".l(),
             colorOn: _theme!.buttonColor,
@@ -242,9 +245,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             iconOn: Icons.wb_sunny,
             iconOff: Icons.nightlight_round,
             textSize: 16.0,
-            onChanged: (bool state) {
-              _app!.setTheme(ThemeMode.values[state ? 1 : 2]);
-            },
+            onChanged: (bool state) =>
+                _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
           )),
     ]);
   }

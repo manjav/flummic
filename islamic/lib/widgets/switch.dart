@@ -94,104 +94,104 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
     Color? transitionColor = Color.lerp(widget.colorOff, widget.colorOn, value);
 
     return GestureDetector(
-      onDoubleTap: () {
-        _action();
-        widget.onDoubleTap?.call();
-      },
-      onTap: () {
-        _action();
-        if (widget.onTap != null) widget.onTap?.call();
-      },
-      onPanEnd: (details) {
-        _action();
-        if (widget.onSwipe != null) widget.onSwipe?.call();
-        //widget.onSwipe();
-      },
+        onDoubleTap: () {
+          _action();
+          widget.onDoubleTap?.call();
+        },
+        onTap: () {
+          _action();
+          if (widget.onTap != null) widget.onTap?.call();
+        },
+        onPanEnd: (details) {
+          _action();
+          if (widget.onSwipe != null) widget.onSwipe?.call();
+          //widget.onSwipe();
+        },
         child: Directionality(
           textDirection: TextDirection.ltr,
-      child: Container(
-        padding: EdgeInsets.all(5),
-        width: 130,
-        decoration: BoxDecoration(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            width: 130,
+            decoration: BoxDecoration(
                 color: transitionColor,
                 borderRadius: BorderRadius.circular(50)),
-        child: Stack(
-          children: <Widget>[
-            Transform.translate(
-              offset: Offset(10 * value, 0), //original
-              child: Opacity(
-                opacity: (1 - value).clamp(0.0, 1.0),
-                child: Container(
-                  padding: EdgeInsets.only(right: 10),
-                  alignment: Alignment.centerRight,
-                  height: 40,
-                  child: Text(
-                    widget.textOff,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: widget.textSize),
-                  ),
-                ),
-              ),
-            ),
-            Transform.translate(
-              offset: Offset(10 * (1 - value), 0), //original
-              child: Opacity(
-                opacity: value.clamp(0.0, 1.0),
-                child: Container(
-                  padding: EdgeInsets.only(/*top: 10,*/ left: 5),
-                  alignment: Alignment.centerLeft,
-                  height: 40,
-                  child: Text(
-                    widget.textOn,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: widget.textSize),
-                  ),
-                ),
-              ),
-            ),
-            Transform.translate(
-              offset: Offset(80 * value, 0),
-              child: Transform.rotate(
-                angle: lerpDouble(0, 2 * pi, value)!,
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.white),
-                  child: Stack(
-                    children: <Widget>[
-                      Center(
-                        child: Opacity(
-                          opacity: (1 - value).clamp(0.0, 1.0),
-                          child: Icon(
-                            widget.iconOff,
-                            size: 25,
-                            color: transitionColor,
-                          ),
-                        ),
+            child: Stack(
+              children: <Widget>[
+                Transform.translate(
+                  offset: Offset(10 * value, 0), //original
+                  child: Opacity(
+                    opacity: (1 - value).clamp(0.0, 1.0),
+                    child: Container(
+                      padding: EdgeInsets.only(right: 10),
+                      alignment: Alignment.centerRight,
+                      height: 40,
+                      child: Text(
+                        widget.textOff,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.textSize),
                       ),
-                      Center(
-                          child: Opacity(
-                              opacity: value.clamp(0.0, 1.0),
-                              child: Icon(
-                                widget.iconOn,
-                                size: 21,
-                                color: transitionColor,
-                              ))),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                Transform.translate(
+                  offset: Offset(10 * (1 - value), 0), //original
+                  child: Opacity(
+                    opacity: value.clamp(0.0, 1.0),
+                    child: Container(
+                      padding: EdgeInsets.only(/*top: 10,*/ left: 5),
+                      alignment: Alignment.centerLeft,
+                      height: 40,
+                      child: Text(
+                        widget.textOn,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.textSize),
+                      ),
+                    ),
+                  ),
+                ),
+                Transform.translate(
+                  offset: Offset(80 * value, 0),
+                  child: Transform.rotate(
+                    angle: lerpDouble(0, 2 * pi, value)!,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                      child: Stack(
+                        children: <Widget>[
+                          Center(
+                            child: Opacity(
+                              opacity: (1 - value).clamp(0.0, 1.0),
+                              child: Icon(
+                                widget.iconOff,
+                                size: 25,
+                                color: transitionColor,
+                              ),
+                            ),
+                          ),
+                          Center(
+                              child: Opacity(
+                                  opacity: value.clamp(0.0, 1.0),
+                                  child: Icon(
+                                    widget.iconOn,
+                                    size: 21,
+                                    color: transitionColor,
+                                  ))),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 
   _action() {
