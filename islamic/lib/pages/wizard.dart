@@ -4,6 +4,7 @@ import 'package:islamic/main.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:islamic/widgets/buttons.dart';
+import 'package:islamic/widgets/switch.dart';
 import 'package:islamic/widgets/texts.dart';
 
 class WizardPage extends StatefulWidget {
@@ -56,8 +57,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     return Container(
         color: _theme!.appBarTheme.backgroundColor,
         alignment: Alignment.center,
-        child:
-            Text(_items[_page].toString(), style: _theme!.textTheme.headline6),
+        child: Text("wiz_$_page", style: _theme!.textTheme.headline6),
         height: 200);
   }
 
@@ -214,6 +214,23 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 selected = _selected;
                 Prefs.instance.setString("font", fonts[selected]);
               });
+            },
+          )),
+      Positioned(
+          bottom: 140,
+          // width: 142,
+          child: LiteRollingSwitch(
+            //initial value
+            value: true,
+            textOn: "theme_${1}".l(),
+            textOff: "theme_${2}".l(),
+            colorOn: _theme!.buttonColor,
+            colorOff: _theme!.buttonColor,
+            iconOn: Icons.wb_sunny,
+            iconOff: Icons.nightlight_round,
+            textSize: 16.0,
+            onChanged: (bool state) {
+              _app!.setTheme(ThemeMode.values[state ? 1 : 2]);
             },
           )),
     ]);
