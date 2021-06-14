@@ -138,6 +138,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _circlaButton(
       IconData icon, double size, double? right, double? left) {
     var dir = icon == Icons.arrow_back ? -1 : 1;
+    if (_page == 0 && dir == -1) return SizedBox();
     return Positioned(
         bottom: right ?? left,
         right: right,
