@@ -8,7 +8,9 @@ import 'package:islamic/widgets/switch.dart';
 import 'package:islamic/widgets/texts.dart';
 
 class WizardPage extends StatefulWidget {
-  WizardPage({Key? key}) : super(key: key);
+  final Function onComplete;
+
+  WizardPage({Key? key, required this.onComplete}) : super(key: key);
 
   @override
   _WizardPageState createState() => _WizardPageState();
@@ -146,9 +148,15 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             backgroundColor:
                 dir == 1 ? _theme!.buttonColor : _theme!.primaryColor,
             child: Icon(icon),
-            onPressed: () => _pageController.animateToPage(_page + dir,
+            onPressed: () {
+              if (_page + dir >= _items.length) {
+                widget.onComplete.call();
+                return;
+              }
+              _pageController.animateToPage(_page + dir,
                 duration: Duration(milliseconds: 600),
-                curve: Curves.easeInOutSine)));
+                  curve: Curves.easeInOutSine);
+            }));
   }
 
   Widget _slideLocale() {

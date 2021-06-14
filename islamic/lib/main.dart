@@ -106,6 +106,8 @@ class AppState extends State<MyApp> {
       case 1:
         return waitingPage!;
       case 2:
+        return WizardPage(onComplete: _onWizardComplete);
+      case 3:
         return IndexPage();
       default:
         return SizedBox();
@@ -137,6 +139,9 @@ class AppState extends State<MyApp> {
                   setState(() => loadingState = 2);
               });
             }),
-        (e) => waitingPage!.page!.error(loadConfig));
+  }
+
+  void _onWizardComplete() {
+    setState(() => loadingState = 3);
   }
 }
