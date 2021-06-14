@@ -13,7 +13,7 @@ import 'package:islamic/widgets/texts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../buttons.dart';
+import '../widgets/buttons.dart';
 import '../models.dart';
 import '../pages/persons.dart';
 import '../utils/localization.dart';

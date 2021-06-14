@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../buttons.dart';
+import '../widgets/buttons.dart';
 import '../models.dart';
 import '../utils/localization.dart';
 

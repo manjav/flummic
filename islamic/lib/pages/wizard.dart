@@ -121,6 +121,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       children: [
         if (index == 0)
           _slideLocale()
+        else if (index == 1)
+          _slideAppearance()
         else
           Center(child: FlutterLogo(size: 200.0))
       ],
@@ -174,21 +176,46 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         ));
   }
 
-  Widget _circlaButton(
-      IconData icon, double size, double? right, double? left) {
-    var dir = icon == Icons.arrow_back ? -1 : 1;
-    return Positioned(
-        bottom: right ?? left,
-        right: right,
-        left: left,
-        width: size,
-        height: size,
-        child: FloatingActionButton(
-            backgroundColor:
-                dir == 1 ? _theme!.buttonColor : _theme!.primaryColor,
-            child: Icon(icon),
-            onPressed: () => _pageController.animateToPage(_page + dir,
-                duration: Duration(milliseconds: 600),
-                curve: Curves.easeInOutSine)));
+  Widget _slideAppearance() {
+    var aya = 18;
+    var uthmaniStyle = TextStyle(
+        fontFamily: Prefs.font,
+        fontSize: 18 * Prefs.textScale,
+        height: 2.2,
+        color: _theme!.textTheme.bodyText1!.color);
+    var fonts = ["mequran", "scheherazade"];
+    var selected = fonts.indexOf(Prefs.font);
+    return Stack(alignment: Alignment.center, children: [
+      Positioned(
+          top: 72,
+          left: 32,
+          right: 32,
+          height: 200,
+          child: Container(
+              padding: EdgeInsets.all(16),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: _theme!.cardColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(16))),
+              child: Texts.quran("۞ ", Configs.instance.quran[2][aya],
+                  " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle))),
+      Positioned(
+          bottom: 240,
+          left: 32,
+          right: 32,
+          child: ButtonGroup(
+            titles: ["mequran".l(), "scheherazade".l()],
+            current: selected,
+            color: _theme!.primaryColor,
+            secondaryColor: _theme!.accentColor,
+            onTab: (_selected) {
+              setState(() {
+                selected = _selected;
+                Prefs.instance.setString("font", fonts[selected]);
+              });
+            },
+          )),
+    ]);
   }
 }
