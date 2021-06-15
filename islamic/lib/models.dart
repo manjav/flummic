@@ -137,7 +137,7 @@ class Configs {
   var texts = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
-  get quran => instance.texts["ar.uthmanimin"]?.data;
+  // get quran => instance.texts["ar.uthmanimin"]?.data;
 
   static void create(Function onCreate, Function(dynamic) onError) {
     instance = Configs();
@@ -395,6 +395,7 @@ class Person {
     flag = p["flag"];
     mode = p["mode"];
     size = p["size"];
+    // dir = Bidi.isRtlLanguage(t.flag) ? TextDirection.rtl : TextDirection.ltr;
   }
 
   void select(Function onDone,

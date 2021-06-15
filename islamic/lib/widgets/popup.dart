@@ -59,7 +59,7 @@ class AyaDetailsState extends State<AyaDetails> {
         var subject =
             "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'aya_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
         var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
-            Configs.instance.quran[s][a];
+            Configs.instance.texts["ar.uthmanimin"]!.data![s][a];
         if (Prefs.persons[PType.text]!.length > 1) {
           var p = Configs.instance.texts[Prefs.persons[PType.text]![1]];
           text += "\n\n${p!.data![s][a]}\n\n${'trans_t'.l()} ${p.name}";

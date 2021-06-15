@@ -214,8 +214,11 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                   color: _theme!.cardColor,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: Texts.quran("۞ ", Configs.instance.quran[2][aya],
-                  " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle))),
+              child: Texts.quran(
+                  "۞ ",
+                  Configs.instance.texts["ar.uthmanimin"]!.data![2][aya],
+                  " ﴿${(aya + 1).toArabic()}﴾ ",
+                  uthmaniStyle))),
       Positioned(
           bottom: 240,
           left: 32,
