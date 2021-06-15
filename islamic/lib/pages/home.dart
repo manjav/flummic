@@ -40,7 +40,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   TextStyle titlesStyle =
       TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
   TextStyle? uthmaniStyle;
-  bool hasQuranText = false;
+  List<Person> _qurans = <Person>[];
+  List<Person> _otherTexts = <Person>[];
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   Aya playingAya = new Aya(0, 0, 0);
@@ -49,7 +50,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static SoundState soundState = SoundState.stop;
 
   void initHome() {
-    hasQuranText = Prefs.persons[PType.text]!.indexOf("ar.uthmanimin") > -1;
+    _qurans = <Person>[];
+    _otherTexts = <Person>[];
+    for (var path in Prefs.persons[PType.text]!) {
+      var p = Configs.instance.texts[path];
+      p!.mode == "quran_t" ? _qurans.add(p) : _otherTexts.add(p);
+    }
 
     _theme = Theme.of(context);
     uthmaniStyle = TextStyle(
@@ -297,14 +303,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       rows.add(Stack(
         textDirection: dir,
         children: [
-          texts.path == "en.transliteration"
-              ? HtmlWidget(
-                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$text")
-              : Text("$text",
+          Text("$text",
                   textAlign: TextAlign.justify,
                   textDirection: dir,
                   style: theme.textTheme.caption),
-          Avatar(path, 15)
+          Avatar(t.path!, 15)
         ],
       ));
       ++i;
