@@ -77,6 +77,7 @@ extension Localization on String {
       _result.forEach((String key, dynamic value) {
         _sentences![key] = value.toString();
       });
+      Prefs.instance.setString("locale", languageCode);
       onDone?.call(_loc);
     }, hash: file != null ? file["md5"] : null);
   }
