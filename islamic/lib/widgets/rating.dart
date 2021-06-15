@@ -36,7 +36,7 @@ class RatingDialogState extends State<RatingDialog> {
                 Text(
                   "rate_l".l(),
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.headline6,
+                  style: theme.textTheme.headline5,
                 ),
                 const SizedBox(height: 15),
                 Text(

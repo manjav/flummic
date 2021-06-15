@@ -19,7 +19,7 @@ class WizardPage extends StatefulWidget {
 class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   final _items = [
     Icons.language,
-    Icons.visibility,
+    Icons.brightness_medium,
     Icons.text_format,
     Icons.translate
   ];
