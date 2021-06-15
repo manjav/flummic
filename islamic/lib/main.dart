@@ -70,7 +70,7 @@ class AppState extends State<MyApp> {
     MyApp.t = DateTime.now().millisecondsSinceEpoch;
     waitingPage = WaitingPage();
     Prefs.init(() {
-      loadConfig();
+      _loadConfig();
       setTheme(ThemeMode.values[Prefs.themeMode]);
       setState(() => loadingState = 1);
       if (Prefs.numRuns < 1)
@@ -97,11 +97,11 @@ class AppState extends State<MyApp> {
       theme: Themes.data,
       darkTheme: Themes.darkData,
       themeMode: themeMode,
-      home: preparedPage(),
+      home: _preparedPage(),
     );
   }
 
-  Widget preparedPage() {
+  Widget _preparedPage() {
     switch (loadingState) {
       case 1:
         return waitingPage!;
@@ -126,7 +126,7 @@ class AppState extends State<MyApp> {
     setState(() {});
   }
 
-  void loadConfig() {
+  void _loadConfig() {
     Configs.create(
         () => Localization.change(Prefs.locale, onDone: (l) {
               setLocale(l);
@@ -139,6 +139,7 @@ class AppState extends State<MyApp> {
                   setState(() => loadingState = 2);
               });
             }),
+        (e) => waitingPage!.page!.error(_loadConfig));
   }
 
   void _onWizardComplete() {
