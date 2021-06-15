@@ -282,31 +282,38 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     rows.add(SizedBox(height: 16));
     var i = 0;
-    if (hasQuranText) {
-      var hizbFlag = getHizbFlag(sura + 1, aya + 1);
-      rows.add(Texts.quran(hizbFlag, Configs.instance.quran[sura][aya],
-          " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle));
+    for (var p in _qurans) {
+      var t = p.data![sura][aya];
+      var hizbFlag = getHizbFlag(sura + 1, aya + 1, i);
+      if (p.path == "ar.uthmanimin")
+        rows.add(Texts.quran(
+            hizbFlag, t, " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle));
+      else {
+        rows.add(p.path == "en.transliteration"
+            ? HtmlWidget("<p align=\"justify\">$t (${(aya + 1).n()}) </p>",
+                textStyle: theme.textTheme.headline6)
+            : Text("$t (${(aya + 1).n()}) ",
+                style: theme.textTheme.headline6,
+                textAlign: TextAlign.justify));
+      }
       ++i;
     }
 
-    for (var path in Prefs.persons[PType.text]!) {
-      if (path == "ar.uthmanimin") continue;
-      var texts = Configs.instance.texts[path];
-      var dir = Bidi.isRtlLanguage(texts!.flag)
-          ? TextDirection.rtl
-          : TextDirection.ltr;
-      var no = i < 1 ? (aya + 1).n(texts.flag) : '';
+    for (var t in _otherTexts) {
+      var dir =
+          Bidi.isRtlLanguage(t.flag) ? TextDirection.rtl : TextDirection.ltr;
+      var no = i < 1 ? (aya + 1).n(t.flag) : '';
       if (dir == TextDirection.rtl) no = no.split('').reversed.join();
       if (no.length > 0) no += '. ';
       var text =
-          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${texts.data![sura][aya]}";
+          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${t.data![sura][aya]}";
       rows.add(Stack(
         textDirection: dir,
         children: [
           Text("$text",
-                  textAlign: TextAlign.justify,
-                  textDirection: dir,
-                  style: theme.textTheme.caption),
+              textAlign: TextAlign.justify,
+              textDirection: dir,
+              style: theme.textTheme.caption),
           Avatar(t.path!, 15)
         ],
       ));
@@ -315,7 +322,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return rows;
   }
 
-  String getHizbFlag(int sura, int aya) {
+  String getHizbFlag(int sura, int aya, int index) {
+    if (index > 0) return "";
     var hizbs = Configs.instance.metadata.hizbs;
     var len = hizbs.length;
     for (var i = 0; i < len; i++) {
