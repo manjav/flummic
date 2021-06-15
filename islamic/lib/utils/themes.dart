@@ -31,15 +31,12 @@ class Themes {
         headline2: hl,
         headline3: hl,
         headline4: hl,
-        headline5: hl,
+        headline5: TextStyle(
+            color: hl.color, fontWeight: FontWeight.bold, fontSize: 21),
+        headline6: TextStyle(color: hl.color, fontSize: 17),
         caption: TextStyle(
             color: primaries[910], fontSize: 15, fontWeight: FontWeight.w100),
-        button: TextStyle(color: primaries[50], fontWeight: FontWeight.normal),
-        headline6: TextStyle(
-            color: primaries[920],
-            fontFamily: "CubicSans",
-            fontSize: 21,
-            fontWeight: FontWeight.bold));
+        button: TextStyle(color: primaries[50], fontWeight: FontWeight.normal));
 
     Color getTextButtonColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -117,15 +114,13 @@ class Themes {
         headline2: hl,
         headline3: hl,
         headline4: hl,
-        headline5: hl,
+        headline5: TextStyle(
+            color: hl.color, fontWeight: FontWeight.bold, fontSize: 21),
+        headline6: TextStyle(color: hl.color, fontSize: 17),
         caption: TextStyle(
             color: primaries[200], fontSize: 15, fontWeight: FontWeight.w100),
-        button: TextStyle(color: primaries[100], fontWeight: FontWeight.normal),
-        headline6: TextStyle(
-            color: primaries[100],
-            fontFamily: "CubicSans",
-            fontSize: 21,
-            fontWeight: FontWeight.bold));
+        button:
+            TextStyle(color: primaries[100], fontWeight: FontWeight.normal));
 
     Color getTextButtonColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
