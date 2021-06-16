@@ -21,12 +21,15 @@ class ButtonGroup extends StatelessWidget {
   static const double _outerPadding = 4.0;
 
   final int current;
-  final List<String> titles;
+  final Function(String, int) itemCreator;
+  final List<String> items;
   final ValueChanged<int> onTab;
   final Color color;
   final Color secondaryColor;
 
-  const ButtonGroup(
+  final double buttonSize;
+
+  const ButtonGroup(this.itemCreator,
       {Key? key,
       required this.titles,
       required this.onTab,
@@ -40,20 +43,15 @@ class ButtonGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // primaryColor = Theme.of(context).primaryColor;
     return Material(
-      color: color,
+        color: primaryColor,
       borderRadius: BorderRadius.circular(_radius),
       child: Padding(
         padding: const EdgeInsets.all(_outerPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(_radius - _outerPadding),
-          child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: _buttonList(),
-          ),
-        ),
-      ),
-    );
+                child: Column(children: _buttonList()))));
   }
 
   List<Widget> _buttonList() {
@@ -65,24 +63,27 @@ class ButtonGroup extends StatelessWidget {
   }
 
   Widget _button(String title, int index) {
-    if (index == this.current)
-      return _activeButton(title);
-    else
-      return _inActiveButton(title, index);
+    return index == this.current
+        ? _selectButton(title, index)
+        : _deselectButton(title, index);
   }
 
-  Widget _activeButton(String title) => Container(
-      height: 56,
+  Widget _selectButton(String title, int index) => Container(
+      height: buttonSize,
       alignment: Alignment.center,
-      color: secondaryColor,
-      child: Text(title, style:TextStyle(color: color)));
+      color: deselectCOlor,
+      child: _itemCreator(title, index));
 
-  Widget _inActiveButton(String title, int index) => GestureDetector(
+  Widget _deselectButton(String title, int index) => GestureDetector(
       // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       child: Container(
-          height: 48,
+          height: buttonSize,
           alignment: Alignment.center,
-          color: color,
-          child: Text(title)),
+          color: selectColor,
+          child: _itemCreator(title, index)),
       onTap: () => onTab.call(index));
+
+  Widget _itemCreator(String title, int index) {
+    return itemCreator(title, index);
+  }
 }
