@@ -48,12 +48,15 @@ class Themes {
       return primaries[states.contains(MaterialState.disabled) ? 600 : 400]!;
     }
 
+    var iconTheme = IconThemeData(color: primaries[50]);
+    
     return ThemeData(
         primarySwatch: material,
+        iconTheme: iconTheme,
         appBarTheme: AppBarTheme(
             backgroundColor: primaries[500],
             textTheme: textTheme,
-            iconTheme: IconThemeData(color: Colors.white)),
+            iconTheme: iconTheme),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: primaries[500], foregroundColor: primaries[100]),
         sliderTheme: SliderThemeData(
@@ -80,7 +83,7 @@ class Themes {
         inputDecorationTheme:
             InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
         fontFamily: "CubicSans",
-        accentColor: primaries[0],
+        accentColor: primaries[600],
         buttonColor: primaries[400],
         scaffoldBackgroundColor: primaries[50],
         backgroundColor: primaries[50],
@@ -132,12 +135,15 @@ class Themes {
       return primaries[states.contains(MaterialState.disabled) ? 600 : 400]!;
     }
 
+    var iconTheme = IconThemeData(color: primaries[50]);
+
     return ThemeData(
       primarySwatch: darkMaterial,
+      iconTheme: iconTheme,
       appBarTheme: AppBarTheme(
           backgroundColor: primaries[700],
           textTheme: textTheme,
-          iconTheme: IconThemeData(color: primaries[100])),
+          iconTheme: iconTheme),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: primaries[500], foregroundColor: primaries[100]),
       sliderTheme: SliderThemeData(

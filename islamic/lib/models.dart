@@ -137,7 +137,6 @@ class Configs {
   var texts = Map<String, Person>();
 
   static String baseURL = "https://grantech.ir/islam/";
-  // get quran => instance.texts["ar.uthmanimin"]?.data;
 
   static void create(Function onCreate, Function(dynamic) onError) {
     instance = Configs();
