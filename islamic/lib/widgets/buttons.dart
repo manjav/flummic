@@ -58,19 +58,9 @@ class ButtonGroup extends StatelessWidget {
 
   List<Widget> _buttonList() {
     final buttons = <Widget>[];
-    for (int i = 0; i < titles.length; i++) {
-      buttons.add(_button(titles[i], i));
-      buttons.add(
-        VerticalDivider(
-          width: 1.0,
-          color: (i == current || i + 1 == current) ? color : secondaryColor,
-          thickness: 1.5,
-          indent: 5.0,
-          endIndent: 5.0,
-        ),
-      );
+    for (int i = 0; i < items.length; i++) {
+      buttons.add(_button(items[i], i));
     }
-    buttons.removeLast();
     return buttons;
   }
 
