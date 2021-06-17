@@ -33,6 +33,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     "وَمِنَ النّاسِ مَن يَقولُ ءامَنّا بِاللَّهِ وَبِاليَومِ الـٔاخِرِ وَما هُم بِمُؤمِنينَ",
     "Wamina a<b>l</b>nn<u>a</u>si man yaqoolu <u>a</u>mann<u>a</u> biAll<u>a</u>hi wabi<b>a</b>lyawmi al<u>a</u>khiri wam<u>a</u> hum bimumineen<b>a</b>"
   ];
+  final _fonts = ["mequran", "scheherazade"];
 
   ThemeData? _theme;
   AppState? _app;
@@ -241,44 +242,34 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     var isLight = Prefs.themeMode == 1;
     if (Prefs.themeMode == 0)
       isLight = MediaQuery.of(context).platformBrightness == Brightness.light;
-    var uthmaniStyle = TextStyle(
-        fontFamily: Prefs.font,
-        fontSize: 18 * Prefs.textScale,
-        height: 2.2,
-        color: _theme!.textTheme.bodyText1!.color);
-    var fonts = ["mequran", "scheherazade"];
-    var selected = fonts.indexOf(Prefs.font);
     return Stack(alignment: Alignment.center, children: [
-      Positioned(
-          top: 72,
-          left: 32,
-          right: 32,
-          height: 200,
-          child: Container(
-              padding: EdgeInsets.all(16),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: _theme!.cardColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: Texts.quran(
-                  "۞ ",
-                  Configs.instance.texts["ar.uthmanimin"]!.data![2][aya],
-                  " ﴿${(aya + 1).toArabic()}﴾ ",
-                  uthmaniStyle))),
       Positioned(
           bottom: 240,
           left: 32,
           right: 32,
           child: ButtonGroup(
-            titles: ["mequran".l(), "scheherazade".l()],
-            current: selected,
-            color: _theme!.primaryColor,
-            secondaryColor: _theme!.accentColor,
+            (String title, int index) {
+              return Padding(
+                  padding: EdgeInsets.only(left: 24),
+              child: Texts.quran(
+                  "۞ ",
+                      _texts[0],
+                  " ﴿${(aya + 1).toArabic()}﴾ ",
+                      TextStyle(
+                          fontFamily: _fonts[index],
+                          fontSize: 18,
+                          height: 2.2,
+                          color: _theme!.textTheme.bodyText1!.color)));
+            },
+            items: _fonts,
+            buttonSize: 148,
+            showSelection: true,
+            current: _fonts.indexOf(Prefs.font),
+            selectColor: _theme!.cardColor,
+            deselectCOlor: _theme!.backgroundColor,
             onTab: (_selected) {
               setState(() {
-                selected = _selected;
-                Prefs.instance.setString("font", fonts[selected]);
+                Prefs.instance.setString("font", _fonts[_selected]);
               });
             },
           )),
