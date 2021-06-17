@@ -18,12 +18,7 @@ class WizardPage extends StatefulWidget {
 }
 
 class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
-  final _items = [
-    Icons.language,
-    Icons.brightness_medium,
-    Icons.text_format,
-    Icons.translate
-  ];
+  final _items = [Icons.language, Icons.brightness_medium, Icons.translate];
   final _pageController = PageController();
   AnimationController? _progressAnimation;
 
@@ -70,7 +65,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     return Container(
         color: _theme!.appBarTheme.backgroundColor,
         alignment: Alignment.center,
-        child: Text("wiz_$_page", style: _theme!.textTheme.headline6),
+        child: Text("wiz_$_page".l(), style: _theme!.textTheme.headline5),
         height: 200);
   }
 
@@ -80,7 +75,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         child: Stack(alignment: Alignment.center, children: [
           LinearProgressIndicator(
             minHeight: 4,
-            backgroundColor: Colors.teal[900],
+            backgroundColor: _theme!.textSelectionTheme.selectionColor,
             value: _progressAnimation!.value,
           ),
           FractionallySizedBox(
@@ -110,7 +105,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             child: Icon(_items[i],
                 color: i > _page
                     ? _theme!.iconTheme.color
-                    : _theme!.primaryColor)));
+                    : _theme!.backgroundColor)));
   }
 
   Widget _slides() {
@@ -187,30 +182,30 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-      DropdownButton<Locale>(
+              DropdownButton<Locale>(
                 isExpanded: true,
-        value: _app!.locale,
-        style: _theme!.textTheme.caption,
-        onChanged: (Locale? v) {
-          Localization.change(v!.languageCode, onDone: (l) {
-            _app!.setLocale(l);
-            setState(() {});
-          });
-        },
-        items: MyApp.supportedLocales
-            .map<DropdownMenuItem<Locale>>(
-                (Locale value) => DropdownMenuItem<Locale>(
-                      value: value,
-                      child: Container(
+                value: _app!.locale,
+                style: _theme!.textTheme.caption,
+                onChanged: (Locale? v) {
+                  Localization.change(v!.languageCode, onDone: (l) {
+                    _app!.setLocale(l);
+                    setState(() {});
+                  });
+                },
+                items: MyApp.supportedLocales
+                    .map<DropdownMenuItem<Locale>>(
+                        (Locale value) => DropdownMenuItem<Locale>(
+                              value: value,
+                              child: Container(
                                 alignment: Alignment.center,
-                        child: Text(
-                          value.languageCode.f(),
-                          textDirection: TextDirection.ltr,
-                          // style: _theme!.textTheme.subtitle2,
-                        ),
-                      ),
-                    ))
-            .toList(),
+                                child: Text(
+                                  value.languageCode.f(),
+                                  textDirection: TextDirection.ltr,
+                                  // style: _theme!.textTheme.subtitle2,
+                                ),
+                              ),
+                            ))
+                    .toList(),
               ),
               SizedBox(height: 72),
               ButtonGroup(
@@ -245,7 +240,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                         .select(() => setState(() {}));
                   });
                 },
-      )
+              )
             ]));
   }
 
@@ -263,10 +258,10 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             (String title, int index) {
               return Padding(
                   padding: EdgeInsets.only(left: 24),
-              child: Texts.quran(
-                  "۞ ",
+                  child: Texts.quran(
+                      "۞ ",
                       _texts[0],
-                  " ﴿${(aya + 1).toArabic()}﴾ ",
+                      " ﴿${(aya + 1).toArabic()}﴾ ",
                       TextStyle(
                           fontFamily: _fonts[index],
                           fontSize: 18,
