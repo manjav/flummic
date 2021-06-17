@@ -49,7 +49,6 @@ class Themes {
     }
 
     var iconTheme = IconThemeData(color: primaries[50]);
-    
     return ThemeData(
         primarySwatch: material,
         iconTheme: iconTheme,

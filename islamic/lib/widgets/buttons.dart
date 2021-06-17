@@ -24,8 +24,10 @@ class ButtonGroup extends StatelessWidget {
   final Function(String, int) itemCreator;
   final List<String> items;
   final ValueChanged<int> onTab;
-  final Color color;
-  final Color secondaryColor;
+  final bool showSelection;
+  final Color primaryColor;
+  final Color selectColor;
+  final Color deselectCOlor;
 
   final double buttonSize;
 
@@ -35,11 +37,16 @@ class ButtonGroup extends StatelessWidget {
       required this.onTab,
       double? buttonSize,
       int? current,
-      Color? color,
-      Color? secondaryColor})
+      bool? showSelection,
+      Color? primaryColor,
+      Color? selectColor,
+      Color? deselectCOlor})
       : current = current ?? 0,
         buttonSize = buttonSize ?? 56,
         showSelection = showSelection ?? false,
+        primaryColor = primaryColor ?? Colors.teal,
+        selectColor = selectColor ?? Colors.blue,
+        deselectCOlor = deselectCOlor ?? Colors.white,
         super(key: key);
 
   @override
@@ -47,11 +54,11 @@ class ButtonGroup extends StatelessWidget {
     // primaryColor = Theme.of(context).primaryColor;
     return Material(
         color: primaryColor,
-      borderRadius: BorderRadius.circular(_radius),
-      child: Padding(
-        padding: const EdgeInsets.all(_outerPadding),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(_radius - _outerPadding),
+        borderRadius: BorderRadius.circular(_radius),
+        child: Padding(
+            padding: const EdgeInsets.all(_outerPadding),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(_radius - _outerPadding),
                 child: Column(children: _buttonList()))));
   }
 
