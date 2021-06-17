@@ -52,16 +52,17 @@ class Prefs {
       }
 
       var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
-      List<String> texts = ["ar.uthmanimin"];
-      List<String> sounds = <String>[];
+
+      List<String> texts = [];
+      List<String> sounds = [];
       switch (_locale) {
         case "en":
-          texts.add("en.sahih");
+          // texts.add("en.sahih");
           sounds.add("mishary_rashid_alafasy");
           sounds.add("ibrahim_walk");
           break;
         case "fa":
-          texts.add("fa.fooladvand");
+          // texts.add("fa.fooladvand");
           sounds.add("shahriar_parhizgar");
           sounds.add("mahdi_fooladvand");
           break;

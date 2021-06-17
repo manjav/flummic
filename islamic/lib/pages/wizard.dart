@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:islamic/main.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
@@ -27,6 +28,11 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   AnimationController? _progressAnimation;
 
   int _page = 0;
+  int _selectedText = -1;
+  final _texts = [
+    "وَمِنَ النّاسِ مَن يَقولُ ءامَنّا بِاللَّهِ وَبِاليَومِ الـٔاخِرِ وَما هُم بِمُؤمِنينَ",
+    "Wamina a<b>l</b>nn<u>a</u>si man yaqoolu <u>a</u>mann<u>a</u> biAll<u>a</u>hi wabi<b>a</b>lyawmi al<u>a</u>khiri wam<u>a</u> hum bimumineen<b>a</b>"
+  ];
 
   ThemeData? _theme;
   AppState? _app;
@@ -161,8 +167,15 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   }
 
   Widget _slideLocale() {
-    return Stack(alignment: Alignment.center, children: [
+    var aya = 18;
+    return Padding(
+        padding: EdgeInsets.all(32),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
       DropdownButton<Locale>(
+                isExpanded: true,
         value: _app!.locale,
         style: _theme!.textTheme.caption,
         onChanged: (Locale? v) {
@@ -176,7 +189,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 (Locale value) => DropdownMenuItem<Locale>(
                       value: value,
                       child: Container(
-                        alignment: Alignment.centerLeft,
+                                alignment: Alignment.center,
                         child: Text(
                           value.languageCode.f(),
                           textDirection: TextDirection.ltr,
@@ -185,9 +198,42 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                       ),
                     ))
             .toList(),
+              ),
+              SizedBox(height: 72),
+              ButtonGroup(
+                (String title, int index) {
+                  return Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: index == 0
+                          ? Texts.quran(
+                              "۞ ",
+                              _texts[0],
+                              " ﴿${(aya + 1).toArabic()}﴾ ",
+                              TextStyle(
+                                  fontFamily: _fonts[index],
+                                  fontSize: 18,
+                                  height: 2.2,
+                                  color: _theme!.textTheme.bodyText1!.color))
+                          : HtmlWidget(
+                              "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
+                              textStyle: _theme!.textTheme.headline6));
+                },
+                items: _texts,
+                buttonSize: 148,
+                showSelection: true,
+                current: _selectedText,
+                selectColor: _theme!.cardColor,
+                deselectCOlor: _theme!.backgroundColor,
+                onTab: (_selected) {
+                  setState(() {
+                    _selectedText = _selected;
+                    var ts = ["ar.uthmanimin", "en.transliteration"];
+                    Configs.instance.texts[ts[_selected]]!
+                        .select(() => setState(() {}));
+                  });
+                },
       )
-,
-    ]);
+            ]));
   }
 
   Widget _slideAppearance() {
