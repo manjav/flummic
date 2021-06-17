@@ -31,14 +31,15 @@ class ButtonGroup extends StatelessWidget {
 
   const ButtonGroup(this.itemCreator,
       {Key? key,
-      required this.titles,
+      required this.items,
       required this.onTab,
+      double? buttonSize,
       int? current,
       Color? color,
       Color? secondaryColor})
       : current = current ?? 0,
-        color = color ?? Colors.blue,
-        secondaryColor = secondaryColor ?? Colors.white,
+        buttonSize = buttonSize ?? 56,
+        showSelection = showSelection ?? false,
         super(key: key);
 
   @override
@@ -84,6 +85,15 @@ class ButtonGroup extends StatelessWidget {
       onTap: () => onTab.call(index));
 
   Widget _itemCreator(String title, int index) {
-    return itemCreator(title, index);
+    if (!showSelection) return itemCreator(title, index);
+    return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      Container(
+          alignment: Alignment.center,
+          width: 48,
+          child: index == current
+              ? Icon(Icons.check_circle, color: primaryColor)
+              : null),
+      Expanded(child: itemCreator(title, index))
+    ]);
   }
 }
