@@ -145,6 +145,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _circlaButton(
       IconData icon, double size, double? right, double? left) {
     var dir = icon == Icons.arrow_back ? -1 : 1;
+    if (dir == 1 && isNextLock) return SizedBox();
     if (_page == 0 && dir == -1) return SizedBox();
     return Positioned(
         bottom: right ?? left,
@@ -165,6 +166,17 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                   duration: Duration(milliseconds: 600),
                   curve: Curves.easeInOutSine);
             }));
+  }
+
+  bool get isNextLock {
+    switch (_page) {
+      case 0:
+        return Prefs.persons[PType.text]!.isEmpty;
+      case 1:
+        return Prefs.font.isEmpty;
+      default:
+        return false;
+    }
   }
 
   Widget _slideLocale() {
