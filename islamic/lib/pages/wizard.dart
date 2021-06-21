@@ -124,17 +124,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   }
 
   Widget _pageItemBuilder(BuildContext context, int index) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        if (index == 0)
-          _slideLocale()
-        else if (index == 1)
-          _slideAppearance()
-        else
-          Center(child: FlutterLogo(size: 200.0))
-      ],
-    );
+    return index == 0 ? _slide_0() : (index == 1 ? _slide_1() : _slide_2());
   }
 
   Widget _circlaButton(
@@ -174,7 +164,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     }
   }
 
-  Widget _slideLocale() {
+  Widget _slide_0() {
     var aya = 18;
     return Padding(
         padding: EdgeInsets.all(32),
@@ -244,7 +234,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             ]));
   }
 
-  Widget _slideAppearance() {
+  Widget _slide_1() {
     var aya = 18;
     var isLight = Prefs.themeMode == 1;
     if (Prefs.themeMode == 0)
@@ -297,5 +287,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
           )),
     ]);
+  }
+  Widget _slide_2() {
+    _qurans = <Person>[];
   }
 }
