@@ -5,12 +5,14 @@ import '../models.dart';
 
 class Texts {
   static final patterns = [
+    ' ۛ',
     ' ۚ',
     ' ۖ',
     ' ۗ',
     ' ۙ',
     ' ۘ',
     ' ۛۛ',
+    // 'َ',
     // '۞',
     // '﴾',
     // '﴿',
