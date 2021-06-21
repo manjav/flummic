@@ -288,7 +288,66 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           )),
     ]);
   }
+
+  List<Person> _qurans = <Person>[];
+  List<Person> _otherTexts = <Person>[];
   Widget _slide_2() {
     _qurans = <Person>[];
+    _otherTexts = <Person>[];
+    for (var path in Prefs.persons[PType.text]!) {
+      var p = Configs.instance.texts[path];
+      p!.mode == "quran_t" ? _qurans.add(p) : _otherTexts.add(p);
+    }
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 56, 16, 10),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: _textsProvider(1, 1)),
+    );
+  }
+
+  List<Widget> _textsProvider(int sura, int aya) {
+    var rows = <Widget>[];
+    var i = 0;
+    for (var p in _qurans) {
+      var t = p.data![sura][aya];
+      var hizbFlag = Texts.getHizbFlag(sura + 1, aya + 1, i);
+      if (p.path == "ar.uthmanimin")
+        rows.add(Texts.quran(
+            hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾", _quranStyle));
+      else {
+        rows.add(p.path == "en.transliteration"
+            ? HtmlWidget(
+                "<p align=\"justify\" dir=\"ltr\"> $t (${aya + 1}) </p>",
+                textStyle: _theme!.textTheme.headline6)
+            : Text("$t (${(aya + 1).n()}) ",
+                style: _theme!.textTheme.headline6,
+                textAlign: TextAlign.justify));
+      }
+      ++i;
+    }
+
+    for (var t in _otherTexts) {
+      rows.add(SizedBox(height: 24));
+      var dir =
+          Bidi.isRtlLanguage(t.flag) ? TextDirection.rtl : TextDirection.ltr;
+      var no = i < 1 ? (aya + 1).n(t.flag) : '';
+      if (dir == TextDirection.rtl) no = no.split('').reversed.join();
+      if (no.length > 0) no += '. ';
+      var text =
+          "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${t.data![sura][aya]}";
+      rows.add(Stack(
+        textDirection: dir,
+        children: [
+          Text("$text",
+              textAlign: TextAlign.justify,
+              textDirection: dir,
+              style: _theme!.textTheme.caption),
+          Avatar(t.path!, 15)
+        ],
+      ));
+      ++i;
+    }
   }
 }
