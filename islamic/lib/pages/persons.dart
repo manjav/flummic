@@ -324,7 +324,7 @@ class PersonListPageState extends State<PersonListPage> {
   void selectPerson(Person p) {
     switch (p.state) {
       case PState.selected:
-        p.deselect(null, null);
+        p.deselect(Duration(milliseconds: 1), () {});
         break;
       case PState.ready:
       case PState.waiting:
