@@ -284,10 +284,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var i = 0;
     for (var p in _qurans) {
       var t = p.data![sura][aya];
-      var hizbFlag = getHizbFlag(sura + 1, aya + 1, i);
+      var hizbFlag = Texts.getHizbFlag(sura + 1, aya + 1, i);
       if (p.path == "ar.uthmanimin")
         rows.add(Texts.quran(
-            hizbFlag, t, " ﴿${(aya + 1).toArabic()}﴾ ", uthmaniStyle));
+            hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾", uthmaniStyle));
       else {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget("<p align=\"justify\">$t (${(aya + 1).n()}) </p>",
@@ -320,17 +320,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ++i;
     }
     return rows;
-  }
-
-  String getHizbFlag(int sura, int aya, int index) {
-    if (index > 0) return "";
-    var hizbs = Configs.instance.metadata.hizbs;
-    var len = hizbs.length;
-    for (var i = 0; i < len; i++) {
-      if (hizbs[i].sura > sura) return "";
-      if (hizbs[i].sura == sura && hizbs[i].aya == aya) return "۞ ";
-    }
-    return "";
   }
 
   Widget footer() {

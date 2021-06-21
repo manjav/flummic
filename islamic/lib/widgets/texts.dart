@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models.dart';
+
 class Texts {
   static final patterns = [
     ' ۚ',
@@ -69,5 +71,16 @@ class Texts {
     } while (spanBoundary < text.length);
 
     return spans;
+  }
+
+  static String getHizbFlag(int sura, int aya, int index) {
+    if (index > 0) return "";
+    var hizbs = Configs.instance.metadata.hizbs;
+    var len = hizbs.length;
+    for (var i = 0; i < len; i++) {
+      if (hizbs[i].sura > sura) return "";
+      if (hizbs[i].sura == sura && hizbs[i].aya == aya) return "۞ ";
+    }
+    return "";
   }
 }
