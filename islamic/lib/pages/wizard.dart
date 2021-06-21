@@ -210,15 +210,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                   return Padding(
                       padding: EdgeInsets.only(left: 16),
                       child: index == 0
-                          ? Texts.quran(
-                              "۞ ",
-                              _texts[0],
-                              " ﴿${(aya + 1).toArabic()}﴾ ",
-                              TextStyle(
-                                  fontFamily: _fonts[index],
-                                  fontSize: 18,
-                                  height: 2.2,
-                                  color: _theme!.textTheme.bodyText1!.color))
+                          ? Texts.quran("۞ ", _texts[0],
+                              "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
                           : HtmlWidget(
                               "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
                               textStyle: _theme!.textTheme.headline6));
@@ -236,8 +229,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                     Configs.instance.texts[ts[_selected]]!
                         .select(() => setState(() {}));
                   });
-                },
-              )
+                  })
             ]));
   }
 
