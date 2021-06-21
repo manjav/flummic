@@ -25,13 +25,15 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   int _page = 0;
   int _selectedText = -1;
   final _texts = [
-    "وَمِنَ النّاسِ مَن يَقولُ ءامَنّا بِاللَّهِ وَبِاليَومِ الـٔاخِرِ وَما هُم بِمُؤمِنينَ",
-    "Wamina a<b>l</b>nn<u>a</u>si man yaqoolu <u>a</u>mann<u>a</u> biAll<u>a</u>hi wabi<b>a</b>lyawmi al<u>a</u>khiri wam<u>a</u> hum bimumineen<b>a</b>"
+    "ذٰلِكَ الكِتـٰبُ لا رَيبَ ۛ فيهِ ۛ هُدًى لِلمُتَّقينَ",
+    "<u>Tha</u>lika alkit<u>a</u>bu l<u>a</u> rayba feehi hudan lilmuttaqeen<b>a</b>"
   ];
   final _fonts = ["mequran", "scheherazade"];
 
-  ThemeData? _theme;
   AppState? _app;
+  ThemeData? _theme;
+  TextStyle? _quranStyle;
+
   double get progress => (_page + 1) / (_items.length + 1);
 
   @override
@@ -45,6 +47,11 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     _app = MyApp.of(context);
     _theme = Theme.of(context);
+    _quranStyle = TextStyle(
+        fontFamily: Prefs.font,
+        fontSize: 18 * Prefs.textScale,
+        height: 2.2,
+        color: _theme!.textTheme.bodyText1!.color);
     var r = Localization.isRTL;
     return Scaffold(
         body: Stack(children: [
