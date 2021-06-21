@@ -91,6 +91,7 @@ class Prefs {
   }
 
   static void removePerson(PType type, String path) {
+    if (path == "all") persons[type]!.clear();
     if (persons[type]!.indexOf(path) < 0) return;
     persons[type]!.remove(path);
     instance.setStringList(type.toString(), persons[type]!);

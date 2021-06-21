@@ -225,6 +225,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 onTab: (_selected) {
                   setState(() {
                     _selectedText = _selected;
+                      Prefs.removePerson(PType.text, "all");
                     var ts = ["ar.uthmanimin", "en.transliteration"];
                     Configs.instance.texts[ts[_selected]]!
                         .select(() => setState(() {}));
