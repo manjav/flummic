@@ -349,5 +349,21 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       ));
       ++i;
     }
+    rows.add(SizedBox(height: 24));
+    rows.add(IconButton(
+        icon: Icon(Icons.add_circle_outline,
+            color: _theme!.textTheme.bodyText1!.color),
+        iconSize: 32,
+        onPressed: _addPerson));
+    return rows;
+  }
+
+  void _addPerson() async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                PersonListPage(PType.text, "trans_t", Configs.instance.texts)));
+    setState(() {});
   }
 }
