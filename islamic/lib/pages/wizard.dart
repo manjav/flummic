@@ -117,25 +117,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                     : _theme!.backgroundColor)));
   }
 
-  Widget _slides() {
-    return Expanded(
-      child: PageView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: _items.length,
-          controller: _pageController,
-          itemBuilder: _pageItemBuilder,
-          onPageChanged: (int index) {
-            _page = index;
-            _progressAnimation!.animateTo(progress,
-                duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
-          }),
-    );
-  }
-
-  Widget _pageItemBuilder(BuildContext context, int index) {
-    return index == 0 ? _slide_0() : (index == 1 ? _slide_1() : _slide_2());
-  }
-
   Widget _circlaButton(
       IconData icon, double size, double? right, double? left) {
     var dir = icon == Icons.arrow_back ? -1 : 1;
@@ -171,6 +152,21 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       default:
         return false;
     }
+  }
+
+  Widget _slides() {
+    return Expanded(
+      child: PageView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _items.length,
+          controller: _pageController,
+          itemBuilder: (context, i)=>i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2()),
+          onPageChanged: (int index) {
+            _page = index;
+            _progressAnimation!.animateTo(progress,
+                duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
+          }),
+    );
   }
 
   Widget _slide_0() {
