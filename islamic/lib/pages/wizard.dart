@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/main.dart';
 import 'package:islamic/models.dart';
+import 'package:islamic/pages/persons.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:islamic/widgets/buttons.dart';
 import 'package:islamic/widgets/switch.dart';
@@ -73,7 +75,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         color: _theme!.appBarTheme.backgroundColor,
         alignment: Alignment.center,
         child: Text("wiz_$_page".l(), style: _theme!.textTheme.headline5),
-        height: 200);
+        height: 160);
   }
 
   Widget _divider() {
