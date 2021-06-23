@@ -184,6 +184,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _slide_0() {
     var aya = 18;
     return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      Texts.title("select_loc".l(), _theme!),
               DropdownButton<Locale>(
                 isExpanded: true,
                 value: _app!.locale,
@@ -209,7 +210,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                             ))
                     .toList(),
               ),
-              SizedBox(height: 72),
+      SizedBox(height: 16),
+      Texts.title("wiz_quran".l(), _theme!),
               ButtonGroup(
                 (String title, int index) {
                   return Padding(
@@ -259,6 +261,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
       ),
       SizedBox(height: 16),
+      Texts.title("select_font".l(), _theme!),
       ButtonGroup(
             (String title, int index) {
               return Padding(
