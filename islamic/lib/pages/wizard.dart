@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
@@ -35,6 +37,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   AppState? _app;
   ThemeData? _theme;
   TextStyle? _quranStyle;
+  double _transitionStep = 0;
   List<Person> _qurans = <Person>[];
   List<Person> _otherTexts = <Person>[];
   double get progress => (_page + 1) / (_items.length + 1);
@@ -72,7 +75,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           56,
           r ? null : 24,
           r ? 24 : null),
-      _circlaButton(Icons.arrow_back, 48, r ? 28 : null, r ? null : 28)
+      _circlaButton(Icons.arrow_back, 48, r ? 28 : null, r ? null : 28),
+      _finishOverley()
     ]));
   }
 
@@ -145,7 +149,16 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             child: Icon(icon),
             onPressed: () {
               if (_page + dir >= _items.length) {
-                widget.onComplete.call();
+                var time = const Duration(milliseconds: 15);
+                Timer.periodic(time, (timer) {
+                  setState(() {});
+                  _transitionStep += 0.04;
+                  setState(() {});
+                  if (_transitionStep > 12) {
+                    timer.cancel();
+                    widget.onComplete.call();
+                  }
+                });
                 return;
               }
               _pageController.animateToPage(_page + dir,
@@ -186,59 +199,59 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     var aya = 18;
     return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       Texts.title("select_loc".l(), _theme!),
-              DropdownButton<Locale>(
-                isExpanded: true,
-                value: _app!.locale,
-                style: _theme!.textTheme.caption,
-                onChanged: (Locale? v) {
-                  Localization.change(v!.languageCode, onDone: (l) {
-                    _app!.setLocale(l);
-                    setState(() {});
-                  });
-                },
-                items: MyApp.supportedLocales
-                    .map<DropdownMenuItem<Locale>>(
-                        (Locale value) => DropdownMenuItem<Locale>(
-                              value: value,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  value.languageCode.f(),
-                                  textDirection: TextDirection.ltr,
-                                  // style: _theme!.textTheme.subtitle2,
-                                ),
-                              ),
-                            ))
-                    .toList(),
-              ),
+      DropdownButton<Locale>(
+        isExpanded: true,
+        value: _app!.locale,
+        style: _theme!.textTheme.caption,
+        onChanged: (Locale? v) {
+          Localization.change(v!.languageCode, onDone: (l) {
+            _app!.setLocale(l);
+            setState(() {});
+          });
+        },
+        items: MyApp.supportedLocales
+            .map<DropdownMenuItem<Locale>>(
+                (Locale value) => DropdownMenuItem<Locale>(
+                      value: value,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          value.languageCode.f(),
+                          textDirection: TextDirection.ltr,
+                          // style: _theme!.textTheme.subtitle2,
+                        ),
+                      ),
+                    ))
+            .toList(),
+      ),
       SizedBox(height: 16),
       Texts.title("wiz_quran".l(), _theme!),
-              ButtonGroup(
-                (String title, int index) {
-                  return Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: index == 0
-                          ? Texts.quran("۞ ", _texts[0],
-                              "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
-                          : HtmlWidget(
-                              "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
-                              textStyle: _theme!.textTheme.headline6));
-                },
-                items: _texts,
+      ButtonGroup(
+          (String title, int index) {
+            return Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: index == 0
+                    ? Texts.quran("۞ ", _texts[0],
+                        "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
+                    : HtmlWidget(
+                        "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
+                        textStyle: _theme!.textTheme.headline6));
+          },
+          items: _texts,
           buttonSize: 132,
-                showSelection: true,
-                current: _selectedText,
-                selectColor: _theme!.cardColor,
-                deselectCOlor: _theme!.backgroundColor,
-                onTab: (_selected) {
-                  setState(() {
-                    _selectedText = _selected;
-                      Prefs.removePerson(PType.text, "all");
-                    var ts = ["ar.uthmanimin", "en.transliteration"];
-                    Configs.instance.texts[ts[_selected]]!
-                        .select(() => setState(() {}));
-                  });
-                  })
+          showSelection: true,
+          current: _selectedText,
+          selectColor: _theme!.cardColor,
+          deselectCOlor: _theme!.backgroundColor,
+          onTab: (_selected) {
+            setState(() {
+              _selectedText = _selected;
+              Prefs.removePerson(PType.text, "all");
+              var ts = ["ar.uthmanimin", "en.transliteration"];
+              Configs.instance.texts[ts[_selected]]!
+                  .select(() => setState(() {}));
+            });
+          })
     ]);
   }
 
@@ -264,30 +277,30 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       SizedBox(height: 16),
       Texts.title("select_font".l(), _theme!),
       ButtonGroup(
-            (String title, int index) {
-              return Padding(
-                  padding: EdgeInsets.only(left: 24),
-                  child: Texts.quran(
-                      "۞ ",
-                      _texts[0],
-                      " ﴿${(aya + 1).toArabic()}﴾ ",
-                      TextStyle(
-                          fontFamily: _fonts[index],
-                          fontSize: 18,
-                          height: 2.2,
-                          color: _theme!.textTheme.bodyText1!.color)));
-            },
-            items: _fonts,
+        (String title, int index) {
+          return Padding(
+              padding: EdgeInsets.only(left: 24),
+              child: Texts.quran(
+                  "۞ ",
+                  _texts[0],
+                  " ﴿${(aya + 1).toArabic()}﴾ ",
+                  TextStyle(
+                      fontFamily: _fonts[index],
+                      fontSize: 18,
+                      height: 2.2,
+                      color: _theme!.textTheme.bodyText1!.color)));
+        },
+        items: _fonts,
         buttonSize: 132,
-            showSelection: true,
-            current: _fonts.indexOf(Prefs.font),
-            selectColor: _theme!.cardColor,
-            deselectCOlor: _theme!.backgroundColor,
-            onTab: (_selected) {
-              setState(() {
-                Prefs.instance.setString("font", _fonts[_selected]);
-              });
-            },
+        showSelection: true,
+        current: _fonts.indexOf(Prefs.font),
+        selectColor: _theme!.cardColor,
+        deselectCOlor: _theme!.backgroundColor,
+        onTab: (_selected) {
+          setState(() {
+            Prefs.instance.setString("font", _fonts[_selected]);
+          });
+        },
       )
     ]);
   }
@@ -301,7 +314,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     }
 
     return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: _textsProvider(1, 1));
   }
 
@@ -363,5 +376,24 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             builder: (context) =>
                 PersonListPage(PType.text, "trans_t", Configs.instance.texts)));
     setState(() {});
+  }
+
+  _finishOverley() {
+    if (_transitionStep <= 0) return SizedBox();
+    double color = (_transitionStep < 3
+            ? _transitionStep - 2
+            : (12 - _transitionStep) * 0.5)
+        .clamp(0, 1);
+    return Opacity(
+        opacity: _transitionStep.clamp(0, 1),
+        child: Container(
+            color: _theme!.backgroundColor,
+            alignment: Alignment.center,
+            child: Text(String.fromCharCode(194),
+                style: TextStyle(
+                    fontFamily: 'Titles',
+                    fontSize: 44,
+                    color: Color.lerp(Colors.transparent,
+                        _theme!.textTheme.bodyText1!.color, color)))));
   }
 }
