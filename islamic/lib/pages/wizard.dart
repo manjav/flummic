@@ -35,7 +35,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   AppState? _app;
   ThemeData? _theme;
   TextStyle? _quranStyle;
-
+  List<Person> _qurans = <Person>[];
+  List<Person> _otherTexts = <Person>[];
   double get progress => (_page + 1) / (_items.length + 1);
 
   @override
@@ -291,8 +292,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     ]);
   }
 
-  List<Person> _qurans = <Person>[];
-  List<Person> _otherTexts = <Person>[];
   Widget _slide_2() {
     _qurans = <Person>[];
     _otherTexts = <Person>[];
