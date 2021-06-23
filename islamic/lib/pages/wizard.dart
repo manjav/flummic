@@ -59,7 +59,12 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         body: Stack(children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[_header(), _divider(), _slides()],
+        children: <Widget>[
+          _header(),
+          _divider(),
+          _slides(),
+          SizedBox(height: 48)
+        ],
       ),
       _circlaButton(
           _page >= _items.length - 1 ? Icons.check : Icons.arrow_forward,
