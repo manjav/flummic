@@ -78,9 +78,14 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _header() {
     return Container(
         color: _theme!.appBarTheme.backgroundColor,
-        alignment: Alignment.center,
-        child: Text("wiz_$_page".l(), style: _theme!.textTheme.headline5),
-        height: 160);
+        height: 120,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              Text("wiz_$_page".l(), style: _theme!.textTheme.headline5),
+            ]));
   }
 
   Widget _divider() {
@@ -165,7 +170,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           physics: NeverScrollableScrollPhysics(),
           itemCount: _items.length,
           controller: _pageController,
-          itemBuilder: (context, i)=>i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2()),
+          itemBuilder: (context, i) => Padding(
+              padding: EdgeInsets.fromLTRB(32, 48, 32, 36),
+              child: i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2())),
           onPageChanged: (int index) {
             _page = index;
             _progressAnimation!.animateTo(progress,
@@ -176,12 +183,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _slide_0() {
     var aya = 18;
-    return Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               DropdownButton<Locale>(
                 isExpanded: true,
                 value: _app!.locale,
@@ -220,7 +222,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                               textStyle: _theme!.textTheme.headline6));
                 },
                 items: _texts,
-                buttonSize: 148,
+          buttonSize: 132,
                 showSelection: true,
                 current: _selectedText,
                 selectColor: _theme!.cardColor,
@@ -234,7 +236,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                         .select(() => setState(() {}));
                   });
                   })
-            ]));
+    ]);
   }
 
   Widget _slide_1() {
@@ -242,12 +244,22 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     var isLight = Prefs.themeMode == 1;
     if (Prefs.themeMode == 0)
       isLight = MediaQuery.of(context).platformBrightness == Brightness.light;
-    return Stack(alignment: Alignment.center, children: [
-      Positioned(
-          bottom: 240,
-          left: 32,
-          right: 32,
-          child: ButtonGroup(
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      LiteRollingSwitch(
+        //initial value
+        value: isLight,
+        textOn: "theme_${1}".l(),
+        textOff: "theme_${2}".l(),
+        colorOn: _theme!.buttonColor,
+        colorOff: _theme!.buttonColor,
+        iconOn: Icons.wb_sunny,
+        iconOff: Icons.nightlight_round,
+        textSize: 16.0,
+        onChanged: (bool state) =>
+            _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
+      ),
+      SizedBox(height: 16),
+      ButtonGroup(
             (String title, int index) {
               return Padding(
                   padding: EdgeInsets.only(left: 24),
@@ -262,7 +274,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                           color: _theme!.textTheme.bodyText1!.color)));
             },
             items: _fonts,
-            buttonSize: 148,
+        buttonSize: 132,
             showSelection: true,
             current: _fonts.indexOf(Prefs.font),
             selectColor: _theme!.cardColor,
@@ -272,23 +284,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 Prefs.instance.setString("font", _fonts[_selected]);
               });
             },
-          )),
-      Positioned(
-          bottom: 140,
-          // width: 142,
-          child: LiteRollingSwitch(
-            //initial value
-            value: isLight,
-            textOn: "theme_${1}".l(),
-            textOff: "theme_${2}".l(),
-            colorOn: _theme!.buttonColor,
-            colorOff: _theme!.buttonColor,
-            iconOn: Icons.wb_sunny,
-            iconOff: Icons.nightlight_round,
-            textSize: 16.0,
-            onChanged: (bool state) =>
-                _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
-          )),
+      )
     ]);
   }
 
@@ -302,12 +298,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       p!.mode == "quran_t" ? _qurans.add(p) : _otherTexts.add(p);
     }
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 56, 16, 10),
-      child: Column(
+    return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _textsProvider(1, 1)),
-    );
+        children: _textsProvider(1, 1));
   }
 
   List<Widget> _textsProvider(int sura, int aya) {
