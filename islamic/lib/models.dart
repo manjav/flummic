@@ -19,7 +19,7 @@ class Prefs {
 
   static String get locale => instance.getString("locale") ?? "en";
   static String get naviMode => instance.getString("naviMode") ?? "sura";
-  static String get font => instance.getString("font") ?? "";
+  static String get font => instance.getString("font") ?? "mequran";
   static double get textScale => instance.getDouble("textScale") ?? 1;
   static int get themeMode => instance.getInt("themeMode") ?? 0;
   static int get numRuns => instance.getInt("numRuns") ?? 0;
@@ -59,12 +59,12 @@ class Prefs {
         case "en":
           // texts.add("en.sahih");
           sounds.add("mishary_rashid_alafasy");
-          sounds.add("ibrahim_walk");
+          // sounds.add("ibrahim_walk");
           break;
         case "fa":
           // texts.add("fa.fooladvand");
           sounds.add("shahriar_parhizgar");
-          sounds.add("mahdi_fooladvand");
+          // sounds.add("mahdi_fooladvand");
           break;
         default:
           sounds.add("abu_bakr_ash_shaatree");
