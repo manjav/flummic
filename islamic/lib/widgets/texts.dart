@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import '../models.dart';
 
 class Texts {
+  static Text title(String text, ThemeData theme) {
+    return Text(text, style: theme.textTheme.headline6);
+  }
+
   static final patterns = [
     ' ۛ',
     ' ۚ',
