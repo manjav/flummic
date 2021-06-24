@@ -24,7 +24,6 @@ class WizardPage extends StatefulWidget {
 class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   final _items = [Icons.language, Icons.brightness_medium, Icons.translate];
   final _pageController = PageController();
-  AnimationController? _progressAnimation;
 
   int _page = 0;
   int _selectedText = -1;
@@ -41,6 +40,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   List<Person> _otherTexts = <Person>[];
 
   AnimationController? _finalAnimation;
+  AnimationController? _buttonsAnimation;
+  AnimationController? _progressAnimation;
   double get progress => (_page + 1) / (_items.length + 1);
 
   @override
@@ -48,6 +49,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     super.initState();
     _progressAnimation = AnimationController(vsync: this, value: progress);
     _progressAnimation!.addListener(() => setState(() {}));
+
+    _buttonsAnimation = AnimationController(vsync: this, upperBound: 2);
+    _buttonsAnimation!.addListener(() => setState(() {}));
 
     _finalAnimation = AnimationController(vsync: this, upperBound: 10);
     _finalAnimation!.addListener(() => setState(() {}));
@@ -141,34 +145,41 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     var dir = icon == Icons.arrow_back ? -1 : 1;
     if (dir == 1 && isNextLock) return SizedBox();
     if (_page == 0 && dir == -1) return SizedBox();
+    double s =
+        size * (_buttonsAnimation!.value - (dir == 1 ? 0 : 1)).clamp(0, 1);
     return Positioned(
         bottom: right ?? left,
         right: right,
         left: left,
         width: size,
         height: size,
+        child: Container(
+            alignment: Alignment.center,
+            child: Container(
+                width: s,
+                height: s,
+                alignment: Alignment.center,
         child: FloatingActionButton(
             backgroundColor:
-                dir == 1 ? _theme!.buttonColor : _theme!.primaryColor,
-            child: Icon(icon),
+                        dir == 1 ? _theme!.buttonColor : _theme!.focusColor,
+                    child: Icon(icon, size: s * 0.5),
             onPressed: () {
               if (_page + dir >= _items.length) {
-                var time = const Duration(milliseconds: 15);
-                Timer.periodic(time, (timer) {
-                  setState(() {});
-                  _transitionStep += 0.04;
-                  setState(() {});
-                  if (_transitionStep > 12) {
-                    timer.cancel();
-                    widget.onComplete.call();
-                  }
-                });
+                        _finalAnimation!
+                            .animateTo(10, duration: const Duration(seconds: 6))
+                            .whenComplete(() => widget.onComplete.call());
                 return;
               }
               _pageController.animateToPage(_page + dir,
                   duration: Duration(milliseconds: 600),
                   curve: Curves.easeInOutSine);
-            }));
+                    }))));
+  }
+
+  void _updateButtons() {
+    _buttonsAnimation!.value = 0;
+    _buttonsAnimation!.animateTo(2,
+        duration: Duration(milliseconds: 1500), curve: Curves.easeOutBack);
   }
 
   bool get isNextLock {
@@ -197,6 +208,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
               _page = p;
             _progressAnimation!.animateTo(progress,
                 duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
+              _updateButtons();
+            }
           }),
     );
   }
