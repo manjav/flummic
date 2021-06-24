@@ -192,7 +192,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
               padding: EdgeInsets.fromLTRB(32, 48, 32, 36),
               child: i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2())),
           onPageChanged: (int index) {
-            _page = index;
+            var p = index.round();
+            if (_page != p) {
+              _page = p;
             _progressAnimation!.animateTo(progress,
                 duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
           }),
