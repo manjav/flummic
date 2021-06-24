@@ -37,9 +37,10 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   AppState? _app;
   ThemeData? _theme;
   TextStyle? _quranStyle;
-  double _transitionStep = 0;
   List<Person> _qurans = <Person>[];
   List<Person> _otherTexts = <Person>[];
+
+  AnimationController? _finalAnimation;
   double get progress => (_page + 1) / (_items.length + 1);
 
   @override
@@ -47,6 +48,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     super.initState();
     _progressAnimation = AnimationController(vsync: this, value: progress);
     _progressAnimation!.addListener(() => setState(() {}));
+
+    _finalAnimation = AnimationController(vsync: this, upperBound: 10);
+    _finalAnimation!.addListener(() => setState(() {}));
   }
 
   @override
@@ -379,13 +383,13 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   }
 
   _finishOverley() {
-    if (_transitionStep <= 0) return SizedBox();
-    double color = (_transitionStep < 3
-            ? _transitionStep - 2
-            : (12 - _transitionStep) * 0.5)
+    if (_finalAnimation!.value <= 0) return SizedBox();
+    double color = (_finalAnimation!.value < 3
+            ? _finalAnimation!.value - 2
+            : (10 - _finalAnimation!.value) * 0.5)
         .clamp(0, 1);
     return Opacity(
-        opacity: _transitionStep.clamp(0, 1),
+        opacity: _finalAnimation!.value.clamp(0, 1),
         child: Container(
             color: _theme!.backgroundColor,
             alignment: Alignment.center,
