@@ -267,8 +267,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
               _selectedText = _selected;
               Prefs.removePerson(PType.text, "all");
               var ts = ["ar.uthmanimin", "en.transliteration"];
-              Configs.instance.texts[ts[_selected]]!
-                  .select(() => setState(() {}));
+              Configs.instance.texts[ts[_selected]]!.select(_updateButtons);
             });
           })
     ]);
@@ -316,9 +315,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         selectColor: _theme!.cardColor,
         deselectCOlor: _theme!.backgroundColor,
         onTab: (_selected) {
-          setState(() {
             Prefs.instance.setString("font", _fonts[_selected]);
-          });
+          _updateButtons();
         },
       )
     ]);
