@@ -320,9 +320,13 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       p!.mode == "quran_t" ? _qurans.add(p) : _otherTexts.add(p);
     }
 
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _textsProvider(1, 1));
+    return ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, i) {
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _textsProvider(1, 1));
+        });
   }
 
   List<Widget> _textsProvider(int sura, int aya) {
@@ -371,7 +375,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     rows.add(GestureDetector(
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.add_circle_outline,
-            color: _theme!.textTheme.bodyText1!.color),
+              color: _theme!.textTheme.bodyText1!.color),
           SizedBox(width: 16),
           Text("add_translate".l())
         ]),
