@@ -55,6 +55,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
     _finalAnimation = AnimationController(vsync: this, upperBound: 10);
     _finalAnimation!.addListener(() => setState(() {}));
+
+    Future.delayed(const Duration(seconds: 3), _updateButtons);
   }
 
   @override
@@ -143,7 +145,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _circlaButton(
       IconData icon, double size, double? right, double? left) {
     var dir = icon == Icons.arrow_back ? -1 : 1;
-    if (dir == 1 && isNextLock) return SizedBox();
     if (_page == 0 && dir == -1) return SizedBox();
     double s =
         size * (_buttonsAnimation!.value - (dir == 1 ? 0 : 1)).clamp(0, 1);
@@ -180,17 +181,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     _buttonsAnimation!.value = 0;
     _buttonsAnimation!.animateTo(2,
         duration: Duration(milliseconds: 1500), curve: Curves.easeOutBack);
-  }
-
-  bool get isNextLock {
-    switch (_page) {
-      case 0:
-        return Prefs.persons[PType.text]!.isEmpty;
-      case 1:
-        return Prefs.font.isEmpty;
-      default:
-        return false;
-    }
   }
 
   Widget _slides() {

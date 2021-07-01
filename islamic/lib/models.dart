@@ -53,7 +53,7 @@ class Prefs {
 
       var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
 
-      List<String> texts = [];
+      List<String> texts = ["ar.uthmanimin"];
       List<String> sounds = [];
       switch (_locale) {
         case "en":
