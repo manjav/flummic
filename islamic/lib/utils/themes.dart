@@ -88,7 +88,7 @@ class Themes {
         backgroundColor: primaries[50],
         cardColor: primaries[100],
         primaryColor: primaries[500],
-        focusColor: primaries[200],
+        focusColor: primaries[300],
         textTheme: textTheme,
         dialogBackgroundColor: primaries[100],
         colorScheme: ColorScheme.light(

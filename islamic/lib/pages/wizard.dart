@@ -83,7 +83,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           56,
           r ? null : 24,
           r ? 24 : null),
-      _circlaButton(Icons.arrow_back, 48, r ? 28 : null, r ? null : 28),
+      _circlaButton(Icons.arrow_back, 40, r ? 28 : null, r ? null : 28),
       _finishOverley()
     ]));
   }
@@ -159,20 +159,20 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 width: s,
                 height: s,
                 alignment: Alignment.center,
-        child: FloatingActionButton(
-            backgroundColor:
+                child: FloatingActionButton(
+                    backgroundColor:
                         dir == 1 ? _theme!.buttonColor : _theme!.focusColor,
                     child: Icon(icon, size: s * 0.5),
-            onPressed: () {
-              if (_page + dir >= _items.length) {
+                    onPressed: () {
+                      if (_page + dir >= _items.length) {
                         _finalAnimation!
                             .animateTo(10, duration: const Duration(seconds: 6))
                             .whenComplete(() => widget.onComplete.call());
-                return;
-              }
-              _pageController.animateToPage(_page + dir,
-                  duration: Duration(milliseconds: 600),
-                  curve: Curves.easeInOutSine);
+                        return;
+                      }
+                      _pageController.animateToPage(_page + dir,
+                          duration: Duration(milliseconds: 600),
+                          curve: Curves.easeInOutSine);
                     }))));
   }
 
@@ -206,8 +206,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             var p = index.round();
             if (_page != p) {
               _page = p;
-            _progressAnimation!.animateTo(progress,
-                duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
+              _progressAnimation!.animateTo(progress,
+                  duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
               _updateButtons();
             }
           }),
@@ -315,7 +315,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         selectColor: _theme!.cardColor,
         deselectCOlor: _theme!.backgroundColor,
         onTab: (_selected) {
-            Prefs.instance.setString("font", _fonts[_selected]);
+          Prefs.instance.setString("font", _fonts[_selected]);
           _updateButtons();
         },
       )
