@@ -33,13 +33,14 @@ class Texts {
   ];
   static TextStyle red = TextStyle(color: Colors.red[400]);
   static TextStyle teal = TextStyle(color: Colors.teal[300]);
-  static RichText quran(String hizb, String text, String end, mainStyle) {
+  static RichText quran(String hizb, String text, String end, mainStyle,
+      [TextAlign? align]) {
     final spans = <TextSpan>[];
     if (hizb.length > 0) spans.add(TextSpan(text: hizb, style: teal));
     spans.addAll(_getSpans(text, red));
     if (end.length > 0) spans.add(TextSpan(text: end, style: teal));
     return RichText(
-        textAlign: TextAlign.justify,
+        textAlign: align ?? TextAlign.justify,
         textDirection: TextDirection.rtl,
         text: new TextSpan(style: mainStyle, children: spans));
   }

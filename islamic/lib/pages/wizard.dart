@@ -26,7 +26,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   final _pageController = PageController();
 
   int _page = 0;
-  int _selectedText = -1;
+  int _selectedText = 0;
   final _texts = [
     "ذٰلِكَ الكِتـٰبُ لا رَيبَ ۛ فيهِ ۛ هُدًى لِلمُتَّقينَ",
     "<u>Tha</u>lika alkit<u>a</u>bu l<u>a</u> rayba feehi hudan lilmuttaqeen<b>a</b>"
@@ -332,8 +332,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       var t = p.data![sura][aya];
       var hizbFlag = Texts.getHizbFlag(sura + 1, aya + 1, i);
       if (p.path == "ar.uthmanimin")
-        rows.add(Texts.quran(
-            hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾", _quranStyle));
+        rows.add(Texts.quran(hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾",
+            _quranStyle, TextAlign.center));
       else {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget(
@@ -396,7 +396,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         child: Container(
             color: _theme!.backgroundColor,
             alignment: Alignment.center,
-            child: Text(String.fromCharCode(194),
+            child: Text("\n${String.fromCharCode(194)}",
                 style: TextStyle(
                     fontFamily: 'Titles',
                     fontSize: 44,
