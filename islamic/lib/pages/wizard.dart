@@ -368,11 +368,14 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       ++i;
     }
     rows.add(SizedBox(height: 24));
-    rows.add(IconButton(
-        icon: Icon(Icons.add_circle_outline,
+    rows.add(GestureDetector(
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.add_circle_outline,
             color: _theme!.textTheme.bodyText1!.color),
-        iconSize: 32,
-        onPressed: _addPerson));
+          SizedBox(width: 16),
+          Text("add_translate".l())
+        ]),
+        onTap: _addPerson));
     return rows;
   }
 
