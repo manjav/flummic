@@ -67,16 +67,11 @@ class ButtonGroup extends StatelessWidget {
 
   List<Widget> _buttonList() {
     final buttons = <Widget>[];
-    for (int i = 0; i < items.length; i++) {
-      buttons.add(_button(items[i], i));
-    }
+    for (int i = 0; i < items.length; i++)
+      buttons.add(i == this.current
+          ? _selectButton(items[i], i)
+          : _deselectButton(items[i], i));
     return buttons;
-  }
-
-  Widget _button(String title, int index) {
-    return index == this.current
-        ? _selectButton(title, index)
-        : _deselectButton(title, index);
   }
 
   Widget _selectButton(String title, int index) => Container(
@@ -86,7 +81,6 @@ class ButtonGroup extends StatelessWidget {
       child: _itemCreator(title, index));
 
   Widget _deselectButton(String title, int index) => GestureDetector(
-      // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       child: Container(
           height: buttonSize,
           alignment: Alignment.center,
