@@ -21,6 +21,7 @@ class Prefs {
   static String get naviMode => instance.getString("naviMode") ?? "sura";
   static String get font => instance.getString("font") ?? "mequran";
   static double get textScale => instance.getDouble("textScale") ?? 1;
+  static bool get needWizard => instance.getBool("needWizard") ?? true;
   static int get themeMode => instance.getInt("themeMode") ?? 0;
   static int get numRuns => instance.getInt("numRuns") ?? 0;
   static int get rate => instance.getInt("rate") ?? 3;

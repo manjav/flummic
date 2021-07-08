@@ -133,16 +133,22 @@ class AppState extends State<MyApp> {
               Configs.instance.init(() {
                 if (waitingPage!.page!.state > 1)
                   waitingPage!.page!.end(() {
-                    setState(() => loadingState = 2);
+                    _gotoWizard();
                   });
                 else
-                  setState(() => loadingState = 2);
+                  _gotoWizard();
               });
             }),
         (e) => waitingPage!.page!.error(_loadConfig));
   }
 
+  void _gotoWizard() {
+    loadingState = Prefs.numRuns > 2 || Prefs.needWizard ? 3 : 2;
+    setState(() {});
+  }
+
   void _onWizardComplete() {
+    Prefs.instance.setBool("needWizard", false);
     setState(() => loadingState = 3);
   }
 }
