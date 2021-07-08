@@ -13,7 +13,7 @@ class Themes {
         600: Color(0xFF005560),
         700: Color(0xFF003540),
         750: Color(0xFF00203A),
-        800: Color(0xFF051A2A),
+        800: Color(0xFF0A1C2D),
         900: Color(0xFF051222),
         910: Color(0xFF5A5A4A),
         920: Color(0xFF3A3A2A),

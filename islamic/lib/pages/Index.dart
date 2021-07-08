@@ -134,7 +134,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                 SizedBox(width: 16),
                                 Text(
                                   "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
-                                  style: theme.textTheme.subtitle2,
+                                  style: theme.textTheme.caption,
                                 ),
                               ])))),
                   HomePageState.soundState != SoundState.playing

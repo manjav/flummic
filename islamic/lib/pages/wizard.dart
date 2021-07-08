@@ -133,9 +133,10 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             width: size,
             height: size,
             decoration: BoxDecoration(
-                color: i > _page ? _theme!.primaryColor : _theme!.accentColor,
-                shape: BoxShape.circle,
-                boxShadow: i > _page ? [BoxShadow(blurRadius: 4)] : null),
+                color: i > _page
+                    ? _theme!.textSelectionTheme.selectionColor
+                    : _theme!.accentColor,
+                shape: BoxShape.circle),
             child: Icon(_items[i],
                 color: i > _page
                     ? _theme!.iconTheme.color

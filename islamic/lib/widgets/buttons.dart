@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 
 class Avatar extends CachedNetworkImage {
@@ -41,13 +40,13 @@ class ButtonGroup extends StatelessWidget {
       bool? showSelection,
       Color? primaryColor,
       Color? selectColor,
-      Color? deselectCOlor})
+      Color? deselectColor})
       : current = current ?? 0,
         buttonSize = buttonSize ?? 56,
         showSelection = showSelection ?? false,
         primaryColor = primaryColor ?? Colors.teal,
         selectColor = selectColor ?? Colors.blue,
-        deselectCOlor = deselectCOlor ?? Colors.white,
+        deselectCOlor = deselectColor ?? Colors.white,
         super(key: key);
 
   @override
