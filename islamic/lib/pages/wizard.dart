@@ -191,7 +191,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           itemCount: _items.length,
           controller: _pageController,
           itemBuilder: (context, i) => Padding(
-              padding: EdgeInsets.fromLTRB(32, 48, 32, 36),
+              padding: EdgeInsets.fromLTRB(24, 48, 24, 36),
               child: i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2())),
           onPageChanged: (int index) {
             var p = index.round();
@@ -207,60 +207,62 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _slide_0() {
     var aya = 18;
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      Texts.title("select_loc".l(), _theme!),
-      DropdownButton<Locale>(
-        isExpanded: true,
-        value: _app!.locale,
-        style: _theme!.textTheme.caption,
-        onChanged: (Locale? v) {
-          Localization.change(v!.languageCode, onDone: (l) {
-            _app!.setLocale(l);
-            setState(() {});
-          });
-        },
-        items: MyApp.supportedLocales
-            .map<DropdownMenuItem<Locale>>(
-                (Locale value) => DropdownMenuItem<Locale>(
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+      _container(children: [
+        Texts.title("select_loc".l(), _theme!),
+        DropdownButton<Locale>(
+          isExpanded: true,
+          value: _app!.locale,
+          style: _theme!.textTheme.caption,
+          onChanged: (Locale? v) {
+            Localization.change(v!.languageCode, onDone: (l) {
+              _app!.setLocale(l);
+              setState(() {});
+            });
+          },
+          items: MyApp.supportedLocales
+              .map<DropdownMenuItem<Locale>>(
+                  (Locale value) => DropdownMenuItem<Locale>(
                       value: value,
                       child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          value.languageCode.f(),
-                          textDirection: TextDirection.ltr,
-                          // style: _theme!.textTheme.subtitle2,
-                        ),
-                      ),
-                    ))
-            .toList(),
-      ),
-      SizedBox(height: 16),
-      Texts.title("wiz_quran".l(), _theme!),
-      ButtonGroup(
-          (String title, int index) {
-            return Padding(
-                padding: EdgeInsets.only(left: 16),
-                child: index == 0
-                    ? Texts.quran("۞ ", _texts[0],
-                        "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
-                    : HtmlWidget(
-                        "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
-                        textStyle: _theme!.textTheme.headline6));
-          },
-          items: _texts,
-          buttonSize: 132,
-          showSelection: true,
-          current: _selectedText,
-          selectColor: _theme!.cardColor,
-          deselectCOlor: _theme!.backgroundColor,
-          onTab: (_selected) {
-            setState(() {
-              _selectedText = _selected;
-              Prefs.removePerson(PType.text, "all");
-              var ts = ["ar.uthmanimin", "en.transliteration"];
-              Configs.instance.texts[ts[_selected]]!.select(_updateButtons);
-            });
-          })
+                          alignment: Alignment.center,
+                          child: Text(
+                            value.languageCode.f(),
+                            textDirection: TextDirection.ltr,
+                            // style: _theme!.textTheme.subtitle2,
+                          ))))
+              .toList(),
+        )
+      ]),
+      // SizedBox(height: 16),
+      _container(children: [
+        Texts.title("wiz_quran".l(), _theme!),
+        ButtonGroup(
+            (String title, int index) {
+              return Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: index == 0
+                      ? Texts.quran("۞ ", _texts[0],
+                          "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
+                      : HtmlWidget(
+                          "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
+                          textStyle: _theme!.textTheme.headline6));
+            },
+            items: _texts,
+            buttonSize: 132,
+            showSelection: true,
+            current: _selectedText,
+            selectColor: _theme!.cardColor,
+            deselectColor: _theme!.backgroundColor,
+            onTab: (_selected) {
+              setState(() {
+                _selectedText = _selected;
+                Prefs.removePerson(PType.text, "all");
+                var ts = ["ar.uthmanimin", "en.transliteration"];
+                Configs.instance.texts[ts[_selected]]!.select(_updateButtons);
+              });
+            })
+      ]),
     ]);
   }
 
@@ -269,7 +271,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     var isLight = Prefs.themeMode == 1;
     if (Prefs.themeMode == 0)
       isLight = MediaQuery.of(context).platformBrightness == Brightness.light;
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       LiteRollingSwitch(
         //initial value
         value: isLight,
@@ -283,33 +285,34 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         onChanged: (bool state) =>
             _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
       ),
-      SizedBox(height: 16),
-      Texts.title("select_font".l(), _theme!),
-      ButtonGroup(
-        (String title, int index) {
-          return Padding(
-              padding: EdgeInsets.only(left: 24),
-              child: Texts.quran(
-                  "۞ ",
-                  _texts[0],
-                  " ﴿${(aya + 1).toArabic()}﴾ ",
-                  TextStyle(
-                      fontFamily: _fonts[index],
-                      fontSize: 18,
-                      height: 2.2,
-                      color: _theme!.textTheme.bodyText1!.color)));
-        },
-        items: _fonts,
-        buttonSize: 132,
-        showSelection: true,
-        current: _fonts.indexOf(Prefs.font),
-        selectColor: _theme!.cardColor,
-        deselectCOlor: _theme!.backgroundColor,
-        onTab: (_selected) {
-          Prefs.instance.setString("font", _fonts[_selected]);
-          _updateButtons();
-        },
-      )
+      _container(children: [
+        Texts.title("select_font".l(), _theme!),
+        ButtonGroup(
+          (String title, int index) {
+            return Padding(
+                padding: EdgeInsets.only(left: 24),
+                child: Texts.quran(
+                    "۞ ",
+                    _texts[0],
+                    " ﴿${(aya + 1).toArabic()}﴾ ",
+                    TextStyle(
+                        fontFamily: _fonts[index],
+                        fontSize: 18,
+                        height: 2.2,
+                        color: _theme!.textTheme.bodyText1!.color)));
+          },
+          items: _fonts,
+          buttonSize: 132,
+          showSelection: true,
+          current: _fonts.indexOf(Prefs.font),
+          selectColor: _theme!.cardColor,
+          deselectColor: _theme!.backgroundColor,
+          onTab: (_selected) {
+            Prefs.instance.setString("font", _fonts[_selected]);
+            _updateButtons();
+          },
+        )
+      ])
     ]);
   }
 
@@ -322,6 +325,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     }
 
     return ListView.builder(
+        padding: EdgeInsets.all(4),
         itemCount: 1,
         itemBuilder: (context, i) {
           return Column(
@@ -410,5 +414,17 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                     fontSize: 44,
                     color: Color.lerp(Colors.transparent,
                         _theme!.textTheme.bodyText1!.color, color)))));
+  }
+
+  Widget _container({List<Widget>? children}) {
+    return Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: _theme!.cardColor,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(16))),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: children ?? []));
   }
 }
