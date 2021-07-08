@@ -46,7 +46,7 @@ class Utils {
 
   static Timer? _wakeupTimer;
   static bool wakeupPassed = false;
-  static void wakeup(BuildContext context, {int seconds = 15}) async {
+  static void wakeup(BuildContext context, {int seconds = 30}) async {
     _wakeupTimer?.cancel();
     if (wakeupPassed) return;
     _wakeupTimer = Timer(Duration(seconds: seconds), () {
