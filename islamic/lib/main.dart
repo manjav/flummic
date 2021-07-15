@@ -143,7 +143,7 @@ class AppState extends State<MyApp> {
   }
 
   void _gotoWizard() {
-    loadingState = Prefs.numRuns > 2 || Prefs.needWizard ? 3 : 2;
+    loadingState = Prefs.numRuns < 3 && Prefs.needWizard ? 2 : 3;
     setState(() {});
   }
 
