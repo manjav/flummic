@@ -266,22 +266,21 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _slide_1() {
     var aya = 18;
-    var isLight = Prefs.themeMode == 1;
-    if (Prefs.themeMode == 0)
-      isLight = MediaQuery.of(context).platformBrightness == Brightness.light;
+    var isDark = Prefs.themeMode == 2;
     return Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       LiteRollingSwitch(
         //initial value
-        value: isLight,
-        textOn: "theme_${1}".l(),
-        textOff: "theme_${2}".l(),
+        value: isDark,
+        textOff: "theme_${1}".l(),
+        textOn: "theme_${2}".l(),
         colorOn: _theme!.buttonColor,
         colorOff: _theme!.buttonColor,
-        iconOn: Icons.wb_sunny,
-        iconOff: Icons.nightlight_round,
+        iconOff: Icons.wb_sunny,
+        iconOn: Icons.nightlight_round,
         textSize: 16.0,
-        onChanged: (bool state) =>
-            _app!.setTheme(ThemeMode.values[state ? 1 : 2]),
+        onChanged: (bool state) {
+          Settings.instance.setTheme(ThemeMode.values[state ? 2 : 1]);
+        },
       ),
       _container(children: [
         Texts.title("select_font".l(), _theme!),
