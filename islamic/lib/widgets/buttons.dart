@@ -1,19 +1,32 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:islamic/models.dart';
 
-class Avatar extends CachedNetworkImage {
+class Avatar extends StatelessWidget {
   final String path;
   final double radius;
-  Avatar(this.path, this.radius)
-      : super(
-            imageUrl: "${Configs.baseURL}images/$path.png",
-            width: radius * 2.0,
-            placeholder: (context, url) =>
-                SvgPicture.asset("images/person.svg"),
-            height: radius * 2.0);
+  Avatar(this.path, this.radius) : super();
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return CachedNetworkImage(
+          imageUrl: "${Configs.baseURL}images/$path.png",
+          width: radius * 2.0,
+          errorWidget: (context, url, error) {
+            return SvgPicture.asset("images/person.svg", width: 32, height: 32);
+          },
+          placeholder: (context, url) {
+            return SvgPicture.asset("images/person.svg", width: 32, height: 32);
+          },
+          height: radius * 2.0);
+    } on HttpException catch (e) {
+      debugPrint(e.toString());
+      return SizedBox();
+    }
+  }
 }
 
 class ButtonGroup extends StatelessWidget {
