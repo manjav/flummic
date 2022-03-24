@@ -68,7 +68,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     suras = Configs.instance.metadata.suras;
     Future.delayed(Duration(seconds: 1)).then((_) {
       showRating();
-      showSurveys();
+      // showSurveys();
     }); //this inside the initstate
 
     createNotes();
@@ -504,7 +504,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     createNotes();
   }
 
-  void showSurveys() async {
+  /* void showSurveys() async {
     for (var s in Configs.instance.configs["surveys"]) {
       if (s["url"] != "" &&
           s["availableAt"] < Prefs.numRuns &&
@@ -517,7 +517,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         return;
       }
     }
-  }
+  } */
 
   void showRating() async {
     print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
