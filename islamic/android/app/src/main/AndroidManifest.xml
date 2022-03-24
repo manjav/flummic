@@ -12,12 +12,13 @@
         android:extractNativeLibs="true"
         android:usesCleartextTraffic="true" -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.ryanheise.audioservice.AudioServiceActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
             tools:ignore="Instantiatable">
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"

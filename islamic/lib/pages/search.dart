@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,9 @@ import '../utils/localization.dart';
 import 'home.dart';
 
 class SearchPage extends StatefulWidget {
+  final AudioHandler audioHandler;
+  const SearchPage(this.audioHandler, {super.key});
+
   @override
   SearchPageState createState() => SearchPageState();
 }
@@ -86,7 +90,9 @@ class SearchPageState extends State<SearchPage> {
               HomePageState.selectedIndex = p[1];
               Prefs.instance.setInt("last", p[2]);
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(widget.audioHandler)));
             },
             child: Padding(
                 padding:

@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:islamic/models.dart';
 import 'package:just_audio/just_audio.dart';
 
 class PlayerAya {
   int? sura, aya;
-  PlayerAya(a) {
-    sura = a["sura"];
-    aya = a["aya"];
+  PlayerAya(Aya a) {
+    sura = a.sura;
+    aya = a.aya;
   }
 }
 
@@ -32,38 +33,37 @@ class Sound {
   }
 }
 
-/// This task defines logic for playing a list of podcast episodes.
-class AudioPlayerTask extends BackgroundAudioTask {
-  AudioPlayer _player = new AudioPlayer();
-  AudioProcessingState? _skipState;
-  Seeker? _seeker;
+/// An [AudioHandler] for playing a single item.
+class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
+  final _player = AudioPlayer();
+  // AudioProcessingState? _skipState;
+  // Seeker? _seeker;
   // ignore: cancel_subscriptions
-  StreamSubscription<PlaybackEvent>? _eventSubscription;
-  MediaItem? mediaItem;
+  // StreamSubscription<PlaybackEvent>? _eventSubscription;
+  // MediaItem? mediaItem;
   int index = 0;
   int soundIndex = 0;
   List<PlayerAya>? ayas;
   List<Sound>? sounds;
   List<String>? suras;
 
-  @override
-  Future<void> onStart(Map<String, dynamic>? params) async {
-    ayas = <PlayerAya>[];
-    var list = json.decode(params!["ayas"]);
-    for (var a in list) ayas!.add(PlayerAya(a));
+  // Future<void> onStart(Map<String, dynamic>? params) async {
+  // ayas = <PlayerAya>[];
+  // var list = json.decode(params!["ayas"]);
+  // for (var a in list) ayas!.add(PlayerAya(a));
 
-    AudioServiceBackground.setQueue(<MediaItem>[]);
-    // We configure the audio session for speech since we're playing a podcast.
-    // You can also put this in your app's initialisation if your app doesn't
-    // switch between two types of audio as this example does.
-    // final session = await AudioSession.instance;
-    // await session.configure(AudioSessionConfiguration.speech());
-    // Propagate all events from the audio player to AudioService clients.
-    _eventSubscription = _player.playbackEventStream.listen((event) {
+  // AudioServiceBackground.setQueue(<MediaItem>[]);
+  // We configure the audio session for speech since we're playing a podcast.
+  // You can also put this in your app's initialisation if your app doesn't
+  // switch between two types of audio as this example does.
+  // final session = await AudioSession.instance;
+  // await session.configure(AudioSessionConfiguration.speech());
+  // Propagate all events from the audio player to AudioService clients.
+  /*_eventSubscription = _player.playbackEventStream.listen((event) {
       _broadcastState();
     });
 
-    // Special processing for state transitions.
+     // Special processing for state transitions.
     _player.processingStateStream.listen((state) {
       switch (state) {
         case ProcessingState.completed:
@@ -89,53 +89,149 @@ class AudioPlayerTask extends BackgroundAudioTask {
         default:
           break;
       }
-    });
-    AudioServiceBackground.sendCustomEvent('{"type":"start"}');
+    }); */
+  // }
+
+  /// Initialise our audio handler.
+  AudioPlayerHandler() {
+    // So that our clients (the Flutter UI and the system notification) know
+    // what state to display, here we set up our audio handler to broadcast all
+    // playback state changes as they happen via playbackState...
+    _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
+    // ... and also the current media item via mediaItem.
+    // mediaItem.add(_item);
+
+    // Load the player.
+    // _player.setAudioSource(AudioSource.uri(Uri.parse(_item.id)));
+
+    ayas = <PlayerAya>[];
+    var list = Configs.instance.navigations["all"]![0];
+    for (var a in list) ayas!.add(PlayerAya(a));
+    customEvent.add('{"type":"start"}');
+  }
+
+  // In this simple example, we handle only 4 actions: play, pause, seek and
+  // stop. Any button press from the Flutter UI, notification, lock screen or
+  // headset will be routed through to these 4 methods so that you can handle
+  // your audio playback logic in one place.
+
+  @override
+  Future<void> play() => _player.play();
+
+  @override
+  Future<void> pause() => _player.pause();
+
+  @override
+  Future<void> seek(Duration position) => _player.seek(position);
+
+  @override
+  Future<void> stop() {
+    customEvent.add('{"type":"stop"}');
+    return _player.stop();
+  }
+
+  /// Transform a just_audio event into an audio_service state.
+  ///
+  /// This method is used from the constructor. Every event received from the
+  /// just_audio player will be transformed into an audio_service state so that
+  /// it can be broadcast to audio_service clients.
+  PlaybackState _transformEvent(PlaybackEvent event) {
+    if (_player.processingState == ProcessingState.completed) {
+      _onComplete(); // select(index, soundIndex)
+    }
+    return PlaybackState(
+      controls: [
+        // MediaControl.rewind,
+        if (_player.playing) MediaControl.pause else MediaControl.play,
+        MediaControl.stop,
+        // MediaControl.fastForward,
+      ],
+      systemActions: const {
+        MediaAction.seek,
+        MediaAction.seekForward,
+        MediaAction.seekBackward,
+      },
+      androidCompactActionIndices: const [0, 1],
+      processingState: const {
+        ProcessingState.idle: AudioProcessingState.idle,
+        ProcessingState.loading: AudioProcessingState.loading,
+        ProcessingState.buffering: AudioProcessingState.buffering,
+        ProcessingState.ready: AudioProcessingState.ready,
+        ProcessingState.completed: AudioProcessingState.completed,
+      }[_player.processingState]!,
+      playing: _player.playing,
+      updatePosition: _player.position,
+      bufferedPosition: _player.bufferedPosition,
+      speed: _player.speed,
+      queueIndex: event.currentIndex,
+    );
   }
 
   @override
-  onCustomAction(String name, dynamic args) async {
+  Future<dynamic> customAction(String name,
+      [Map<String, dynamic>? extras]) async {
     switch (name) {
       case 'update':
         sounds = <Sound>[];
-        var list = json.decode(args!["sounds"]);
+        var list = json.decode(extras!["sounds"]);
         for (var s in list) sounds!.add(Sound(s));
 
-        var _suras = args["suras"];
+        var _suras = extras["suras"];
         suras = <String>[];
         for (var s in _suras) suras!.add(s);
         break;
 
-      case 'setVolume':
-        _player.setVolume(args);
-        break;
+      // case 'setVolume':
+      //   _player.setVolume(extras);
+      //   break;
 
       case 'select':
-        index = args!["index"];
+        index = extras!["index"];
         select(index, 0);
         break;
     }
+    super.customAction(name, extras);
   }
 
-  Future<void> select(int index, int soundIndex) async {
+  select(int index, int soundIndex) async {
+    this.soundIndex = soundIndex;
     var aya = ayas![index];
     var sound = sounds![soundIndex];
     var url = sound.getURL(aya.sura!, aya.aya!);
     var duration = await _player.setUrl(url);
-    mediaItem = MediaItem(
+    var mediaItem = MediaItem(
         artUri: Uri.parse("https://hidaya.sarand.net/images/${sound.path}.png"),
         title: "${suras![aya.sura!]} (${aya.aya! + 1})",
         artist: sound.name,
         album: sound.ename!,
         id: url,
         duration: duration);
-    AudioServiceBackground.setMediaItem(mediaItem!);
-    AudioServiceBackground.sendCustomEvent(
-        '{"type":"select", "data":[$index, $soundIndex]}');
-    onPlay();
+    addQueueItem(mediaItem);
+    customEvent.add('{"type":"select", "data":[$index, $soundIndex]}');
+    play();
+
+    // _player.setAudioSource(AudioSource.uri(Uri.parse(mediaItem.id)));
+    // AudioServiceBackground.setMediaItem(mediaItem!);
+    // AudioServiceBackground.sendCustomEvent(
+    //     '{"type":"select", "data":[$index, $soundIndex]}');
+    // onPlay();
   }
 
-  @override
+  _onComplete() async {
+    if (index >= ayas!.length - 1) {
+      stop();
+    }
+    if (soundIndex >= sounds!.length - 1) {
+      soundIndex = 0;
+      index++;
+    } else {
+      soundIndex++;
+    }
+    await Future.delayed(Duration(milliseconds: 100));
+    select(index, soundIndex);
+  }
+
+  /*  @override
   Future<void> onSkipToQueueItem(String mediaId) async {
     // print("------------------------------ onSkipToQueueItem");
 
@@ -150,9 +246,9 @@ class AudioPlayerTask extends BackgroundAudioTask {
     // previous. This variable holds the preferred state to send instead of
     // buffering during a skip, and it is cleared as soon as the player exits
     // buffering (see the listener in onStart).
-    _skipState = newIndex > index
-        ? AudioProcessingState.skippingToNext
-        : AudioProcessingState.skippingToPrevious;
+    // _skipState = newIndex > index
+    //     ? AudioProcessingState.skippingToNext
+    //     : AudioProcessingState.skippingToPrevious;
     // This jumps to the beginning of the queue item at newIndex.
     _player.seek(Duration.zero, index: newIndex);
     // Demonstrate custom events.
@@ -239,7 +335,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
         // MediaControl.skipToNext,
       ],
       systemActions: [
-        MediaAction.seekTo,
+        MediaAction.seek,
         MediaAction.seekForward,
         MediaAction.seekBackward,
       ],
@@ -257,10 +353,10 @@ class AudioPlayerTask extends BackgroundAudioTask {
   AudioProcessingState _getProcessingState() {
     if (_skipState != null) return _skipState!;
     switch (_player.processingState) {
-      case ProcessingState.idle:
-        return AudioProcessingState.stopped;
-      case ProcessingState.loading:
-        return AudioProcessingState.connecting;
+      // case ProcessingState.idle:
+      //   return AudioProcessingState.stopped;
+      // case ProcessingState.loading:
+      //   return AudioProcessingState.connecting;
       case ProcessingState.buffering:
         return AudioProcessingState.buffering;
       case ProcessingState.ready:
@@ -270,10 +366,10 @@ class AudioPlayerTask extends BackgroundAudioTask {
       default:
         throw Exception("Invalid state: ${_player.processingState}");
     }
-  }
+  } */
 }
 
-class Seeker {
+/* class Seeker {
   final AudioPlayer player;
   final Duration positionInterval;
   final Duration stepInterval;
@@ -302,3 +398,4 @@ class Seeker {
     _running = false;
   }
 }
+ */

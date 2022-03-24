@@ -6,20 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/pages/search.dart';
-import 'package:islamic/utils/player.dart';
 import 'package:islamic/utils/utils.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:islamic/widgets/texts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../widgets/buttons.dart';
 import '../models.dart';
 import '../pages/persons.dart';
 import '../utils/localization.dart';
+import '../widgets/buttons.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final AudioHandler audioHandler;
+  const HomePage(this.audioHandler, {Key? key}) : super(key: key);
   @override
   HomePageState createState() => HomePageState();
 }
@@ -426,7 +426,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void gotoIndex(int index, int duration) {
-    // print("index $index, duration $duration");
+    print("index $index, duration $duration");
     selectedIndex = index;
     setState(() {});
     if (duration == 0) {
@@ -441,7 +441,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Widget getToggleButton(BuildContext context) {
     return StreamBuilder<bool>(
-        stream: AudioService.playbackStateStream
+        stream: widget.audioHandler.playbackState
             .map((state) => state.playing)
             .distinct(),
         builder: (context, snapshot) {
@@ -479,7 +479,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             backgroundColor: theme.dialogBackgroundColor,
             context: context,
             isScrollControlled: true,
-            builder: (context) => Settings(() => setState(() {})),
+            builder: (context) => SettingsPopup(() => setState(() {})),
           ),
         );
       case "search":
@@ -487,7 +487,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             icon: Icon(Icons.search),
             onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SearchPage()),
+                  MaterialPageRoute(
+                      builder: (context) => SearchPage(widget.audioHandler)),
                 ));
       case "forward":
       case "back":
@@ -509,27 +510,27 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Future<void> initAudio() async {
-    print("initAudio c ${AudioService.connected} r ${AudioService.running}");
-    if (AudioService.connected && AudioService.running) return;
+    // print("initAudio c ${AudioService.connected} r ${AudioService.running}");
+    // if (AudioService.connected && widget.audioHandler.playbackState. == pros) return;
 
     soundState = SoundState.loading;
     setState(() {});
     List<String>? sounds = Prefs.persons[PType.sound];
     playingSound = Configs.instance.sounds[sounds![0]]!;
-    await AudioService.start(
-        backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint,
-        androidNotificationChannelName: 'قرآن هدایت',
-        // Enable this if you want the Android service to exit the foreground state on pause.
-        //androidStopForegroundOnPause: true,
-        androidNotificationColor: Colors.amber.value,
-        androidNotificationIcon: 'mipmap/ic_launcher',
-        androidEnableQueue: true,
-        params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
+    // await AudioService.start(
+    //     backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint,
+    //     androidNotificationChannelName: 'قرآن هدایت',
+    //     // Enable this if you want the Android service to exit the foreground state on pause.
+    //     //androidStopForegroundOnPause: true,
+    //     androidNotificationColor: Colors.amber.value,
+    //     androidNotificationIcon: 'mipmap/ic_launcher',
+    //     androidEnableQueue: true,
+    //     params: {"ayas": jsonEncode(Configs.instance.navigations["all"]![0])});
     updatePlayer();
     soundState = SoundState.ready;
     setState(() {});
 
-    AudioService.customEventStream.listen((state) {
+    widget.audioHandler.customEvent.listen((state) {
       var event = json.decode(state as String);
       if (event["type"] == "select") {
         playingAya = Configs.instance.navigations["all"]![0][event["data"][0]];
@@ -544,11 +545,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void onTogglePressed() async {
-    await initAudio();
+    // await initAudio();
     if (soundState == SoundState.pause || soundState == SoundState.playing) {
       soundState == SoundState.playing
-          ? AudioService.pause()
-          : AudioService.play();
+          ? widget.audioHandler.pause()
+          : widget.audioHandler.play();
       return;
     }
     play(Configs.instance.pageItems[selectedPage][scrollIndex].index);
@@ -557,8 +558,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void play(int index) async {
     soundState = SoundState.loading;
     setState(() {});
-    await initAudio();
-    AudioService.customAction("select", {"index": index});
+    // await initAudio();
+    widget.audioHandler.customAction("select", {"index": index});
   }
 
   void updatePlayer() {
@@ -567,8 +568,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     var sounds = <Person>[];
     for (var p in Prefs.persons[PType.sound]!)
       sounds.add(Configs.instance.sounds[p]!);
-    AudioService.customAction(
-        "update", {"sounds": jsonEncode(sounds), "suras": suras});
+    widget.audioHandler
+        .customAction("update", {"sounds": jsonEncode(sounds), "suras": suras});
   }
 
   @override

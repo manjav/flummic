@@ -2,21 +2,18 @@ import 'dart:io';
 
 import 'package:android_intent/android_intent.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/pages/home.dart';
-import 'package:islamic/pages/web.dart';
+import 'package:islamic/utils/player.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:islamic/widgets/rating.dart';
 
-import '../main.dart';
 import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
-  const IndexPage({Key? key}) : super(key: key);
   @override
   IndexPageState createState() => IndexPageState();
 }
@@ -284,7 +281,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             width: 50,
             height: _toolbarHeight,
             color: Colors.transparent,
-            child: Stack(alignment: Alignment.topCenter,
+            child: Stack(
+                alignment: Alignment.topCenter,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -523,7 +521,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
     // Send to store
     if (Prefs.rate == 5) {
-      if (Configs.instance.buildConfig!.target == "cafebazaar") {
+      if (Configs.instance.buildConfig.target == "cafebazaar") {
         if (Platform.isAndroid) {
           AndroidIntent intent = AndroidIntent(
               data: 'bazaar://details?id=com.gerantech.muslim.holy.quran',
@@ -570,14 +568,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         content: Text("thanks_l".l()),
       ));
     }
-    AppState.analytics.logEvent(
+    /* AppState.analytics.logEvent(
       name: 'rate',
       parameters: <String, dynamic>{
         'numRuns': Prefs.numRuns,
         'rating': rating,
         'comment': comment
       },
-    );
+    ); */
     print(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
   }
 }
