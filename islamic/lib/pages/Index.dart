@@ -113,62 +113,68 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             ],
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [getSuras(theme), getJuzes(theme), getNotes(theme)],
-        ),
-        bottomNavigationBar: footer(theme));
+        body: Column(children: [
+          Expanded(
+              child: TabBarView(
+            controller: _tabController,
+            children: [getSuras(theme), getJuzes(theme), getNotes(theme)],
+          )),
+          _footer(theme),
+          _playerLine(theme)
+        ]));
   }
 
-  Widget footer(ThemeData theme) {
+  _footer(ThemeData theme) {
+    if (Prefs.last == 0) return SizedBox();
     var last = Configs.instance.navigations["all"]![0][Prefs.last];
     var sura = Configs.instance.metadata.suras[last.sura];
-    return Prefs.last == 0
-        ? SizedBox(height: 0)
-        : Container(
-            height: HomePageState.soundState == SoundState.playing ? 100 : 64,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  GestureDetector(
-                      onTap: () => goto(last.sura, last.aya),
-                      child: Container(
-                          height: 64,
-                          color: theme.buttonColor,
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                  right: Localization.isRTL ? 16 : 0,
-                                  left: Localization.isRTL ? 0 : 16),
-                              child: Row(children: [
-                                Icon(Icons.arrow_back),
-                                SizedBox(width: 16),
-                                Text(
-                                  "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
-                                  style: theme.textTheme.caption,
-                                ),
-                              ])))),
-                  HomePageState.soundState != SoundState.playing
-                      ? SizedBox()
-                      : Container(
-                          height: 36,
-                          color: theme.appBarTheme.backgroundColor,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 16),
-                              Expanded(
-                                  child: Text("playing_l".l(),
-                                      textDirection: Localization.dir,
-                                      style: theme.textTheme.bodyText2)),
-                              IconButton(
-                                  icon: Icon(Icons.stop, size: 16),
-                                  onPressed: () {
-                                    AudioService.stop();
-                                    HomePageState.soundState = SoundState.stop;
-                                    setState(() {});
-                                  })
-                            ],
-                          ))
-                ]));
+    return GestureDetector(
+        onTap: () => goto(last.sura, last.aya),
+        child: Container(
+            height: 64,
+            color: theme.colorScheme.primary,
+            child: Padding(
+                padding: EdgeInsets.only(
+                    right: Localization.isRTL ? 16 : 0,
+                    left: Localization.isRTL ? 0 : 16),
+                child: Row(children: [
+                  Icon(Icons.arrow_back),
+                  SizedBox(width: 16),
+                  Text(
+                    "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ]))));
+  }
+
+  _playerLine(ThemeData theme) {
+    if (_audioHandler == null) return SizedBox(height: 12);
+    return StreamBuilder<bool>(
+        stream: _audioHandler!.playbackState
+            .map((state) => state.playing)
+            .distinct(),
+        builder: (context, snapshot) {
+          return (snapshot.data ?? false)
+              ? Container(
+                  height: 36,
+                  color: theme.appBarTheme.backgroundColor,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 16),
+                      Expanded(
+                          child: Text("playing_l".l(),
+                              textDirection: Localization.dir,
+                              style: theme.textTheme.bodyMedium)),
+                      IconButton(
+                          icon: Icon(Icons.stop, size: 16),
+                          onPressed: () {
+                            _audioHandler!.stop();
+                            setState(() {});
+                          })
+                    ],
+                  ))
+              : SizedBox();
+        });
   }
 
   Widget getSuras(ThemeData theme) {

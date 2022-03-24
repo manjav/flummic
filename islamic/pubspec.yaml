@@ -19,7 +19,7 @@ dependencies:
   autocomplete_textfield_ns: ^2.0.0
   crypto: ^3.0.1
   cached_network_image: ^3.0.0
-  cupertino_icons: ^1.0.3
+  # cupertino_icons: ^1.0.3
   firebase_analytics: ^10.0.7
   firebase_core: ^2.4.0
   firebase_messaging: ^14.1.4
