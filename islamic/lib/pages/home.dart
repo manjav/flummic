@@ -46,6 +46,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
   Aya playingAya = new Aya(0, 0, 0);
   ThemeData? _theme;
+
+  bool _disposed = false;
   ThemeData get theme => _theme!;
   static SoundState soundState = SoundState.stop;
 
@@ -531,6 +533,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {});
 
     widget.audioHandler.customEvent.listen((state) {
+      if (_disposed) return;
       var event = json.decode(state as String);
       if (event["type"] == "select") {
         playingAya = Configs.instance.navigations["all"]![0][event["data"][0]];
@@ -574,13 +577,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _disposed = true;
     Wakelock.disable();
     super.dispose();
   }
 }
 
 enum SoundState { stop, loading, ready, playing, pause }
-
-// void _audioPlayerTaskEntrypoint() async {
-//   AudioServiceBackground.run(() => AudioPlayerTask());
-// }
