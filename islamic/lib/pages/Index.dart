@@ -224,7 +224,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                     Stack(children: [
                       SvgPicture.asset(
                         "images/${sura.type == 0 ? 'meccan' : 'median'}.svg",
-                        color: theme.primaryColor,
                         width: 36,
                         height: 36,
                       ),
