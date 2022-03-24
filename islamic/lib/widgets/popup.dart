@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/models.dart';
 import 'package:islamic/utils/localization.dart';
@@ -30,7 +29,7 @@ class AyaDetailsState extends State<AyaDetails> {
             top: 20,
             child: Text(
               "${'sura_l'.l()} ${Configs.instance.metadata.suras[widget.sura].title} - ${'aya_l'.l()} ${(widget.aya + 1).n()}",
-              style: theme.textTheme.headline5,
+              style: theme.textTheme.headlineSmall,
             ),
           ),
           Positioned(
@@ -47,7 +46,7 @@ class AyaDetailsState extends State<AyaDetails> {
   IconButton getButton(ThemeData theme, IconData icon, String type) {
     return IconButton(
         padding: EdgeInsets.all(28),
-        icon: Icon(icon, color: theme.textTheme.bodyText1!.color),
+        icon: Icon(icon, color: theme.textTheme.bodyLarge!.color),
         onPressed: () => onPressed(theme, type));
   }
 
@@ -132,7 +131,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                     right: rtl ? null : p,
                     child: DropdownButton<int>(
                       value: themeMode,
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                       onChanged: (int? newValue) {
                         themeMode = newValue!;
                         Settings.instance.setTheme(ThemeMode.values[themeMode]);
@@ -154,7 +153,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                     right: rtl ? null : p,
                     child: DropdownButton<Locale>(
                       value: Settings.instance.locale,
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                       onChanged: (Locale? v) {
                         Localization.change(v!.languageCode, onDone: (l) {
                           Settings.instance.setLocale(l);
@@ -170,7 +169,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                                       child: Text(
                                         value.languageCode.f(),
                                         textDirection: TextDirection.ltr,
-                                        style: theme.textTheme.subtitle2,
+                                        style: theme.textTheme.titleSmall,
                                       ),
                                     ),
                                   ))
@@ -202,7 +201,8 @@ class SettingsPopupState extends State<SettingsPopup> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           for (var i = 0; i < 4; i++)
-                            Text("tsize_$i".l(), style: theme.textTheme.caption)
+                            Text("tsize_$i".l(),
+                                style: theme.textTheme.bodySmall)
                         ])),
                 Generics.text(theme, "navi_mode".l(), 320, rtl ? p : null,
                     rtl ? null : p),
@@ -214,7 +214,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: Prefs.naviMode,
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                       onChanged: (String? newValue) {
                         Prefs.instance.setString("naviMode", newValue!);
                         setState(() {});
@@ -238,7 +238,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                     child: DropdownButton<String>(
                       value: Prefs.font,
                       isExpanded: true,
-                      style: theme.textTheme.caption,
+                      style: theme.textTheme.bodySmall,
                       onChanged: (String? newValue) {
                         Prefs.instance.setString("font", newValue!);
                         setState(() {});
@@ -256,7 +256,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                                             fontFamily: value,
                                             fontSize: 17,
                                             color: theme
-                                                .textTheme.bodyText1!.color)),
+                                                .textTheme.bodyLarge!.color)),
                                   ))
                           .toList(),
                     )),
@@ -266,7 +266,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                     right: rtl ? null : p,
                     child: Text(
                         "${'app_title'.l()}  ${'app_ver'.l()} ${config.packageInfo!.version.n()}  (${config.target})",
-                        style: theme.textTheme.caption))
+                        style: theme.textTheme.bodySmall))
               ])),
         ));
   }
@@ -280,7 +280,7 @@ class Generics {
         height: 5,
         child: Container(
           decoration: BoxDecoration(
-              color: theme.textTheme.bodyText1!.color,
+              color: theme.textTheme.bodyLarge!.color,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(4))),
         ));
@@ -294,7 +294,7 @@ class Generics {
       right: right,
       child: Text(
         text,
-        style: theme.textTheme.subtitle1,
+        style: theme.textTheme.titleMedium,
       ),
     );
   }
@@ -321,7 +321,7 @@ class Generics {
                     height: 64,
                     child: Container(
                         decoration: BoxDecoration(
-                          color: theme.bottomAppBarColor,
+                          color: theme.colorScheme.background,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -408,7 +408,7 @@ class Generics {
             title: Center(
               child: Text(
                 text,
-                style: theme.textTheme.caption,
+                style: theme.textTheme.bodySmall,
               ),
             )));
   } */

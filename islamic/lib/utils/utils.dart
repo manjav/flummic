@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic/widgets/popup.dart';
 import 'package:timezone/data/latest.dart' as tz;

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -77,7 +76,7 @@ class PersonPageState extends State<PersonPage>
                 floatingActionButton: SpeedDial(
                   icon: Icons.add,
                   curve: Curves.easeOutExpo,
-                  overlayColor: theme.backgroundColor,
+                  overlayColor: theme.colorScheme.background,
                   overlayOpacity: 0.5,
                   tooltip: title,
                   heroTag: 'fab',
@@ -88,7 +87,7 @@ class PersonPageState extends State<PersonPage>
                       SpeedDialChild(
                           labelWidget: Text(modes![i].l(),
                               textAlign: TextAlign.right,
-                              style: theme.textTheme.bodyText1),
+                              style: theme.textTheme.bodyLarge),
                           child: Icon(Icons.arrow_back),
                           backgroundColor:
                               theme.floatingActionButtonTheme.backgroundColor,
@@ -135,11 +134,12 @@ class PersonPageState extends State<PersonPage>
                   bottom: 0,
                   left: 0,
                   child: Container(
-                    color: theme.backgroundColor.withOpacity(0.8),
+                    color: theme.colorScheme.background.withOpacity(0.8),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("undo_b".l(), style: theme.textTheme.subtitle1),
+                          Text("undo_b".l(),
+                              style: theme.textTheme.titleMedium),
                           SizedBox(height: 16),
                           LinearProgressIndicator(value: removeAnimation!.value)
                         ]),

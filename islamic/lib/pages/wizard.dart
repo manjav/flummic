@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:intl/intl.dart' show Bidi;
@@ -65,7 +64,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         fontFamily: Prefs.font,
         fontSize: 18 * Prefs.textScale,
         height: 2.2,
-        color: _theme!.textTheme.bodyText1!.color);
+        color: _theme!.textTheme.bodyLarge!.color);
     var r = Localization.isRTL;
     return Scaffold(
         body: Stack(children: [
@@ -97,7 +96,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 16),
-              Text("wiz_$_page".l(), style: _theme!.textTheme.headline5),
+              Text("wiz_$_page".l(), style: _theme!.textTheme.headlineSmall),
             ]));
   }
 
@@ -133,12 +132,12 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             decoration: BoxDecoration(
                 color: i > _page
                     ? _theme!.textSelectionTheme.selectionColor
-                    : _theme!.accentColor,
+                    : _theme!.colorScheme.secondary,
                 shape: BoxShape.circle),
             child: Icon(_items[i],
                 color: i > _page
                     ? _theme!.iconTheme.color
-                    : _theme!.backgroundColor)));
+                    : _theme!.colorScheme.background)));
   }
 
   Widget _circlaButton(
@@ -160,8 +159,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                 height: s,
                 alignment: Alignment.center,
                 child: FloatingActionButton(
-                    backgroundColor:
-                        dir == 1 ? _theme!.buttonColor : _theme!.focusColor,
+                    backgroundColor: dir == 1
+                        ? _theme!.colorScheme.primary
+                        : _theme!.focusColor,
                     child: Icon(icon, size: s * 0.5),
                     onPressed: () {
                       if (_page + dir >= _items.length) {
@@ -211,7 +211,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         DropdownButton<Locale>(
           isExpanded: true,
           value: Settings.instance.locale,
-          style: _theme!.textTheme.caption,
+          style: _theme!.textTheme.bodySmall,
           onChanged: (Locale? v) {
             Localization.change(v!.languageCode, onDone: (l) {
               Settings.instance.setLocale(l);
@@ -227,7 +227,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                           child: Text(
                             value.languageCode.f(),
                             textDirection: TextDirection.ltr,
-                            // style: _theme!.textTheme.subtitle2,
+                            // style: _theme!.textTheme.titleSmall,
                           ))))
               .toList(),
         )
@@ -244,14 +244,14 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                           "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
                       : HtmlWidget(
                           "<p align=\"justify\" dir=\"ltr\"> ۞ ${_texts[1]} (${(aya + 1).n()}) </p>",
-                          textStyle: _theme!.textTheme.headline6));
+                          textStyle: _theme!.textTheme.titleLarge));
             },
             items: _texts,
             buttonSize: 132,
             showSelection: true,
             current: _selectedText,
             selectColor: _theme!.cardColor,
-            deselectColor: _theme!.backgroundColor,
+            deselectColor: _theme!.colorScheme.background,
             onTab: (_selected) {
               setState(() {
                 _selectedText = _selected;
@@ -273,8 +273,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         value: isDark,
         textOff: "theme_${1}".l(),
         textOn: "theme_${2}".l(),
-        colorOn: _theme!.buttonColor,
-        colorOff: _theme!.buttonColor,
+        colorOn: _theme!.colorScheme.primary,
+        colorOff: _theme!.colorScheme.primary,
         iconOff: Icons.wb_sunny,
         iconOn: Icons.nightlight_round,
         textSize: 16.0,
@@ -296,14 +296,14 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                         fontFamily: _fonts[index],
                         fontSize: 18,
                         height: 2.2,
-                        color: _theme!.textTheme.bodyText1!.color)));
+                        color: _theme!.textTheme.bodyLarge!.color)));
           },
           items: _fonts,
           buttonSize: 132,
           showSelection: true,
           current: _fonts.indexOf(Prefs.font),
           selectColor: _theme!.cardColor,
-          deselectColor: _theme!.backgroundColor,
+          deselectColor: _theme!.colorScheme.background,
           onTab: (_selected) {
             Prefs.instance.setString("font", _fonts[_selected]);
             _updateButtons();
@@ -344,9 +344,9 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget(
                 "<p align=\"justify\" dir=\"ltr\"> $t (${aya + 1}) </p>",
-                textStyle: _theme!.textTheme.headline6)
+                textStyle: _theme!.textTheme.titleLarge)
             : Text("$t (${(aya + 1).n()}) ",
-                style: _theme!.textTheme.headline6,
+                style: _theme!.textTheme.titleLarge,
                 textAlign: TextAlign.justify));
       }
       ++i;
@@ -367,7 +367,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           Text("$text",
               textAlign: TextAlign.justify,
               textDirection: dir,
-              style: _theme!.textTheme.caption),
+              style: _theme!.textTheme.bodySmall),
           Avatar(t.path!, 15)
         ],
       ));
@@ -377,7 +377,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     rows.add(GestureDetector(
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.add_circle_outline,
-              color: _theme!.textTheme.bodyText1!.color),
+              color: _theme!.textTheme.bodyLarge!.color),
           SizedBox(width: 16),
           Text("add_translate".l())
         ]),
@@ -403,14 +403,14 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     return Opacity(
         opacity: _finalAnimation!.value.clamp(0, 1),
         child: Container(
-            color: _theme!.backgroundColor,
+            color: _theme!.colorScheme.background,
             alignment: Alignment.center,
             child: Text("\n${String.fromCharCode(194)}",
                 style: TextStyle(
                     fontFamily: 'Titles',
                     fontSize: 44,
                     color: Color.lerp(Colors.transparent,
-                        _theme!.textTheme.bodyText1!.color, color)))));
+                        _theme!.textTheme.bodyLarge!.color, color)))));
   }
 
   Widget _container({List<Widget>? children}) {

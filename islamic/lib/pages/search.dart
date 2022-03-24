@@ -1,6 +1,5 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models.dart';
@@ -82,7 +81,7 @@ class SearchPageState extends State<SearchPage> {
     if (s.index > max) pre = "... $pre";
     if (t.length - s.index > max) post = "$post ...";
     return Container(
-        color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+        color: index % 2 == 0 ? theme.colorScheme.background : theme.cardColor,
         child: GestureDetector(
             onTap: () {
               var p = Configs.instance.getPart(s.sura, s.aya);
@@ -106,11 +105,11 @@ class SearchPageState extends State<SearchPage> {
                         textAlign: TextAlign.justify,
                         textDirection: TextDirection.rtl,
                         text: new TextSpan(
-                          style: theme.textTheme.caption,
+                          style: theme.textTheme.bodySmall,
                           children: [
                             new TextSpan(text: pre),
                             new TextSpan(
-                                text: text, style: theme.textTheme.subtitle1),
+                                text: text, style: theme.textTheme.titleMedium),
                             new TextSpan(text: post),
                           ],
                         ),

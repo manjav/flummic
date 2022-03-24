@@ -22,21 +22,22 @@ class Themes {
   static ThemeData get data {
     var hl = TextStyle(color: primaries[920], fontWeight: FontWeight.bold);
     var textTheme = TextTheme(
-        bodyText1: TextStyle(color: primaries[920]),
-        bodyText2: TextStyle(color: primaries[920]),
-        subtitle1: TextStyle(
+        bodyLarge: TextStyle(color: primaries[920]),
+        bodyMedium: TextStyle(color: primaries[920]),
+        titleMedium: TextStyle(
             color: primaries[920], fontSize: 15, fontWeight: FontWeight.bold),
-        subtitle2: TextStyle(color: primaries[910], fontSize: 12),
-        headline1: hl,
-        headline2: hl,
-        headline3: hl,
-        headline4: hl,
-        headline5: TextStyle(
+        titleSmall: TextStyle(color: primaries[910], fontSize: 12),
+        displayLarge: hl,
+        displayMedium: hl,
+        displaySmall: hl,
+        headlineMedium: hl,
+        headlineSmall: TextStyle(
             color: hl.color, fontWeight: FontWeight.bold, fontSize: 21),
-        headline6: TextStyle(color: hl.color, fontSize: 17),
-        caption: TextStyle(
+        titleLarge: TextStyle(color: hl.color, fontSize: 17),
+        bodySmall: TextStyle(
             color: primaries[910], fontSize: 15, fontWeight: FontWeight.w100),
-        button: TextStyle(color: primaries[50], fontWeight: FontWeight.normal));
+        labelLarge:
+            TextStyle(color: primaries[50], fontWeight: FontWeight.normal));
 
     Color getTextButtonColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -54,7 +55,7 @@ class Themes {
         iconTheme: iconTheme,
         appBarTheme: AppBarTheme(
             backgroundColor: primaries[500],
-            textTheme: textTheme,
+            // textTheme: textTheme,
             iconTheme: iconTheme),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: primaries[500], foregroundColor: primaries[100]),
@@ -82,46 +83,46 @@ class Themes {
         inputDecorationTheme:
             InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
         fontFamily: "CubicSans",
-        accentColor: primaries[600],
-        buttonColor: primaries[400],
+        // accentColor: primaries[600],
+        // buttonColor: primaries[400],
         scaffoldBackgroundColor: primaries[50],
-        backgroundColor: primaries[50],
+        // backgroundColor: primaries[50],
         cardColor: primaries[100],
         primaryColor: primaries[500],
         focusColor: primaries[300],
         textTheme: textTheme,
         dialogBackgroundColor: primaries[100],
         colorScheme: ColorScheme.light(
-            // primary: primaries[500],
-            // onPrimary: Colors.white,
-            // primaryVariant: Colors.teal[50],
-            // background: primaries[50],
-            // onBackground: primaries[100],
-            // surface: Colors.red,
-            // secondary: Colors.teal[50],
-            // onSecondary: Colors.red,
-            // secondaryVariant: Colors.red,
-            ));
+          primary: primaries[500]!,
+          // onPrimary: Colors.white,
+          // primaryVariant: Colors.teal[50],
+          background: primaries[50]!,
+          // onBackground: primaries[100],
+          // surface: Colors.red,
+          secondary: primaries[600]!,
+          // onSecondary: Colors.red,
+          // secondaryVariant: Colors.red,
+        ));
   }
 
   static ThemeData get darkData {
     var hl = TextStyle(color: primaries[100], fontWeight: FontWeight.bold);
     var textTheme = TextTheme(
-        bodyText1: TextStyle(color: primaries[100]),
-        bodyText2: TextStyle(color: primaries[200]),
-        subtitle1: TextStyle(
+        bodyLarge: TextStyle(color: primaries[100]),
+        bodyMedium: TextStyle(color: primaries[200]),
+        titleMedium: TextStyle(
             color: primaries[100], fontSize: 15, fontWeight: FontWeight.bold),
-        subtitle2: TextStyle(color: primaries[200], fontSize: 12),
-        headline1: hl,
-        headline2: hl,
-        headline3: hl,
-        headline4: hl,
-        headline5: TextStyle(
+        titleSmall: TextStyle(color: primaries[200], fontSize: 12),
+        displayLarge: hl,
+        displayMedium: hl,
+        displaySmall: hl,
+        headlineMedium: hl,
+        headlineSmall: TextStyle(
             color: hl.color, fontWeight: FontWeight.bold, fontSize: 21),
-        headline6: TextStyle(color: hl.color, fontSize: 17),
-        caption: TextStyle(
+        titleLarge: TextStyle(color: hl.color, fontSize: 17),
+        bodySmall: TextStyle(
             color: primaries[200], fontSize: 15, fontWeight: FontWeight.w100),
-        button:
+        labelLarge:
             TextStyle(color: primaries[100], fontWeight: FontWeight.normal));
 
     Color getTextButtonColor(Set<MaterialState> states) {
@@ -141,7 +142,7 @@ class Themes {
       iconTheme: iconTheme,
       appBarTheme: AppBarTheme(
           backgroundColor: primaries[700],
-          textTheme: textTheme,
+          // textTheme: textTheme,
           iconTheme: iconTheme),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: primaries[500], foregroundColor: primaries[100]),
@@ -169,26 +170,26 @@ class Themes {
       inputDecorationTheme:
           InputDecorationTheme(hintStyle: TextStyle(color: primaries[150])),
       fontFamily: "CubicSans",
-      accentColor: primaries[0],
-      buttonColor: primaries[600],
+      // accentColor: primaries[0],
+      // buttonColor: primaries[600],
       scaffoldBackgroundColor: primaries[900],
-      backgroundColor: primaries[900],
+      // backgroundColor: primaries[900],
       cardColor: primaries[800],
       primaryColor: primaries[700],
       focusColor: primaries[750],
       textTheme: textTheme,
       dialogBackgroundColor: primaries[800],
       colorScheme: ColorScheme.dark(
-          // primary: primaries[700],
-          // onPrimary: Colors.white,
-          // primaryVariant: Colors.teal[50],
-          // background: primaries[900],
-          // onBackground: primaries[800],
-          // surface: Colors.red,
-          // secondary: Colors.teal[50],
-          // onSecondary: Colors.red,
-          // secondaryVariant: Colors.red,
-          ),
+        primary: primaries[700]!,
+        // onPrimary: Colors.white,
+        // primaryVariant: Colors.teal[50],
+        background: primaries[900]!,
+        // onBackground: primaries[800],
+        // surface: Colors.red,
+        secondary: primaries[0]!,
+        // onSecondary: Colors.red,
+        // secondaryVariant: Colors.red,
+      ),
     );
   }
 

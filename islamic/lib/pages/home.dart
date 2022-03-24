@@ -64,7 +64,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         fontFamily: Prefs.font,
         fontSize: 18 * Prefs.textScale,
         height: 2.2,
-        color: theme.textTheme.bodyText1!.color);
+        color: theme.textTheme.bodyLarge!.color);
     Texts.teal =
         TextStyle(color: theme.textSelectionTheme.selectionHandleColor);
     if (suraPageController != null) return;
@@ -139,7 +139,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             child: Text(headerTextProvider(),
                                 style: !Localization.isRTL &&
                                         Prefs.naviMode == "page"
-                                    ? theme.textTheme.subtitle1
+                                    ? theme.textTheme.titleMedium
                                     : titlesStyle),
                             height: _toolbarHeight)),
                     footer()
@@ -200,7 +200,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget ayaItemBuilder(int position, int index) {
-    var color = index % 2 == 0 ? theme.backgroundColor : theme.cardColor;
+    var color = index % 2 == 0 ? theme.colorScheme.background : theme.cardColor;
     var part = Configs.instance.pageItems[position][index];
     return GestureDetector(
         onTap: () {
@@ -227,7 +227,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     icon: Icon(
                       Icons.bookmark_sharp,
                       size: 14,
-                      color: theme.textTheme.caption!.color,
+                      color: theme.textTheme.bodySmall!.color,
                     ),
                     onPressed: () {
                       showDialog(
@@ -241,7 +241,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               right: -14,
               child: IconButton(
                 icon: Icon(Icons.more_vert,
-                    size: 16, color: theme.textTheme.caption!.color),
+                    size: 16, color: theme.textTheme.bodySmall!.color),
                 onPressed: () => showAyaDetails(part.sura, part.aya),
               )),
         ]));
@@ -293,9 +293,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       else {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget("<p align=\"justify\">$t (${(aya + 1).n()}) </p>",
-                textStyle: theme.textTheme.headline6)
+                textStyle: theme.textTheme.titleLarge)
             : Text("$t (${(aya + 1).n()}) ",
-                style: theme.textTheme.headline6,
+                style: theme.textTheme.titleLarge,
                 textAlign: TextAlign.justify));
       }
       ++i;
@@ -315,7 +315,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Text("$text",
               textAlign: TextAlign.justify,
               textDirection: dir,
-              style: theme.textTheme.caption),
+              style: theme.textTheme.bodySmall),
           Avatar(t.path!, 15)
         ],
       ));
@@ -356,7 +356,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   left: 80,
                   child: Text(
                       "${playingSound.title} - ${'sura_l'.l()} ${Configs.instance.metadata.suras[playingAya.sura].title} (${(playingAya.aya + 1).n()})",
-                      style: theme.textTheme.button,
+                      style: theme.textTheme.labelLarge,
                       softWrap: false,
                       overflow: TextOverflow.fade,
                       textDirection: TextDirection.rtl,

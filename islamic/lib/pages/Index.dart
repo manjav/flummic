@@ -214,7 +214,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         onTap: () => goto(sura.index!, 0),
         child: Container(
             height: Localization.isRTL ? 64 : 72,
-            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+            color:
+                index % 2 == 0 ? theme.colorScheme.background : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.only(
                     right: Localization.isRTL ? 8 : 0,
@@ -300,8 +301,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                   Text(
                     "${value}_l".l(),
                     style: lastSort == value
-                        ? theme.textTheme.bodyText1
-                        : theme.textTheme.subtitle2,
+                        ? theme.textTheme.bodyLarge
+                        : theme.textTheme.titleSmall,
                   ),
                   Positioned(
                     child: Icon(
@@ -309,8 +310,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
                         color: lastSort == value
-                            ? theme.textTheme.bodyText1!.color
-                            : theme.textTheme.subtitle2!.color),
+                            ? theme.textTheme.bodyLarge!.color
+                            : theme.textTheme.titleSmall!.color),
                     top: 24,
                   )
                 ])));
@@ -334,7 +335,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         },
         child: Container(
             height: 80,
-            color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+            color:
+                index % 2 == 0 ? theme.colorScheme.background : theme.cardColor,
             child: Padding(
                 padding: EdgeInsets.only(
                     top: 6,
@@ -354,10 +356,10 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                 : "$j. " + "n_$j".l() + " " + "juze_l".l(),
                             style: Localization.isRTL
                                 ? titlesStyle
-                                : theme.textTheme.subtitle1),
+                                : theme.textTheme.titleMedium),
                         Text(
                             "${'sura_l'.l()} ${Configs.instance.metadata.suras[juz.sura - 1].title} ${'aya_l'.l()} ${juz.aya.n()}",
-                            style: theme.textTheme.caption)
+                            style: theme.textTheme.bodySmall)
                       ],
                     )),
                     getHizb(theme, index, 0),
@@ -386,7 +388,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                     height: 36,
                   ),
                   Text("hizb_l".l() + " " + (hizbIndex + 1).n(),
-                      style: theme.textTheme.caption)
+                      style: theme.textTheme.bodySmall)
                 ]))));
   }
 
@@ -403,7 +405,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     return notes.length == 0
         ? Center(
             child: Text("note_empty".l(),
-                style: theme.textTheme.caption, textAlign: TextAlign.center))
+                style: theme.textTheme.bodySmall, textAlign: TextAlign.center))
         : ListView.builder(
             itemBuilder: (c, int i) => noteItemBuilder(c, theme, i),
             itemCount: notes.length);
@@ -416,7 +418,9 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         child: Stack(children: [
           Container(
               height: 72,
-              color: index % 2 == 0 ? theme.backgroundColor : theme.cardColor,
+              color: index % 2 == 0
+                  ? theme.colorScheme.background
+                  : theme.cardColor,
               child: Padding(
                   padding: EdgeInsets.only(
                       left: Localization.isRTL ? 4 : 16,
@@ -429,7 +433,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                       children: [
                         Text(
                           "${'sura_l'.l()} ${Configs.instance.metadata.suras[note.sura].title} - ${'aya_l'.l()} ${(note.aya + 1).n()}",
-                          style: theme.textTheme.subtitle1,
+                          style: theme.textTheme.titleMedium,
                         ),
                         note.text.length > 0
                             ? Text(note.text, overflow: TextOverflow.ellipsis)
@@ -459,11 +463,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                   bottom: 0,
                   left: 0,
                   child: Container(
-                    color: theme.backgroundColor.withOpacity(0.8),
+                    color: theme.colorScheme.background.withOpacity(0.8),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("undo_b".l(), style: theme.textTheme.subtitle1),
+                          Text("undo_b".l(),
+                              style: theme.textTheme.titleMedium),
                           SizedBox(height: 16),
                           LinearProgressIndicator(value: removeAnimation!.value)
                         ]),

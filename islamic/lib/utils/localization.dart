@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:islamic/models.dart';
 
@@ -60,7 +60,7 @@ extension Localization on String {
   };
 
   static void change(String _languageCode, {Function(Locale)? onDone}) {
-    dynamic? _result;
+    dynamic _result;
     var _loc = MyApp.supportedLocales.firstWhere(
         (l) => l.languageCode == _languageCode,
         orElse: () => MyApp.supportedLocales[2]);
