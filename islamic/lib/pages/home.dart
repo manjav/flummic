@@ -581,6 +581,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 enum SoundState { stop, loading, ready, playing, pause }
 
-void _audioPlayerTaskEntrypoint() async {
-  AudioServiceBackground.run(() => AudioPlayerTask());
-}
+// void _audioPlayerTaskEntrypoint() async {
+//   AudioServiceBackground.run(() => AudioPlayerTask());
+// }

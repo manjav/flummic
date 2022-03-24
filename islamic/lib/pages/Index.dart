@@ -39,6 +39,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   AnimationController? hizbAnimation;
   AnimationController? removeAnimation;
+  AudioHandler? _audioHandler;
 
   @override
   void initState() {
@@ -69,6 +70,18 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     }); //this inside the initstate
 
     createNotes();
+    _initAudioService();
+  }
+
+  _initAudioService() async {
+    _audioHandler = await AudioService.init(
+      builder: () => AudioPlayerHandler(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
+        androidNotificationChannelName: 'Audio playback',
+        androidNotificationOngoing: true,
+      ),
+    );
   }
 
   @override
@@ -495,10 +508,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     HomePageState.selectedPage = part[0];
     HomePageState.selectedIndex = part[1];
     Prefs.instance.setInt("last", part[2]);
-    await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AudioServiceWidget(child: HomePage())));
+    await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => HomePage(_audioHandler!)));
     createNotes();
   }
 
