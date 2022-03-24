@@ -1,13 +1,9 @@
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:islamic/pages/Index.dart';
 import 'package:islamic/pages/wizard.dart';
-import 'package:islamic/utils/localization.dart';
-import 'package:smartlook/smartlook.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'models.dart';
@@ -39,46 +35,19 @@ class MyApp extends StatefulWidget {
 
   @override
   AppState createState() => AppState();
-  static AppState? of(BuildContext context) =>
-      context.findAncestorStateOfType<AppState>();
 }
 
 class AppState extends State<MyApp> {
-  Locale? locale;
-  ThemeMode? themeMode;
-  int loadingState = 0;
-  WaitingPage? waitingPage;
-
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  var loadingState = 0;
+  static final analytics = FirebaseAnalytics.instance;
+  static final observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   void initState() {
-    Map appsFlyerOptions = {
-      "afDevKey": "YBThmUqaiHZYpiSwZ3GQz4",
-      "afAppId": "com.gerantech.muslim.holy.quran",
-      "isDebug": false
-    };
-
-    AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-    appsflyerSdk.initSdk(
-        registerConversionDataCallback: true,
-        registerOnAppOpenAttributionCallback: true,
-        registerOnDeepLinkingCallback: true);
-
-    MyApp.t = DateTime.now().millisecondsSinceEpoch;
-    waitingPage = WaitingPage();
-    Prefs.init(() {
-      _loadConfig();
-      setTheme(ThemeMode.values[Prefs.themeMode]);
-      setState(() => loadingState = 1);
-      if (Prefs.numRuns < 1)
-        Smartlook.setupAndStartRecording(
-            SetupOptionsBuilder('6488995bc0e02e3d4defab25862fd68ebf40a071')
-                .build());
+    Settings.instance.addListener(() => setState(() {}));
+    Configs.instance.addListener(() {
+      if (Configs.instance.state == LoadState.finalized) _gotoWizard();
     });
-
     Wakelock.disable();
     super.initState();
   }
@@ -86,25 +55,24 @@ class AppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorObservers: <NavigatorObserver>[observer],
-      // title: 'Title Example',
+      navigatorObservers: [observer],
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: MyApp.supportedLocales,
-      locale: locale,
+      locale: Settings.instance.locale,
       theme: Themes.data,
       darkTheme: Themes.darkData,
-      themeMode: themeMode,
+      themeMode: Settings.instance.themeMode,
       home: _preparedPage(),
     );
   }
 
   Widget _preparedPage() {
     switch (loadingState) {
-      case 1:
-        return waitingPage!;
+      case 0:
+        return WaitingPage();
       case 2:
         return WizardPage(onComplete: _onWizardComplete);
       case 3:
@@ -112,34 +80,6 @@ class AppState extends State<MyApp> {
       default:
         return SizedBox();
     }
-  }
-
-  void setTheme(ThemeMode mode) {
-    if (themeMode == mode) return;
-    themeMode = mode;
-    Prefs.instance.setInt("themeMode", mode.index);
-    setState(() {});
-  }
-
-  void setLocale(Locale _locale) {
-    locale = _locale;
-    setState(() {});
-  }
-
-  void _loadConfig() {
-    Configs.create(
-        () => Localization.change(Prefs.locale, onDone: (l) {
-              setLocale(l);
-              Configs.instance.init(() {
-                if (waitingPage!.page!.state > 1)
-                  waitingPage!.page!.end(() {
-                    _gotoWizard();
-                  });
-                else
-                  _gotoWizard();
-              });
-            }),
-        (e) => waitingPage!.page!.error(_loadConfig));
   }
 
   void _gotoWizard() {

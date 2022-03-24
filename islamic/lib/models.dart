@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:islamic/utils/localization.dart';
 import 'package:package_info/package_info.dart';
@@ -13,8 +13,8 @@ import 'utils/utils.dart';
 class Prefs {
   static SharedPreferences? _instance;
   static SharedPreferences get instance => _instance!;
-  static Map<PType, List<String>> persons = Map();
-  static Map<String, String> notes = Map();
+  static Map<PType, List<String>> persons = {};
+  static Map<String, String> notes = {};
   static List<String>? _surveys = <String>[];
 
   static String get locale => instance.getString("locale") ?? "en";
@@ -33,7 +33,7 @@ class Prefs {
   static int get selectedAya => instance.getInt("a") ?? 0;
   static set selectedAya(int a) => instance.setInt("a", a);
 
-  static void init(Function onInit) {
+  static void init(BuildContext context, Function onInit) {
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       _instance = prefs;
 
@@ -53,6 +53,8 @@ class Prefs {
       }
 
       var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
+      var _themeMode =
+          MediaQuery.of(context).platformBrightness == Brightness.light ? 1 : 2;
 
       List<String> texts = ["ar.uthmanimin"];
       List<String> sounds = [];
@@ -72,9 +74,9 @@ class Prefs {
           break;
       }
       instance.setInt("numRuns", 0);
-      instance.setInt("themeMode", 0);
-      instance.setString("naviMode", "sura");
+      instance.setInt("themeMode", _themeMode);
       instance.setString("locale", _locale);
+      instance.setString("naviMode", "sura");
       instance.setString("bookmarks", "{}");
       instance.setStringList(
           PType.text.toString(), persons[PType.text] = texts);
@@ -123,13 +125,51 @@ class Prefs {
   }
 }
 
-class Configs {
-  static Configs instance = Configs();
-  Function? onInit;
-  Function(dynamic)? onError;
+enum SettingChange { none, locale, theme }
+
+class Settings extends ChangeNotifier {
+  static final instance = Settings();
+  var activeChange = SettingChange.none;
+  Locale? locale;
+  ThemeMode? themeMode;
+  initialize() {
+    themeMode = ThemeMode.values[Prefs.instance.getInt("themeMode")!];
+    // locale = Prefs.instance.getString("locale")!;
+  }
+
+  setTheme(ThemeMode themeMode) {
+    if (this.themeMode == themeMode) return;
+    this.activeChange = SettingChange.theme;
+    this.themeMode = themeMode;
+    Prefs.instance.setInt("themeMode", themeMode.index);
+    notifyListeners();
+  }
+
+  void setLocale(Locale locale) {
+    if (this.locale == locale) return;
+    this.activeChange = SettingChange.locale;
+    this.locale = locale;
+    notifyListeners();
+  }
+}
+
+enum LoadState {
+  none,
+  begin,
+  error,
+  initialized,
+  configured,
+  loaded,
+  finalized
+}
+
+class Configs extends ChangeNotifier {
+  static final instance = Configs();
   dynamic configs;
   QuranMeta? _metadata;
-  BuildConfig? buildConfig;
+  final buildConfig = BuildConfig();
+
+  LoadState state = LoadState.none;
   QuranMeta get metadata => _metadata!;
 
   List<Word> words = <Word>[];
@@ -139,21 +179,21 @@ class Configs {
   var sounds = Map<String, Person>();
   var texts = Map<String, Person>();
 
-  static String baseURL = "https://grantech.ir/islam/";
+  static String baseURL = "https://hidaya.sarand.net/";
 
-  static void create(Function onCreate, Function(dynamic) onError) {
-    instance = Configs();
-    instance.buildConfig = BuildConfig();
-    instance.onError = onError;
-    if (Prefs.locale != "fa") baseURL = "https://hidaya.sarand.net/";
-    Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
-      instance.configs = json.decode(data);
-      onCreate.call();
-    }, onError: onError, forceUpdate: true);
+  static void initialize() {
+    instance.setState(LoadState.begin);
+    try {
+      Loader().load("configs.json", "${baseURL}configs.ijson", (String data) {
+        instance.configs = json.decode(data);
+        instance.setState(LoadState.initialized);
+      }, onError: (d) => instance.setState(LoadState.error), forceUpdate: true);
+    } catch (e) {
+      instance.setState(LoadState.error);
+    }
   }
 
-  void init(Function onInit) {
-    this.onInit = onInit;
+  void load() {
     for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
   }
 
@@ -164,15 +204,16 @@ class Configs {
       if (path == "persons")
         _loadPersons(map);
       else if (path == "uthmani-meta") _loadMetadata(map);
-    }, hash: md5, onError: onError);
+    }, hash: md5, onError: (d) => instance.setState(LoadState.error));
   }
 
   void _loadPersons(Map map) {
+    print("_loadPersons");
     for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
     for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
 
-    for (var t in Prefs.persons[PType.text]!) texts[t]?.select(finalize);
-    for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(finalize);
+    for (var t in Prefs.persons[PType.text]!) texts[t]?.select(checkLoaded);
+    for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(checkLoaded);
   }
 
   void _loadMetadata(Map map) {
@@ -192,16 +233,16 @@ class Configs {
     for (var i = 0; i < _m.suras.length; i++) _m.suras[i].index = i;
     _metadata = _m;
     createAyas();
-    finalize();
+    checkLoaded();
   }
 
-  void finalize() {
+  void checkLoaded() {
     if (_metadata == null) return;
     for (var t in Prefs.persons[PType.text]!)
       if (texts[t]?.state != PState.selected) return;
     for (var r in Prefs.persons[PType.sound]!)
       if (sounds[r]?.state != PState.selected) return;
-    onInit?.call();
+    instance.setState(LoadState.loaded);
   }
 
   Future<void> loadSearchAssets(Function onDone) async {
@@ -277,6 +318,11 @@ class Configs {
     if (Prefs.naviMode == "sura") return [sura, aya, a.index];
     if (Prefs.naviMode == "juze") return [a.juze!, a.juzeIndex!, a.index];
     return [a.page!, a.pageIndex!, a.index];
+  }
+
+  setState(LoadState state) {
+    this.state = state;
+    notifyListeners();
   }
 }
 

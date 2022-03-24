@@ -98,19 +98,18 @@ class AyaDetailsState extends State<AyaDetails> {
   }
 }
 
-class Settings extends StatefulWidget {
+class SettingsPopup extends StatefulWidget {
   final Function updater;
-  Settings(this.updater);
+  SettingsPopup(this.updater);
 
   @override
-  State<StatefulWidget> createState() => SettingsState();
+  State<StatefulWidget> createState() => SettingsPopupState();
 }
 
-class SettingsState extends State<Settings> {
+class SettingsPopupState extends State<SettingsPopup> {
   int themeMode = Prefs.themeMode;
   @override
   Widget build(BuildContext context) {
-    var app = MyApp.of(context)!;
     var theme = Theme.of(context);
     var p = 24.0;
     var rtl = Localization.isRTL;
@@ -136,7 +135,7 @@ class SettingsState extends State<Settings> {
                       style: theme.textTheme.caption,
                       onChanged: (int? newValue) {
                         themeMode = newValue!;
-                        app.setTheme(ThemeMode.values[themeMode]);
+                        Settings.instance.setTheme(ThemeMode.values[themeMode]);
                         Navigator.pop(context);
                       },
                       items: <int>[0, 1, 2]
@@ -154,11 +153,11 @@ class SettingsState extends State<Settings> {
                     left: rtl ? p : null,
                     right: rtl ? null : p,
                     child: DropdownButton<Locale>(
-                      value: app.locale,
+                      value: Settings.instance.locale,
                       style: theme.textTheme.caption,
                       onChanged: (Locale? v) {
                         Localization.change(v!.languageCode, onDone: (l) {
-                          app.setLocale(l);
+                          Settings.instance.setLocale(l);
                           setState(() {});
                         });
                       },
@@ -266,7 +265,7 @@ class SettingsState extends State<Settings> {
                     left: rtl ? p : null,
                     right: rtl ? null : p,
                     child: Text(
-                        "${'app_title'.l()}  ${'app_ver'.l()} ${config!.packageInfo!.version.n()}  (${config.target})",
+                        "${'app_title'.l()}  ${'app_ver'.l()} ${config.packageInfo!.version.n()}  (${config.target})",
                         style: theme.textTheme.caption))
               ])),
         ));

@@ -33,7 +33,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   ];
   final _fonts = ["mequran", "scheherazade"];
 
-  AppState? _app;
   ThemeData? _theme;
   TextStyle? _quranStyle;
   List<Person> _qurans = <Person>[];
@@ -61,7 +60,6 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _app = MyApp.of(context);
     _theme = Theme.of(context);
     _quranStyle = TextStyle(
         fontFamily: Prefs.font,
@@ -212,11 +210,11 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         Texts.title("select_loc".l(), _theme!),
         DropdownButton<Locale>(
           isExpanded: true,
-          value: _app!.locale,
+          value: Settings.instance.locale,
           style: _theme!.textTheme.caption,
           onChanged: (Locale? v) {
             Localization.change(v!.languageCode, onDone: (l) {
-              _app!.setLocale(l);
+              Settings.instance.setLocale(l);
               setState(() {});
             });
           },

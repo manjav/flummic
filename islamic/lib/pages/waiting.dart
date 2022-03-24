@@ -1,26 +1,31 @@
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
+import 'package:islamic/models.dart';
+import 'package:islamic/utils/localization.dart';
 import 'package:rive/rive.dart';
 
-// ignore: must_be_immutable
 class WaitingPage extends StatefulWidget {
-  WaitingPageState? page;
-
   @override
-  WaitingPageState createState() => page = WaitingPageState();
+  createState() => WaitingPageState();
 }
 
 class WaitingPageState extends State<WaitingPage> {
-  int state = 0;
   Artboard? artboard;
   RiveAnimationController? controller;
-  bool errorMode = false;
-  Function? onRreload;
 
   @override
   void initState() {
     super.initState();
     rootBundle.load('anims/islam-logo.riv').then(animLoaded);
+    Configs.instance.addListener(() async {
+      if (Configs.instance.state == LoadState.loaded) {
+        artboard!.addController(SimpleAnimation('end'));
+        await Future.delayed(const Duration(milliseconds: 700));
+        Configs.instance.setState(LoadState.finalized);
+      }
+    });
   }
 
   animLoaded(ByteData data) {
@@ -28,77 +33,82 @@ class WaitingPageState extends State<WaitingPage> {
     artboard = riveData.mainArtboard;
     artboard!.addController(SimpleAnimation('start'));
     artboard!.addController(SimpleAnimation('idle'));
-    Future.delayed(const Duration(milliseconds: 500), () => state = 2);
-    state = 1;
-    setState(() {});
+    // Future.delayed(const Duration(milliseconds: 500), () => state = 2);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(alignment: Alignment.center, children: [
-      state < 1
-          ? const SizedBox()
-          : Rive(
-              artboard: artboard!,
-              fit: BoxFit.none,
-            ),
-      errorMode
-          ? Positioned(
-              bottom: 64,
-              child: Column(children: [
-                Text("No internet connection!"),
-                TextButton(
-                    child: Row(
-                      children: [
-                        Icon(Icons.sync),
-                        SizedBox(width: 10),
-                        Text("Try Again")
-                      ],
-                    ),
-                    onPressed: onPressed)
-              ]))
-          : SizedBox()
-    ]));
+    _loadServices();
+    return AnimatedBuilder(
+        animation: Configs.instance,
+        builder: (ctx, w) => Stack(alignment: Alignment.center, children: [
+              Configs.instance.state == LoadState.error
+                  ? _error()
+                  : _animation(),
+            ]));
   }
 
-  void end(Function onFinish) {
-    artboard!.addController(SimpleAnimation('end'));
-    Future.delayed(const Duration(milliseconds: 700), () {
-      state = 3;
-      onFinish();
+  _loadServices() {
+    if (Configs.instance.state != LoadState.none) return;
+    var appsFlyerOptions = {
+      "afDevKey": "YBThmUqaiHZYpiSwZ3GQz4",
+      "afAppId": "com.gerantech.muslim.holy.quran",
+      "isDebug": false
+    };
+
+    var appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+    appsflyerSdk.initSdk(
+        registerConversionDataCallback: true,
+        registerOnAppOpenAttributionCallback: true,
+        registerOnDeepLinkingCallback: true);
+
+    Prefs.init(context, () {
+      _initSmartlook();
+      Configs.initialize();
+      Configs.instance.addListener(_onConfigsStateChange);
+      Settings.instance.setTheme(ThemeMode.values[Prefs.themeMode]);
     });
   }
 
-  void error(Function onRreload) {
-    this.onRreload = onRreload;
-    setState(() => errorMode = true);
+  _initSmartlook() async {
+    if (Prefs.numRuns >= 1) return;
+    // Smartlook.instance.log.enableLogging();
+    await Smartlook.instance.preferences
+        .setProjectKey("6488995bc0e02e3d4defab25862fd68ebf40a071");
+    await Smartlook.instance.start();
+    // Smartlook.instance.registerIntegrationListener(CustomIntegrationListener());
+    await Smartlook.instance.preferences.setWebViewEnabled(true);
   }
 
-  void onPressed() {
-    setState(() => errorMode = false);
-    onRreload?.call();
-  }
-}
-
-/* class CallbackAnimation extends SimpleAnimation {
-  CallbackAnimation(
-    String animationName, {
-    @required this.callback,
-    double mix,
-  }) : super(animationName, mix: mix);
-
-  final Function callback;
-
-  @override
-  void apply(RuntimeArtboard artboard, double elapsedSeconds) {
-    print(animationName);
-    // Apply the animation to the artboard with the appropriate level of mix
-    instance.animation.apply(instance.time, coreContext: artboard, mix: mix);
-    // If false, the animation has ended (it doesn't loop)
-    if (!instance.advance(elapsedSeconds)) {
-      // _onCompleted(callback);
-      callback();
+  _onConfigsStateChange() {
+    if (Configs.instance.state == LoadState.initialized) {
+      Localization.change(Prefs.locale, onDone: (l) {
+        Settings.instance.setLocale(l);
+        Configs.instance.load();
+      });
     }
   }
-} */
+
+  _animation() {
+    if (artboard == null) return SizedBox();
+    return Rive(artboard: artboard!, fit: BoxFit.none);
+  }
+
+  _error() {
+    return Positioned(
+        bottom: 64,
+        child: Column(children: [
+          Text("No internet connection!"),
+          TextButton(
+              child: Row(children: [
+                Icon(Icons.sync),
+                SizedBox(width: 10),
+                Text("Try Again")
+              ]),
+              onPressed: () {
+                Configs.instance.setState(LoadState.none);
+                Configs.initialize();
+              })
+        ]));
+  }
+}
