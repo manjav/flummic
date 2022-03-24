@@ -6,7 +6,7 @@ class RatingDialog extends StatefulWidget {
   /// The initial rating of the rating bar
   final int initialRating;
 
-  const RatingDialog({
+  const RatingDialog({super.key, 
     this.initialRating = 1,
   });
   @override
@@ -55,7 +55,7 @@ class RatingDialogState extends State<RatingDialog> {
                     direction: Axis.horizontal,
                     allowHalfRating: false,
                     itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 3.0),
                     onRatingUpdate: (rating) {
                       _response = rating.toInt();
                       setState(() {});
@@ -67,14 +67,14 @@ class RatingDialogState extends State<RatingDialog> {
                   ),
                 ),
                 TextButton(
-                  child: Text(
-                    "save_l".l(),
-                  ),
                   onPressed: _response == 0
                       ? null
                       : () {
                           Navigator.pop(context, _response);
                         },
+                  child: Text(
+                    "save_l".l(),
+                  ),
                 ),
               ],
             ),
@@ -90,6 +90,8 @@ class RatingDialogState extends State<RatingDialog> {
 }
 
 class ReviewDialog extends StatefulWidget {
+  const ReviewDialog({super.key});
+
   @override
   State<ReviewDialog> createState() => ReviewDialogState();
 }
@@ -111,7 +113,7 @@ class ReviewDialogState extends State<ReviewDialog> {
           borderRadius: BorderRadius.circular(12.0),
         ),
         titlePadding: EdgeInsets.zero,
-        title: Container(
+        title: SizedBox(
           width: 360,
           child: Stack(
             alignment: Alignment.topRight,
@@ -133,14 +135,14 @@ class ReviewDialogState extends State<ReviewDialog> {
                           hintText: "rate_p".l(),
                         )),
                     TextButton(
-                      child: Text(
-                        "save_l".l(),
-                      ),
                       onPressed: _commentController.text == ""
                           ? null
                           : () {
                               Navigator.pop(context, _commentController.text);
                             },
+                      child: Text(
+                        "save_l".l(),
+                      ),
                     ),
                   ],
                 ),

@@ -9,7 +9,7 @@ class PersonPage extends StatefulWidget {
   static List<String> soundModes = ["mujaw_t", "treci_t", "murat_t"]; //muall_t
   static List<String> textModes = ["tafsi_t", "trans_t", "quran_t"];
   final PType type;
-  PersonPage(this.type) : super();
+  const PersonPage(this.type, {super.key});
   @override
   PersonPageState createState() => PersonPageState();
 }
@@ -48,15 +48,15 @@ class PersonPageState extends State<PersonPage>
                   actions: [
                     Localization.isRTL
                         ? IconButton(
-                            icon: Icon(Icons.arrow_forward),
+                            icon: const Icon(Icons.arrow_forward),
                             onPressed: () => Navigator.pop(context),
                           )
-                        : SizedBox()
+                        : const SizedBox()
                   ],
                   leading: Localization.isRTL
-                      ? SizedBox()
+                      ? const SizedBox()
                       : IconButton(
-                          icon: Icon(Icons.arrow_back),
+                          icon: const Icon(Icons.arrow_back),
                           onPressed: () => Navigator.pop(context),
                         ),
                   automaticallyImplyLeading: false,
@@ -88,7 +88,7 @@ class PersonPageState extends State<PersonPage>
                           labelWidget: Text(modes![i].l(),
                               textAlign: TextAlign.right,
                               style: theme.textTheme.bodyLarge),
-                          child: Icon(Icons.arrow_back),
+                          child: const Icon(Icons.arrow_back),
                           backgroundColor:
                               theme.floatingActionButtonTheme.backgroundColor,
                           onTap: () => onSpeedChildTap(modes![i])),
@@ -108,8 +108,9 @@ class PersonPageState extends State<PersonPage>
   List<Widget> _personItems(BuildContext context, ThemeData theme) {
     var removable = _removable();
     var items = <Widget>[];
-    for (var p in Prefs.persons[widget.type]!)
+    for (var p in Prefs.persons[widget.type]!) {
       items.add(_personItem(p, removable, theme));
+    }
     return items;
   }
 
@@ -123,7 +124,7 @@ class PersonPageState extends State<PersonPage>
         child: Stack(children: [
           ListTile(
               horizontalTitleGap: 8,
-              contentPadding: EdgeInsets.only(left: 8, right: 8),
+              contentPadding: const EdgeInsets.only(left: 8, right: 8),
               leading: Avatar(p, 24),
               title: Text(ps!.title),
               subtitle: Text("${ps.mode!.l()} ${ps.flag!.f()}")),
@@ -140,11 +141,11 @@ class PersonPageState extends State<PersonPage>
                         children: [
                           Text("undo_b".l(),
                               style: theme.textTheme.titleMedium),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           LinearProgressIndicator(value: removeAnimation!.value)
                         ]),
                   ))
-              : SizedBox(),
+              : const SizedBox(),
           Positioned(
               left: Localization.isRTL ? 8 : null,
               right: Localization.isRTL ? null : 8,
@@ -162,8 +163,9 @@ class PersonPageState extends State<PersonPage>
 
   bool _removable() {
     var numSelecteds = 0;
-    for (var p in Prefs.persons[widget.type]!)
+    for (var p in Prefs.persons[widget.type]!) {
       if (configPersons![p]!.state == PState.selected) ++numSelecteds;
+    }
     return numSelecteds > 1;
   }
 
@@ -197,7 +199,7 @@ class PersonListPage extends StatefulWidget {
   final String mode;
   final PType type;
   final Map<String, Person> configPersons;
-  PersonListPage(this.type, this.mode, this.configPersons) : super();
+  const PersonListPage(this.type, this.mode, this.configPersons, {super.key});
 
   @override
   PersonListPageState createState() => PersonListPageState();
@@ -208,7 +210,7 @@ class PersonListPageState extends State<PersonListPage> {
   List<Person> persons = <Person>[];
 
   Widget? appBarTitle;
-  Icon searchIcon = Icon(Icons.search);
+  Icon searchIcon = const Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -219,10 +221,11 @@ class PersonListPageState extends State<PersonListPage> {
     var foreign = <Person>[];
     for (var p in widget.configPersons.values) {
       if (p.mode != widget.mode) continue;
-      if (p.flag == Localization.languageCode)
+      if (p.flag == Localization.languageCode) {
         defaultPersons!.add(p);
-      else
+      } else {
         foreign.add(p);
+      }
     }
     defaultPersons!.addAll(foreign);
 
@@ -246,7 +249,7 @@ class PersonListPageState extends State<PersonListPage> {
               )
             ]),
             body: defaultPersons == null
-                ? Center()
+                ? const Center()
                 : ListView.builder(
                     itemBuilder: personItemBuilder,
                     itemCount: persons.length,
@@ -256,16 +259,16 @@ class PersonListPageState extends State<PersonListPage> {
   void onSearchPressed() {
     setState(() {
       if (searchIcon.icon == Icons.search) {
-        searchIcon = Icon(Icons.close);
+        searchIcon = const Icon(Icons.close);
         appBarTitle = TextField(
           autofocus: true,
           controller: searchController,
           decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search), hintText: 'search_in'.l()),
+              prefixIcon: const Icon(Icons.search), hintText: 'search_in'.l()),
         );
       } else {
-        searchIcon = Icon(Icons.search);
-        appBarTitle = Center();
+        searchIcon = const Icon(Icons.search);
+        appBarTitle = const Center();
         persons = search("");
         searchController.clear();
       }
@@ -276,26 +279,27 @@ class PersonListPageState extends State<PersonListPage> {
     if (pattern.isEmpty) return defaultPersons!;
     pattern = pattern.toLowerCase();
     return defaultPersons!
-        .where((p) => p.name!.toLowerCase().indexOf(pattern) > -1)
+        .where((p) => p.name!.toLowerCase().contains(pattern))
         .toList();
   }
 
   Widget personItemBuilder(BuildContext context, int index) {
     var p = persons[index];
-    var subtitle = "${p.flag!.f()}";
+    var subtitle = p.flag!.f();
     if (widget.type == PType.text) {
       String size;
-      if (p.size! > 5048576)
-        size = (p.size! / 5048576).floor().n() + " " + "mbyte_t".l();
-      else
-        size = (p.size! / 5024).floor().n() + " " + "kbyte_t".l();
+      if (p.size! > 5048576) {
+        size = "${(p.size! / 5048576).floor().n()} ${"mbyte_t".l()}";
+      } else {
+        size = "${(p.size! / 5024).floor().n()} ${"kbyte_t".l()}";
+      }
       subtitle += " , $size";
     }
     return GestureDetector(
       onTap: () => selectPerson(p),
       child: ListTile(
         horizontalTitleGap: 8,
-        contentPadding: EdgeInsets.only(left: 8, right: 8),
+        contentPadding: const EdgeInsets.only(left: 8, right: 8),
         leading: Avatar(p.path!, 24),
         title: Text(p.title),
         subtitle: Text(
@@ -324,7 +328,7 @@ class PersonListPageState extends State<PersonListPage> {
   void selectPerson(Person p) {
     switch (p.state) {
       case PState.selected:
-        p.deselect(Duration(milliseconds: 1), () {});
+        p.deselect(const Duration(milliseconds: 1), () {});
         break;
       case PState.ready:
       case PState.waiting:
@@ -334,7 +338,7 @@ class PersonListPageState extends State<PersonListPage> {
         }, (double p) {
           setState(() {});
         }, (dynamic e) {
-          print(e);
+          debugPrint(e);
           setState(() {});
         });
         break;
@@ -347,13 +351,13 @@ class PersonListPageState extends State<PersonListPage> {
   Icon downloadIcon(BuildContext context, PState state) {
     switch (state) {
       case PState.ready:
-        return Icon(Icons.radio_button_off);
+        return const Icon(Icons.radio_button_off);
       case PState.selected:
-        return Icon(Icons.check_circle_outline_outlined);
+        return const Icon(Icons.check_circle_outline_outlined);
       case PState.downloading:
-        return Icon(Icons.close_sharp);
+        return const Icon(Icons.close_sharp);
       default:
-        return Icon(Icons.arrow_circle_down);
+        return const Icon(Icons.arrow_circle_down);
     }
   }
 }

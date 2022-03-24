@@ -9,7 +9,7 @@ import '../main.dart';
 class AyaDetails extends StatefulWidget {
   final int sura, aya;
   final Function(String, int) updater;
-  AyaDetails(this.sura, this.aya, this.updater);
+  const AyaDetails(this.sura, this.aya, this.updater, {super.key});
 
   @override
   State<StatefulWidget> createState() => AyaDetailsState();
@@ -21,7 +21,7 @@ class AyaDetailsState extends State<AyaDetails> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     hasNote = Prefs.hasNote(widget.sura, widget.aya)!;
-    return Container(
+    return SizedBox(
         height: 160,
         child: Stack(alignment: Alignment.topCenter, children: [
           Generics.draggable(theme),
@@ -45,7 +45,7 @@ class AyaDetailsState extends State<AyaDetails> {
 
   IconButton getButton(ThemeData theme, IconData icon, String type) {
     return IconButton(
-        padding: EdgeInsets.all(28),
+        padding: const EdgeInsets.all(28),
         icon: Icon(icon, color: theme.textTheme.bodyLarge!.color),
         onPressed: () => onPressed(theme, type));
   }
@@ -57,8 +57,7 @@ class AyaDetailsState extends State<AyaDetails> {
       case "share":
         var subject =
             "${'sura_l'.l()} ${Configs.instance.metadata.suras[s].title} ${'aya_l'.l()} ${(a + 1).n()}\n${'share_sign'.l()} ${'app_title'.l()}";
-        var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n" +
-            Configs.instance.texts["ar.uthmanimin"]!.data![s][a];
+        var text = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n${Configs.instance.texts["ar.uthmanimin"]!.data![s][a]}";
         if (Prefs.persons[PType.text]!.length > 1) {
           var p = Configs.instance.texts[Prefs.persons[PType.text]![1]];
           text += "\n\n${p!.data![s][a]}\n\n${'trans_t'.l()} ${p.name}";
@@ -69,11 +68,12 @@ class AyaDetailsState extends State<AyaDetails> {
         break;
 
       case "note":
-        if (!hasNote)
+        if (!hasNote) {
           showDialog(
               context: context,
               builder: (BuildContext context) =>
                   Generics.editNote(context, theme, s, a, widget.updater));
+        }
         setState(() {
           hasNote ? Prefs.removeNote(s, a) : Prefs.addNote(s, a, "");
         });
@@ -99,7 +99,7 @@ class AyaDetailsState extends State<AyaDetails> {
 
 class SettingsPopup extends StatefulWidget {
   final Function updater;
-  SettingsPopup(this.updater);
+  const SettingsPopup(this.updater, {super.key});
 
   @override
   State<StatefulWidget> createState() => SettingsPopupState();
@@ -114,7 +114,7 @@ class SettingsPopupState extends State<SettingsPopup> {
     var rtl = Localization.isRTL;
     var queryData = MediaQuery.of(context);
     var config = Configs.instance.buildConfig;
-    return Container(
+    return SizedBox(
         height: 500,
         child: MediaQuery(
           data: queryData.copyWith(
@@ -225,7 +225,7 @@ class SettingsPopupState extends State<SettingsPopup> {
                               DropdownMenuItem<String>(
                                   value: value,
                                   child: Text("navi_$value".l(),
-                                      style: TextStyle(fontSize: 14))))
+                                      style: const TextStyle(fontSize: 14))))
                           .toList(),
                     )),
                 Generics.text(theme, "select_font".l(), 390, rtl ? p : null,
@@ -282,7 +282,7 @@ class Generics {
           decoration: BoxDecoration(
               color: theme.textTheme.bodyLarge!.color,
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(4))),
+              borderRadius: const BorderRadius.all(Radius.circular(4))),
         ));
   }
 
@@ -307,9 +307,9 @@ class Generics {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        titlePadding: EdgeInsets.fromLTRB(16, 40, 16, 8),
+        titlePadding: const EdgeInsets.fromLTRB(16, 40, 16, 8),
         // scrollable: true,
-        title: Container(
+        title: SizedBox(
             width: 320,
             child: Stack(
               clipBehavior: Clip.none,
@@ -343,7 +343,7 @@ class Generics {
                         minLines: 1, //Normal textInputField will be displayed
                         maxLines: 6, //Normal textInputField will be displayed
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextButton(
                         child: Text("save_l".l()),
                         onPressed: () {
@@ -370,8 +370,8 @@ class Generics {
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: title == null ? SizedBox() : Text(title),
-          content: text == null ? SizedBox() : Text(text),
+          title: title == null ? const SizedBox() : Text(title),
+          content: text == null ? const SizedBox() : Text(text),
           actions: <Widget>[
             TextButton(
               child: Text(acceptLabel ?? "yes_l".l()),

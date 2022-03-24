@@ -35,13 +35,13 @@ class Texts {
   static RichText quran(String hizb, String text, String end, mainStyle,
       [TextAlign? align]) {
     final spans = <TextSpan>[];
-    if (hizb.length > 0) spans.add(TextSpan(text: hizb, style: teal));
+    if (hizb.isNotEmpty) spans.add(TextSpan(text: hizb, style: teal));
     spans.addAll(_getSpans(text, red));
-    if (end.length > 0) spans.add(TextSpan(text: end, style: teal));
+    if (end.isNotEmpty) spans.add(TextSpan(text: end, style: teal));
     return RichText(
         textAlign: align ?? TextAlign.justify,
         textDirection: TextDirection.rtl,
-        text: new TextSpan(style: mainStyle, children: spans));
+        text: TextSpan(style: mainStyle, children: spans));
   }
 
   static List<TextSpan> _getSpans(String text, TextStyle style) {
@@ -56,13 +56,14 @@ class Texts {
         if (startIndex > -1) {
           found = true;
           // add any unstyled text before the next match
-          if (startIndex > spanBoundary)
+          if (startIndex > spanBoundary) {
             spans.add(TextSpan(text: text.substring(spanBoundary, startIndex)));
+          }
 
           // style the matched text
           final endIndex = startIndex + 1;
           // final spanText = text.substring(startIndex, endIndex + 1);
-          spans.add(TextSpan(text: "${patterns[i]}", style: style));
+          spans.add(TextSpan(text: patterns[i], style: style));
 
           // mark the boundary to start the next search from
           spanBoundary = endIndex;

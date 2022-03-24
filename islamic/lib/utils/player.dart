@@ -56,7 +56,9 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
     ayas = <PlayerAya>[];
     var list = Configs.instance.navigations["all"]![0];
-    for (var a in list) ayas!.add(PlayerAya(a));
+    for (var a in list) {
+      ayas!.add(PlayerAya(a));
+    }
     customEvent.add('{"type":"start"}');
   }
 
@@ -123,11 +125,15 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       case 'update':
         sounds = <Sound>[];
         var list = json.decode(extras!["sounds"]);
-        for (var s in list) sounds!.add(Sound(s));
+        for (var s in list) {
+          sounds!.add(Sound(s));
+        }
 
-        var _suras = extras["suras"];
+        var mSuras = extras["suras"];
         suras = <String>[];
-        for (var s in _suras) suras!.add(s);
+        for (var s in mSuras) {
+          suras!.add(s);
+        }
         break;
 
       case 'select':
@@ -166,7 +172,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     } else {
       soundIndex++;
     }
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     select(index, soundIndex);
   }
 }

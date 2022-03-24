@@ -14,6 +14,8 @@ import 'package:islamic/widgets/rating.dart';
 import '../utils/localization.dart';
 
 class IndexPage extends StatefulWidget {
+  const IndexPage({super.key});
+
   @override
   IndexPageState createState() => IndexPageState();
 }
@@ -21,7 +23,7 @@ class IndexPage extends StatefulWidget {
 class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TabController? _tabController;
 
-  Icon searchIcon = Icon(Icons.search);
+  Icon searchIcon = const Icon(Icons.search);
   TextEditingController searchController = TextEditingController();
 
   TextStyle? titlesStyle;
@@ -64,7 +66,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
       }
     });
     suras = Configs.instance.metadata.suras;
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(const Duration(seconds: 1)).then((_) {
       showRating();
       // showSurveys();
     }); //this inside the initstate
@@ -94,8 +96,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         letterSpacing: -2,
         height: Localization.isRTL ? 1.1 : 0.1);
     uthmaniStyle = Localization.isRTL
-        ? TextStyle(fontFamily: 'mequran', fontSize: 20)
-        : TextStyle(
+        ? const TextStyle(fontFamily: 'mequran', fontSize: 20)
+        : const TextStyle(
             fontFamily: 'cubicsans-regular',
             fontSize: 15,
             fontWeight: FontWeight.bold);
@@ -125,7 +127,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   _footer(ThemeData theme) {
-    if (Prefs.last == 0) return SizedBox();
+    if (Prefs.last == 0) return const SizedBox();
     var last = Configs.instance.navigations["all"]![0][Prefs.last];
     var sura = Configs.instance.metadata.suras[last.sura];
     return GestureDetector(
@@ -138,8 +140,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                     right: Localization.isRTL ? 16 : 0,
                     left: Localization.isRTL ? 0 : 16),
                 child: Row(children: [
-                  Icon(Icons.arrow_back),
-                  SizedBox(width: 16),
+                  const Icon(Icons.arrow_back),
+                  const SizedBox(width: 16),
                   Text(
                     "${'last_l'.l()} :  ${'sura_l'.l()} ${sura.title}  ( ${(last.aya + 1).n()} )",
                     style: theme.textTheme.bodySmall,
@@ -148,7 +150,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   }
 
   _playerLine(ThemeData theme) {
-    if (_audioHandler == null) return SizedBox(height: 12);
+    if (_audioHandler == null) return const SizedBox(height: 12);
     return StreamBuilder<bool>(
         stream: _audioHandler!.playbackState
             .map((state) => state.playing)
@@ -160,20 +162,20 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                   color: theme.appBarTheme.backgroundColor,
                   child: Row(
                     children: [
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
                           child: Text("playing_l".l(),
                               textDirection: Localization.dir,
                               style: theme.textTheme.bodyMedium)),
                       IconButton(
-                          icon: Icon(Icons.stop, size: 16),
+                          icon: const Icon(Icons.stop, size: 16),
                           onPressed: () {
                             _audioHandler!.stop();
                             setState(() {});
                           })
                     ],
                   ))
-              : SizedBox();
+              : const SizedBox();
         });
   }
 
@@ -189,7 +191,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: theme.cardColor,
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black,
                 blurRadius: 6.0, // changes position of shadow
@@ -242,7 +244,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                           child: Text("${sura.index! + 1}",
                               style: uthmaniStyle, textAlign: TextAlign.center))
                     ]),
-                    SizedBox(width: 4, height: 48),
+                    const SizedBox(width: 4, height: 48),
                     Expanded(
                         child: Container(
                             padding: EdgeInsets.only(
@@ -256,12 +258,12 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                       style: titlesStyle,
                                       textDirection: TextDirection.ltr),
                                   Localization.isRTL
-                                      ? SizedBox(height: 0)
-                                      : SizedBox(height: 4),
+                                      ? const SizedBox(height: 0)
+                                      : const SizedBox(height: 4),
                                   Localization.isRTL
-                                      ? SizedBox(height: 0)
+                                      ? const SizedBox(height: 0)
                                       : Text("    ${sura.title}",
-                                          style: TextStyle(fontSize: 12))
+                                          style: const TextStyle(fontSize: 12))
                                 ]))),
                     getText(sura.order!),
                     getText(sura.ayas!),
@@ -288,9 +290,11 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             reversed = false;
             lastSort = value;
             suras.sort((Sura l, Sura r) {
-              if (value == "ayas")
+              if (value == "ayas") {
                 return l.ayas!.compareTo(r.ayas!);
-              else if (value == "order") return l.order!.compareTo(r.order!);
+              } else if (value == "order") {
+                return l.order!.compareTo(r.order!);
+              }
               return l.index!.compareTo(r.index!);
             });
           }
@@ -311,6 +315,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         : theme.textTheme.titleSmall,
                   ),
                   Positioned(
+                    top: 24,
                     child: Icon(
                         reversed && lastSort == value
                             ? Icons.arrow_drop_up
@@ -318,7 +323,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         color: lastSort == value
                             ? theme.textTheme.bodyLarge!.color
                             : theme.textTheme.titleSmall!.color),
-                    top: 24,
                   )
                 ])));
   }
@@ -337,7 +341,8 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         onTap: () {
           selectedJuzIndex = index;
           hizbAnimation!.value = 0;
-          hizbAnimation!.animateTo(1, duration: Duration(milliseconds: 1000));
+          hizbAnimation!
+              .animateTo(1, duration: const Duration(milliseconds: 1000));
         },
         child: Container(
             height: 80,
@@ -359,7 +364,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         Text(
                             Localization.isRTL
                                 ? "$j. ${String.fromCharCode(index + 327)}${String.fromCharCode(193)}"
-                                : "$j. " + "n_$j".l() + " " + "juze_l".l(),
+                                : "$j. ${"n_$j".l()} ${"juze_l".l()}",
                             style: Localization.isRTL
                                 ? titlesStyle
                                 : theme.textTheme.titleMedium),
@@ -378,7 +383,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   Widget getHizb(ThemeData theme, int juzIndex, int hizbIndex) {
     var hidden = juzIndex != selectedJuzIndex;
-    if (hidden) return SizedBox();
+    if (hidden) return const SizedBox();
     var hIndex = juzIndex * 8 + hizbIndex * 2;
     var hizb = Configs.instance.metadata.hizbs[hIndex];
     return Opacity(
@@ -387,13 +392,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
             onTap: () => goto(hizb.sura - 1, hizb.aya - 1),
             child: Container(
                 width: 48,
-                padding: EdgeInsets.only(top: 6),
+                padding: const EdgeInsets.only(top: 6),
                 child: Column(children: [
                   SvgPicture.asset(
                     "images/quarter_$hizbIndex.svg",
                     height: 36,
                   ),
-                  Text("hizb_l".l() + " " + (hizbIndex + 1).n(),
+                  Text("${"hizb_l".l()} ${(hizbIndex + 1).n()}",
                       style: theme.textTheme.bodySmall)
                 ]))));
   }
@@ -402,13 +407,14 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
 
   void createNotes() {
     notes.clear();
-    for (var k in Prefs.notes.keys)
+    for (var k in Prefs.notes.keys) {
       notes.add(Note(int.parse(k.substring(0, 3)), int.parse(k.substring(3)),
           Prefs.notes[k]!));
+    }
   }
 
   Widget getNotes(ThemeData theme) {
-    return notes.length == 0
+    return notes.isEmpty
         ? Center(
             child: Text("note_empty".l(),
                 style: theme.textTheme.bodySmall, textAlign: TextAlign.center))
@@ -441,13 +447,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                           "${'sura_l'.l()} ${Configs.instance.metadata.suras[note.sura].title} - ${'aya_l'.l()} ${(note.aya + 1).n()}",
                           style: theme.textTheme.titleMedium,
                         ),
-                        note.text.length > 0
+                        note.text.isNotEmpty
                             ? Text(note.text, overflow: TextOverflow.ellipsis)
-                            : SizedBox()
+                            : const SizedBox()
                       ],
                     )),
                     IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.edit,
                           size: 20,
                         ),
@@ -460,7 +466,7 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                                     note.sura,
                                     note.aya,
                                     (string, number) => setState(() {})))),
-                    SizedBox(width: 64)
+                    const SizedBox(width: 64)
                   ]))),
           note.removing
               ? Positioned(
@@ -475,11 +481,11 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
                         children: [
                           Text("undo_b".l(),
                               style: theme.textTheme.titleMedium),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           LinearProgressIndicator(value: removeAnimation!.value)
                         ]),
                   ))
-              : SizedBox(),
+              : const SizedBox(),
           Positioned(
               top: 8,
               bottom: 8,
@@ -539,12 +545,13 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   } */
 
   void showRating() async {
-    print("showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
+    debugPrint(
+        "showRating Prefs.rate: ${Prefs.rate}, num runs: ${Prefs.numRuns}");
     // Send to store
     if (Prefs.rate == 5) {
       if (Configs.instance.buildConfig.target == "cafebazaar") {
         if (Platform.isAndroid) {
-          AndroidIntent intent = AndroidIntent(
+          AndroidIntent intent = const AndroidIntent(
               data: 'bazaar://details?id=com.gerantech.muslim.holy.quran',
               action: 'android.intent.action.EDIT',
               package: 'com.farsitel.bazaar');
@@ -572,22 +579,26 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
     int rating = await showDialog(
         barrierDismissible: false,
         context: context,
-        builder: (context) =>
-            WillPopScope(onWillPop: () async => false, child: RatingDialog()));
+        builder: (context) => WillPopScope(
+            onWillPop: () async => false, child: const RatingDialog()));
 
     Prefs.instance.setInt("rate", rating >= 5 ? rating : (Prefs.rate + 10));
 
     String comment = "";
-    if (rating > 0) {
-      if (rating < 5) {
-        comment = await showDialog(
-            context: context,
-            builder: (context) => WillPopScope(
-                onWillPop: () async => false, child: ReviewDialog()));
+    if (mounted) {
+      if (rating > 0) {
+        if (rating < 5) {
+          comment = await showDialog(
+              context: context,
+              builder: (context) => WillPopScope(
+                  onWillPop: () async => false, child: const ReviewDialog()));
+        }
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("thanks_l".l()),
-      ));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("thanks_l".l()),
+        ));
+      }
     }
     /* AppState.analytics.logEvent(
       name: 'rate',
@@ -597,6 +608,6 @@ class IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         'comment': comment
       },
     ); */
-    print(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
+    debugPrint(" Prefs.rate: ${Prefs.rate} rating: $rating comment: $comment");
   }
 }

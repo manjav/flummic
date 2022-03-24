@@ -52,13 +52,13 @@ class Prefs {
         return;
       }
 
-      var _locale = Utils.getLocaleByTimezone(Utils.findTimezone());
-      var _themeMode =
+      var mLocale = Utils.getLocaleByTimezone(Utils.findTimezone());
+      var mThemeMode =
           MediaQuery.of(context).platformBrightness == Brightness.light ? 1 : 2;
 
       List<String> texts = ["ar.uthmanimin"];
       List<String> sounds = [];
-      switch (_locale) {
+      switch (mLocale) {
         case "en":
           // texts.add("en.sahih");
           sounds.add("mishary_rashid_alafasy");
@@ -74,8 +74,8 @@ class Prefs {
           break;
       }
       instance.setInt("numRuns", 0);
-      instance.setInt("themeMode", _themeMode);
-      instance.setString("locale", _locale);
+      instance.setInt("themeMode", mThemeMode);
+      instance.setString("locale", mLocale);
       instance.setString("naviMode", "sura");
       instance.setString("bookmarks", "{}");
       instance.setStringList(
@@ -88,14 +88,14 @@ class Prefs {
   }
 
   static void addPerson(PType type, String path) {
-    if (persons[type]!.indexOf(path) > -1) return;
+    if (persons[type]!.contains(path)) return;
     persons[type]!.add(path);
     instance.setStringList(type.toString(), persons[type]!);
   }
 
   static void removePerson(PType type, String path) {
     if (path == "all") persons[type]!.clear();
-    if (persons[type]!.indexOf(path) < 0) return;
+    if (!persons[type]!.contains(path)) return;
     persons[type]!.remove(path);
     instance.setStringList(type.toString(), persons[type]!);
   }
@@ -139,7 +139,7 @@ class Settings extends ChangeNotifier {
 
   setTheme(ThemeMode themeMode) {
     if (this.themeMode == themeMode) return;
-    this.activeChange = SettingChange.theme;
+    activeChange = SettingChange.theme;
     this.themeMode = themeMode;
     Prefs.instance.setInt("themeMode", themeMode.index);
     notifyListeners();
@@ -147,7 +147,7 @@ class Settings extends ChangeNotifier {
 
   void setLocale(Locale locale) {
     if (this.locale == locale) return;
-    this.activeChange = SettingChange.locale;
+    activeChange = SettingChange.locale;
     this.locale = locale;
     notifyListeners();
   }
@@ -169,15 +169,14 @@ class Configs extends ChangeNotifier {
   QuranMeta? _metadata;
   final buildConfig = BuildConfig();
 
-  LoadState state = LoadState.none;
+  var state = LoadState.none;
   QuranMeta get metadata => _metadata!;
 
-  List<Word> words = <Word>[];
-  List<List<String>> simpleQuran = <List<String>>[];
-  Map<String, List<List<Aya>>> navigations = Map();
-
-  var sounds = Map<String, Person>();
-  var texts = Map<String, Person>();
+  var words = <Word>[];
+  var simpleQuran = <List<String>>[];
+  var navigations = <String, List<List<Aya>>>{};
+  var sounds = <String, Person>{};
+  var texts = <String, Person>{};
 
   static String baseURL = "https://hidaya.sarand.net/";
 
@@ -194,54 +193,77 @@ class Configs extends ChangeNotifier {
   }
 
   void load() {
-    for (var f in configs["files"]) _loadFile(f["path"], f["md5"]);
+    for (var f in configs["files"]) {
+      _loadFile(f["path"], f["md5"]);
+    }
   }
 
   void _loadFile(String path, String md5) {
     if (path != "persons" && path != "uthmani-meta") return;
     Loader().load("$path.json", "$baseURL$path.ijson", (String data) {
       var map = json.decode(data);
-      if (path == "persons")
+      if (path == "persons") {
         _loadPersons(map);
-      else if (path == "uthmani-meta") _loadMetadata(map);
+      } else if (path == "uthmani-meta") {
+        _loadMetadata(map);
+      }
     }, hash: md5, onError: (d) => instance.setState(LoadState.error));
   }
 
   void _loadPersons(Map map) {
-    print("_loadPersons");
-    for (var t in map["texts"]) texts[t["path"]] = Person(PType.text, t);
-    for (var s in map["sounds"]) sounds[s["path"]] = Person(PType.sound, s);
+    for (var t in map["texts"]) {
+      texts[t["path"]] = Person(PType.text, t);
+    }
+    for (var s in map["sounds"]) {
+      sounds[s["path"]] = Person(PType.sound, s);
+    }
 
-    for (var t in Prefs.persons[PType.text]!) texts[t]?.select(checkLoaded);
-    for (var s in Prefs.persons[PType.sound]!) sounds[s]?.select(checkLoaded);
+    for (var t in Prefs.persons[PType.text]!) {
+      texts[t]?.select(checkLoaded);
+    }
+    for (var s in Prefs.persons[PType.sound]!) {
+      sounds[s]?.select(checkLoaded);
+    }
   }
 
   void _loadMetadata(Map map) {
-    var _m = QuranMeta();
+    var m = QuranMeta();
     var keys = map.keys;
     for (var k in keys) {
-      if (k == "suras")
-        for (var c in map[k]) _m.suras.add(Sura(c));
-      else if (k == "juzes")
-        for (var c in map[k])
-          _m.juzes.add(Juz(c['sura'], c['aya'], c['page'], c['name']));
-      else if (k == "hizbs")
-        for (var c in map[k]) _m.hizbs.add(Part(c['sura'], c['aya']));
-      else if (k == "pages")
-        for (var c in map[k]) _m.pages.add(Part(c['sura'], c['aya']));
+      if (k == "suras") {
+        for (var c in map[k]) {
+          m.suras.add(Sura(c));
+        }
+      } else if (k == "juzes") {
+        for (var c in map[k]) {
+          m.juzes.add(Juz(c['sura'], c['aya'], c['page'], c['name']));
+        }
+      } else if (k == "hizbs") {
+        for (var c in map[k]) {
+          m.hizbs.add(Part(c['sura'], c['aya']));
+        }
+      } else if (k == "pages") {
+        for (var c in map[k]) {
+          m.pages.add(Part(c['sura'], c['aya']));
+        }
+      }
     }
-    for (var i = 0; i < _m.suras.length; i++) _m.suras[i].index = i;
-    _metadata = _m;
+    for (var i = 0; i < m.suras.length; i++) {
+      m.suras[i].index = i;
+    }
+    _metadata = m;
     createAyas();
     checkLoaded();
   }
 
   void checkLoaded() {
     if (_metadata == null) return;
-    for (var t in Prefs.persons[PType.text]!)
+    for (var t in Prefs.persons[PType.text]!) {
       if (texts[t]?.state != PState.selected) return;
-    for (var r in Prefs.persons[PType.sound]!)
+    }
+    for (var r in Prefs.persons[PType.sound]!) {
       if (sounds[r]?.state != PState.selected) return;
+    }
     instance.setState(LoadState.loaded);
   }
 
@@ -250,15 +272,19 @@ class Configs extends ChangeNotifier {
       onDone();
       return;
     }
-    await Loader().load("words.json", baseURL + "words.zip",
+    await Loader().load("words.json", "${baseURL}words.zip",
         (String data) async {
       var list = json.decode(data);
-      for (var w in list) words.add(new Word(w));
-      await Loader().load("simple.json", baseURL + "simple.zip", (String data) {
+      for (var w in list) {
+        words.add(Word(w));
+      }
+      await Loader().load("simple.json", "${baseURL}simple.zip", (String data) {
         var list = json.decode(data);
         for (var s in list) {
           var sura = <String>[];
-          for (var a in s) sura.add(a);
+          for (var a in s) {
+            sura.add(a);
+          }
           simpleQuran.add(sura);
         }
         onDone();
@@ -359,11 +385,12 @@ class Note extends Part {
 
   void remove(Duration? duration, Function? onDone) async {
     removing = true;
-    if (onDone != null)
+    if (onDone != null) {
       _removeTimer = Timer(duration!, () {
         Prefs.removeNote(sura, aya);
         onDone();
       });
+    }
   }
 
   void cancelRemove() {
@@ -421,6 +448,7 @@ class BuildConfig {
 }
 
 enum PState { waiting, downloading, ready, selected, removing }
+
 enum PType { text, sound, athan }
 
 class Person {
@@ -448,22 +476,24 @@ class Person {
 
   void select(Function onDone,
       [Function(double)? onProgress, Function(dynamic)? onError]) {
-    print("select $path");
-    if (state == PState.waiting)
+    debugPrint("select $path");
+    if (state == PState.waiting) {
       load(() => onSelecFinish(onDone), onProgress, onError);
-    else
+    } else {
       onSelecFinish(onDone);
+    }
   }
 
   void deselect(Duration? duration, Function? onDone) async {
     state = onDone != null ? PState.removing : PState.ready;
-    if (onDone != null)
+    if (onDone != null) {
       _removeTimer = Timer(duration!, () {
         _removeTimer!.cancel();
         Prefs.removePerson(type!, path!);
         state = PState.ready;
         onDone();
       });
+    }
   }
 
   void cancelDeselect() {
@@ -481,12 +511,14 @@ class Person {
       Function(dynamic)? onError) {
     state = PState.downloading;
     _loader = Loader();
-    _loader!.load(path!, url!, (String _data) {
-      var list = json.decode(_data);
+    _loader!.load(path!, url!, (String loadedData) {
+      var list = json.decode(loadedData);
       data = <List<String>>[];
       for (var s in list) {
         var sura = <String>[];
-        for (var a in s) sura.add(a);
+        for (var a in s) {
+          sura.add(a);
+        }
         data!.add(sura);
       }
       onDone();

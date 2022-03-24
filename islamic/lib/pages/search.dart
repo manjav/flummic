@@ -35,13 +35,13 @@ class SearchPageState extends State<SearchPage> {
           focusNode: focusNode,
           textInputAction: TextInputAction.none,
           decoration: InputDecoration(
-              hintText: "search_in".l(), suffixIcon: Icon(Icons.search)),
+              hintText: "search_in".l(), suffixIcon: const Icon(Icons.search)),
           controller: TextEditingController(),
           suggestionsAmount: 12,
           suggestions: Configs.instance.words,
           itemBuilder: suggestionBuilder,
           itemSorter: (a, b) => b.c! - a.c!,
-          itemFilter: (w, t) => w.t!.indexOf(t) > -1,
+          itemFilter: (w, t) => w.t!.contains(t),
           clearOnSubmit: false,
           itemSubmitted: (Word w) => setState(() => results = search(w.t!)));
       focusNode!.requestFocus();
@@ -52,11 +52,11 @@ class SearchPageState extends State<SearchPage> {
 
   Widget suggestionBuilder(BuildContext context, Word item) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         height: 40,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(item.t!), Text("${item.c!.n()}")]));
+            children: [Text(item.t!), Text(item.c!.n())]));
   }
 
   @override
@@ -64,7 +64,7 @@ class SearchPageState extends State<SearchPage> {
     var theme = Theme.of(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: textField == null ? SizedBox() : textField),
+        appBar: AppBar(title: textField ?? const SizedBox()),
         body: ListView.builder(
             itemBuilder: (BuildContext c, int i) => _itemBuilder(c, theme, i),
             itemCount: results!.length));
@@ -95,7 +95,7 @@ class SearchPageState extends State<SearchPage> {
             },
             child: Padding(
                 padding:
-                    EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
+                    const EdgeInsets.only(top: 10, right: 16, bottom: 5, left: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -104,13 +104,13 @@ class SearchPageState extends State<SearchPage> {
                       RichText(
                         textAlign: TextAlign.justify,
                         textDirection: TextDirection.rtl,
-                        text: new TextSpan(
+                        text: TextSpan(
                           style: theme.textTheme.bodySmall,
                           children: [
-                            new TextSpan(text: pre),
-                            new TextSpan(
+                            TextSpan(text: pre),
+                            TextSpan(
                                 text: text, style: theme.textTheme.titleMedium),
-                            new TextSpan(text: post),
+                            TextSpan(text: post),
                           ],
                         ),
                       )
@@ -124,7 +124,7 @@ class SearchPageState extends State<SearchPage> {
     for (var s = 0; s < quran.length; s++) {
       for (var a = 0; a < quran[s].length; a++) {
         var i = quran[s][a].toLowerCase().indexOf(pattern);
-        if (i > -1) result.add(new Search(s, a, i));
+        if (i > -1) result.add(Search(s, a, i));
       }
     }
     return result;

@@ -14,10 +14,10 @@ import 'package:islamic/widgets/texts.dart';
 class WizardPage extends StatefulWidget {
   final Function onComplete;
 
-  WizardPage({Key? key, required this.onComplete}) : super(key: key);
+  const WizardPage({Key? key, required this.onComplete}) : super(key: key);
 
   @override
-  _WizardPageState createState() => _WizardPageState();
+  createState() => _WizardPageState();
 }
 
 class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
@@ -74,7 +74,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           _header(),
           _divider(),
           _slides(),
-          SizedBox(height: 48)
+          const SizedBox(height: 48)
         ],
       ),
       _circlaButton(
@@ -95,13 +95,13 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text("wiz_$_page".l(), style: _theme!.textTheme.headlineSmall),
             ]));
   }
 
   Widget _divider() {
-    return Container(
+    return SizedBox(
         height: 4,
         child: Stack(alignment: Alignment.center, children: [
           LinearProgressIndicator(
@@ -143,7 +143,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   Widget _circlaButton(
       IconData icon, double size, double? right, double? left) {
     var dir = icon == Icons.arrow_back ? -1 : 1;
-    if (_page == 0 && dir == -1) return SizedBox();
+    if (_page == 0 && dir == -1) return const SizedBox();
     double s =
         size * (_buttonsAnimation!.value - (dir == 1 ? 0 : 1)).clamp(0, 1);
     return Positioned(
@@ -171,7 +171,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
                         return;
                       }
                       _pageController.animateToPage(_page + dir,
-                          duration: Duration(milliseconds: 600),
+                          duration: const Duration(milliseconds: 600),
                           curve: Curves.easeInOutSine);
                     }))));
   }
@@ -179,24 +179,24 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   void _updateButtons() {
     _buttonsAnimation!.value = 0;
     _buttonsAnimation!.animateTo(2,
-        duration: Duration(milliseconds: 1500), curve: Curves.easeOutBack);
+        duration: const Duration(milliseconds: 1500), curve: Curves.easeOutBack);
   }
 
   Widget _slides() {
     return Expanded(
       child: PageView.builder(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: _items.length,
           controller: _pageController,
           itemBuilder: (context, i) => Padding(
-              padding: EdgeInsets.fromLTRB(24, 48, 24, 36),
+              padding: const EdgeInsets.fromLTRB(24, 48, 24, 36),
               child: i == 0 ? _slide_0() : (i == 1 ? _slide_1() : _slide_2())),
           onPageChanged: (int index) {
             var p = index.round();
             if (_page != p) {
               _page = p;
               _progressAnimation!.animateTo(progress,
-                  duration: Duration(seconds: 1), curve: Curves.easeOutExpo);
+                  duration: const Duration(seconds: 1), curve: Curves.easeOutExpo);
               _updateButtons();
             }
           }),
@@ -238,7 +238,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         ButtonGroup(
             (String title, int index) {
               return Padding(
-                  padding: EdgeInsets.only(left: 16),
+                  padding: const EdgeInsets.only(left: 16),
                   child: index == 0
                       ? Texts.quran("۞ ", _texts[0],
                           "   ﴿${(aya + 1).toArabic()}﴾ ", _quranStyle)
@@ -252,12 +252,12 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
             current: _selectedText,
             selectColor: _theme!.cardColor,
             deselectColor: _theme!.colorScheme.background,
-            onTab: (_selected) {
+            onTab: (mselected) {
               setState(() {
-                _selectedText = _selected;
+                _selectedText = mselected;
                 Prefs.removePerson(PType.text, "all");
                 var ts = ["ar.uthmanimin", "en.transliteration"];
-                Configs.instance.texts[ts[_selected]]!.select(_updateButtons);
+                Configs.instance.texts[ts[mselected]]!.select(_updateButtons);
               });
             })
       ]),
@@ -287,7 +287,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
         ButtonGroup(
           (String title, int index) {
             return Padding(
-                padding: EdgeInsets.only(left: 24),
+                padding: const EdgeInsets.only(left: 24),
                 child: Texts.quran(
                     "۞ ",
                     _texts[0],
@@ -304,8 +304,8 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
           current: _fonts.indexOf(Prefs.font),
           selectColor: _theme!.cardColor,
           deselectColor: _theme!.colorScheme.background,
-          onTab: (_selected) {
-            Prefs.instance.setString("font", _fonts[_selected]);
+          onTab: (mSelected) {
+            Prefs.instance.setString("font", _fonts[mSelected]);
             _updateButtons();
           },
         )
@@ -322,7 +322,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     }
 
     return ListView.builder(
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
         itemCount: 1,
         itemBuilder: (context, i) {
           return Column(
@@ -337,10 +337,10 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     for (var p in _qurans) {
       var t = p.data![sura][aya];
       var hizbFlag = Texts.getHizbFlag(sura + 1, aya + 1, i);
-      if (p.path == "ar.uthmanimin")
+      if (p.path == "ar.uthmanimin") {
         rows.add(Texts.quran(hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾",
             _quranStyle, TextAlign.center));
-      else {
+      } else {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget(
                 "<p align=\"justify\" dir=\"ltr\"> $t (${aya + 1}) </p>",
@@ -353,18 +353,18 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
     }
 
     for (var t in _otherTexts) {
-      rows.add(SizedBox(height: 24));
+      rows.add(const SizedBox(height: 24));
       var dir =
           Bidi.isRtlLanguage(t.flag) ? TextDirection.rtl : TextDirection.ltr;
       var no = i < 1 ? (aya + 1).n(t.flag) : '';
       if (dir == TextDirection.rtl) no = no.split('').reversed.join();
-      if (no.length > 0) no += '. ';
+      if (no.isNotEmpty) no += '. ';
       var text =
           "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${t.data![sura][aya]}";
       rows.add(Stack(
         textDirection: dir,
         children: [
-          Text("$text",
+          Text(text,
               textAlign: TextAlign.justify,
               textDirection: dir,
               style: _theme!.textTheme.bodySmall),
@@ -373,15 +373,15 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
       ));
       ++i;
     }
-    rows.add(SizedBox(height: 24));
+    rows.add(const SizedBox(height: 24));
     rows.add(GestureDetector(
+        onTap: _addPerson,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.add_circle_outline,
               color: _theme!.textTheme.bodyLarge!.color),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Text("add_translate".l())
-        ]),
-        onTap: _addPerson));
+        ])));
     return rows;
   }
 
@@ -395,7 +395,7 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
   }
 
   _finishOverley() {
-    if (_finalAnimation!.value <= 0) return SizedBox();
+    if (_finalAnimation!.value <= 0) return const SizedBox();
     double color = (_finalAnimation!.value < 3
             ? _finalAnimation!.value - 2
             : (10 - _finalAnimation!.value) * 0.5)
@@ -415,11 +415,11 @@ class _WizardPageState extends State<WizardPage> with TickerProviderStateMixin {
 
   Widget _container({List<Widget>? children}) {
     return Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: _theme!.cardColor,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(16))),
+            borderRadius: const BorderRadius.all(Radius.circular(16))),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: children ?? []));

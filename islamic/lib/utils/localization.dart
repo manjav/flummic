@@ -59,12 +59,12 @@ extension Localization on String {
     'ot': 'Other Languages'
   };
 
-  static void change(String _languageCode, {Function(Locale)? onDone}) {
-    dynamic _result;
-    var _loc = MyApp.supportedLocales.firstWhere(
-        (l) => l.languageCode == _languageCode,
+  static void change(String mlanguageCode, {Function(Locale)? onDone}) {
+    dynamic result;
+    var loc = MyApp.supportedLocales.firstWhere(
+        (l) => l.languageCode == mlanguageCode,
         orElse: () => MyApp.supportedLocales[2]);
-    languageCode = _loc.languageCode;
+    languageCode = loc.languageCode;
     isRTL = Bidi.isRtlLanguage(languageCode);
     dir = isRTL ? TextDirection.rtl : TextDirection.ltr;
     List<dynamic> files = Configs.instance.configs["files"];
@@ -72,13 +72,13 @@ extension Localization on String {
     Loader().load(
         "$languageCode.json", "${Configs.baseURL}/locales/$languageCode.ijson",
         (String data) {
-      _result = json.decode(data);
-      _sentences = Map();
-      _result.forEach((String key, dynamic value) {
+      result = json.decode(data);
+      _sentences = {};
+      result.forEach((String key, dynamic value) {
         _sentences![key] = value.toString();
       });
       Prefs.instance.setString("locale", languageCode);
-      onDone?.call(_loc);
+      onDone?.call(loc);
     }, hash: file != null ? file["md5"] : null);
   }
 
@@ -90,17 +90,16 @@ extension Localization on String {
       res = key;
     } else {
       if (args != null) {
-        args.forEach((arg) {
+        for (var arg in args) {
           res = res!.replaceFirst(RegExp(r'%s'), arg.toString());
-        });
+        }
       }
     }
     return res!;
   }
 
   String toArabic() {
-    return this
-        .replaceAll('0', '٠')
+    return replaceAll('0', '٠')
         .replaceAll('1', '١')
         .replaceAll('2', '٢')
         .replaceAll('3', '٣')
@@ -113,8 +112,7 @@ extension Localization on String {
   }
 
   String toPersian() {
-    return this
-        .replaceAll('0', '٠')
+    return replaceAll('0', '٠')
         .replaceAll('1', '١')
         .replaceAll('2', '٢')
         .replaceAll('3', '٣')
@@ -128,9 +126,9 @@ extension Localization on String {
 
   String n([String? languageString]) {
     if (languageString != null) {
-      if (Bidi.isRtlLanguage(languageString)) return this.toPersian();
+      if (Bidi.isRtlLanguage(languageString)) return toPersian();
     } else if (isRTL) {
-      return this.toPersian();
+      return toPersian();
     }
     return this;
   }
@@ -173,28 +171,28 @@ extension Localization on String {
 
 extension LocalizeInt on int {
   String toArabic() {
-    return this.toString().toArabic();
+    return toString().toArabic();
   }
 
   String toPersian() {
-    return this.toString().toPersian();
+    return toString().toPersian();
   }
 
   String n([String? languageString]) {
-    return this.toString().n(languageString);
+    return toString().n(languageString);
   }
 }
 
 extension LocalizeDouble on double {
   String toArabic() {
-    return this.toString().toArabic();
+    return toString().toArabic();
   }
 
   String toPersian() {
-    return this.toString().toPersian();
+    return toString().toPersian();
   }
 
   String n([String? languageString]) {
-    return this.toString().n(languageString);
+    return toString().n(languageString);
   }
 }

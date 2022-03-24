@@ -7,6 +7,8 @@ import 'package:islamic/utils/localization.dart';
 import 'package:rive/rive.dart';
 
 class WaitingPage extends StatefulWidget {
+  const WaitingPage({super.key});
+
   @override
   createState() => WaitingPageState();
 }
@@ -90,7 +92,7 @@ class WaitingPageState extends State<WaitingPage> {
   }
 
   _animation() {
-    if (artboard == null) return SizedBox();
+    if (artboard == null) return const SizedBox();
     return Rive(artboard: artboard!, fit: BoxFit.none);
   }
 
@@ -98,9 +100,9 @@ class WaitingPageState extends State<WaitingPage> {
     return Positioned(
         bottom: 64,
         child: Column(children: [
-          Text("No internet connection!"),
+          const Text("No internet connection!"),
           TextButton(
-              child: Row(children: [
+              child: Row(children: const [
                 Icon(Icons.sync),
                 SizedBox(width: 10),
                 Text("Try Again")

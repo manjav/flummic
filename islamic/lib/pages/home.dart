@@ -38,13 +38,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   );
   AnimationController? headerAnimation;
   TextStyle titlesStyle =
-      TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
+      const TextStyle(fontFamily: 'Titles', fontSize: 28, letterSpacing: -4);
   TextStyle? uthmaniStyle;
   List<Person> _qurans = <Person>[];
   List<Person> _otherTexts = <Person>[];
   Person playingSound =
       Configs.instance.sounds[Prefs.persons[PType.sound]![0]]!;
-  Aya playingAya = new Aya(0, 0, 0);
+  Aya playingAya = Aya(0, 0, 0);
   ThemeData? _theme;
 
   bool _disposed = false;
@@ -129,29 +129,31 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: theme.cardColor,
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black,
                                   blurRadius: 6.0, // changes position of shadow
                                 ),
                               ],
                             ),
+                            height: _toolbarHeight,
                             child: Text(headerTextProvider(),
                                 style: !Localization.isRTL &&
                                         Prefs.naviMode == "page"
                                     ? theme.textTheme.titleMedium
-                                    : titlesStyle),
-                            height: _toolbarHeight)),
+                                    : titlesStyle))),
                     footer()
                   ],
                 ))));
   }
 
   String headerTextProvider() {
-    if (Prefs.naviMode == "sura")
+    if (Prefs.naviMode == "sura") {
       return "${String.fromCharCode(selectedPage + 204)}${String.fromCharCode(192)}";
-    if (Prefs.naviMode == "juze")
+    }
+    if (Prefs.naviMode == "juze") {
       return "${String.fromCharCode(selectedPage + 327)}${String.fromCharCode(193)}";
+    }
     return (selectedPage + 1).n();
   }
 
@@ -214,13 +216,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Container(
               color: index == selectedIndex ? theme.focusColor : color,
               child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 14, right: 16, bottom: 5, left: 16),
+                  padding: const EdgeInsets.only(
+                      top: 14, right: 16, bottom: 5, left: 16),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: textsProvider(part.sura, part.aya)))),
           Prefs.getNote(part.sura, part.aya) == null
-              ? SizedBox()
+              ? const SizedBox()
               : Positioned(
                   top: -18,
                   child: IconButton(
@@ -255,9 +257,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       backgroundColor: theme.dialogBackgroundColor,
       context: context,
       builder: (context) => AyaDetails(sura, aya, (type, data) {
-        if (type == "note")
+        if (type == "note") {
           setState(() {});
-        else if (type == "play") play(data);
+        } else if (type == "play") {
+          play(data);
+        }
       }),
     ).then((value) {
       setState(() {});
@@ -267,30 +271,32 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<Widget> textsProvider(int sura, int aya) {
     var rows = <Widget>[];
     if (aya == 0) {
-      if (Prefs.naviMode != "sura")
+      if (Prefs.naviMode != "sura") {
         rows.add(Text(
           "${String.fromCharCode(sura + 204)}${String.fromCharCode(192)}",
           style: titlesStyle,
           textAlign: TextAlign.center,
         ));
-      if (sura != 0 && sura != 8)
+      }
+      if (sura != 0 && sura != 8) {
         rows.add(Text(
           "\n\n${String.fromCharCode(194)}",
           style: titlesStyle,
           textAlign: TextAlign.center,
         ));
-      rows.add(SizedBox(height: 40));
+      }
+      rows.add(const SizedBox(height: 40));
     }
 
-    rows.add(SizedBox(height: 16));
+    rows.add(const SizedBox(height: 16));
     var i = 0;
     for (var p in _qurans) {
       var t = p.data![sura][aya];
       var hizbFlag = Texts.getHizbFlag(sura + 1, aya + 1, i);
-      if (p.path == "ar.uthmanimin")
+      if (p.path == "ar.uthmanimin") {
         rows.add(Texts.quran(
             hizbFlag, t, "    ﴿${(aya + 1).toArabic()}﴾", uthmaniStyle));
-      else {
+      } else {
         rows.add(p.path == "en.transliteration"
             ? HtmlWidget("<p align=\"justify\">$t (${(aya + 1).n()}) </p>",
                 textStyle: theme.textTheme.titleLarge)
@@ -306,13 +312,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Bidi.isRtlLanguage(t.flag) ? TextDirection.rtl : TextDirection.ltr;
       var no = i < 1 ? (aya + 1).n(t.flag) : '';
       if (dir == TextDirection.rtl) no = no.split('').reversed.join();
-      if (no.length > 0) no += '. ';
+      if (no.isNotEmpty) no += '. ';
       var text =
           "${dir == TextDirection.rtl ? '\u202E' : ''}\t\t\t\t\t\t\t $no${t.data![sura][aya]}";
       rows.add(Stack(
         textDirection: dir,
         children: [
-          Text("$text",
+          Text(text,
               textAlign: TextAlign.justify,
               textDirection: dir,
               style: theme.textTheme.bodySmall),
@@ -342,7 +348,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       decoration: BoxDecoration(
                     color: theme.appBarTheme.backgroundColor,
                     shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16)),
                   ))),
@@ -413,22 +419,24 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (!force && index != 0) return;
       var dis = (page - selectedPage).abs();
       gotoPage(page, dis > 3 ? 0 : 400);
-      Future.delayed(Duration(milliseconds: 500), () => gotoIndex(index, 800));
+      Future.delayed(
+          const Duration(milliseconds: 500), () => gotoIndex(index, 800));
     } else {
       gotoIndex(index, 800);
     }
   }
 
   void gotoPage(int page, int duration) {
-    if (duration == 0)
+    if (duration == 0) {
       suraPageController!.jumpToPage(page);
-    else
+    } else {
       suraPageController!.animateToPage(page,
           duration: Duration(milliseconds: duration), curve: Curves.easeInOut);
+    }
   }
 
   void gotoIndex(int index, int duration) {
-    print("index $index, duration $duration");
+    debugPrint("index $index, duration $duration");
     selectedIndex = index;
     setState(() {});
     if (duration == 0) {
@@ -447,14 +455,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             .map((state) => state.playing)
             .distinct(),
         builder: (context, snapshot) {
-          if (soundState.index > SoundState.ready.index)
+          if (soundState.index > SoundState.ready.index) {
             soundState = (snapshot.data ?? false)
                 ? SoundState.playing
                 : SoundState.pause;
+          }
           return FloatingActionButton(
               heroTag: "fab",
-              child: Icon(getIcon()),
-              onPressed: onTogglePressed);
+              onPressed: onTogglePressed,
+              child: Icon(getIcon()));
         });
   }
 
@@ -473,7 +482,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     switch (type) {
       case "settings":
         return IconButton(
-          icon: Icon(Icons.settings),
+          icon: const Icon(Icons.settings),
           onPressed: () => showModalBottomSheet(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -486,7 +495,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         );
       case "search":
         return IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -567,10 +576,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void updatePlayer() {
     var suras = <String>[];
-    for (var s in Configs.instance.metadata.suras) suras.add(s.title);
+    for (var s in Configs.instance.metadata.suras) {
+      suras.add(s.title);
+    }
     var sounds = <Person>[];
-    for (var p in Prefs.persons[PType.sound]!)
+    for (var p in Prefs.persons[PType.sound]!) {
       sounds.add(Configs.instance.sounds[p]!);
+    }
     widget.audioHandler
         .customAction("update", {"sounds": jsonEncode(sounds), "suras": suras});
   }

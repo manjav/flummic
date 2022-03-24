@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:islamic/pages/Index.dart';
+import 'package:islamic/pages/index.dart';
 import 'package:islamic/pages/wizard.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -13,7 +13,7 @@ import 'utils/themes.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -32,6 +32,8 @@ class MyApp extends StatefulWidget {
     const Locale("tr", ""),
     const Locale("ur", "")
   ];
+
+  const MyApp({super.key});
 
   @override
   AppState createState() => AppState();
@@ -56,7 +58,7 @@ class AppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorObservers: [observer],
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -72,13 +74,13 @@ class AppState extends State<MyApp> {
   Widget _preparedPage() {
     switch (loadingState) {
       case 0:
-        return WaitingPage();
+        return const WaitingPage();
       case 2:
         return WizardPage(onComplete: _onWizardComplete);
       case 3:
-        return IndexPage();
+        return const IndexPage();
       default:
-        return SizedBox();
+        return const SizedBox();
     }
   }
 

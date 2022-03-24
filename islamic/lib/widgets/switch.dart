@@ -37,8 +37,9 @@ class LiteRollingSwitch extends StatefulWidget {
   final Function? onDoubleTap;
   final Function? onSwipe;
 
-  LiteRollingSwitch(
-      {this.value = false,
+  const LiteRollingSwitch(
+      {super.key,
+      this.value = false,
       this.textOff = "Off",
       this.textOn = "On",
       this.textSize = 14.0,
@@ -53,7 +54,7 @@ class LiteRollingSwitch extends StatefulWidget {
       required this.onChanged});
 
   @override
-  _RollingSwitchState createState() => _RollingSwitchState();
+  createState() => _RollingSwitchState();
 }
 
 class _RollingSwitchState extends State<LiteRollingSwitch>
@@ -110,7 +111,7 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             width: 130,
             decoration: BoxDecoration(
                 color: transitionColor,
@@ -122,7 +123,7 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
                   child: Opacity(
                     opacity: (1 - value).clamp(0.0, 1.0),
                     child: Container(
-                      padding: EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: 10),
                       alignment: Alignment.centerRight,
                       height: 40,
                       child: Text(
@@ -140,7 +141,7 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
                   child: Opacity(
                     opacity: value.clamp(0.0, 1.0),
                     child: Container(
-                      padding: EdgeInsets.only(/*top: 10,*/ left: 5),
+                      padding: const EdgeInsets.only(/*top: 10,*/ left: 5),
                       alignment: Alignment.centerLeft,
                       height: 40,
                       child: Text(
@@ -161,7 +162,7 @@ class _RollingSwitchState extends State<LiteRollingSwitch>
                       height: 40,
                       width: 40,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
                       child: Stack(
                         children: <Widget>[

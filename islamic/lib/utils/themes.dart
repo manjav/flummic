@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 class Themes {
   static Map<int, Color> get primaries => <int, Color>{
-        0: Color(0xFF50E0E0),
-        50: Color(0xFFF0F9FF),
-        100: Color(0xFFD2E6F0),
-        150: Color(0xFF445555),
-        200: Color(0xFF90C0CB),
-        300: Color(0xFF4DAFB6),
-        400: Color(0xFF269DA6),
-        500: Color(0xFF008C96),
-        600: Color(0xFF005560),
-        700: Color(0xFF003540),
-        750: Color(0xFF00203A),
-        800: Color(0xFF0A1C2D),
-        900: Color(0xFF051222),
-        910: Color(0xFF5A5A4A),
-        920: Color(0xFF3A3A2A),
+        0: const Color(0xFF50E0E0),
+        50: const Color(0xFFF0F9FF),
+        100: const Color(0xFFD2E6F0),
+        150: const Color(0xFF445555),
+        200: const Color(0xFF90C0CB),
+        300: const Color(0xFF4DAFB6),
+        400: const Color(0xFF269DA6),
+        500: const Color(0xFF008C96),
+        600: const Color(0xFF005560),
+        700: const Color(0xFF003540),
+        750: const Color(0xFF00203A),
+        800: const Color(0xFF0A1C2D),
+        900: const Color(0xFF051222),
+        910: const Color(0xFF5A5A4A),
+        920: const Color(0xFF3A3A2A),
       };
 
   static ThemeData get data {
@@ -68,7 +68,7 @@ class Themes {
             style: ButtonStyle(
                 foregroundColor:
                     MaterialStateProperty.resolveWith(getTextButtonColor),
-                textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
+                textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(
                     fontFamily: "CubicSans",
                     fontSize: 18,
                     fontWeight: FontWeight.bold)))),
@@ -77,7 +77,7 @@ class Themes {
             selectionHandleColor: primaries[600],
             selectionColor: primaries[300]),
         snackBarTheme: SnackBarThemeData(
-            contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
+            contentTextStyle: const TextStyle(fontFamily: "CubicSans", fontSize: 16),
             backgroundColor: primaries[500],
             actionTextColor: primaries[50]),
         inputDecorationTheme:
@@ -155,7 +155,7 @@ class Themes {
           style: ButtonStyle(
               foregroundColor:
                   MaterialStateProperty.resolveWith(getTextButtonColor),
-              textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
+              textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(
                   fontFamily: "CubicSans",
                   fontSize: 18,
                   fontWeight: FontWeight.bold)))),
@@ -164,7 +164,7 @@ class Themes {
           selectionHandleColor: primaries[300],
           selectionColor: primaries[600]),
       snackBarTheme: SnackBarThemeData(
-          contentTextStyle: TextStyle(fontFamily: "CubicSans", fontSize: 16),
+          contentTextStyle: const TextStyle(fontFamily: "CubicSans", fontSize: 16),
           backgroundColor: primaries[700],
           actionTextColor: primaries[500]),
       inputDecorationTheme:

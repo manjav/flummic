@@ -8,7 +8,7 @@ import 'package:islamic/models.dart';
 class Avatar extends StatelessWidget {
   final String path;
   final double radius;
-  Avatar(this.path, this.radius) : super();
+  const Avatar(this.path, this.radius, {super.key});
   @override
   Widget build(BuildContext context) {
     try {
@@ -24,7 +24,7 @@ class Avatar extends StatelessWidget {
           height: radius * 2.0);
     } on HttpException catch (e) {
       debugPrint(e.toString());
-      return SizedBox();
+      return const SizedBox();
     }
   }
 }
@@ -79,10 +79,11 @@ class ButtonGroup extends StatelessWidget {
 
   List<Widget> _buttonList() {
     final buttons = <Widget>[];
-    for (int i = 0; i < items.length; i++)
-      buttons.add(i == this.current
+    for (int i = 0; i < items.length; i++) {
+      buttons.add(i == current
           ? _selectButton(items[i], i)
           : _deselectButton(items[i], i));
+    }
     return buttons;
   }
 
